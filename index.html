@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Kitara ja teoria treenari 1.16.14</title>
+<title>SightFret 1.16.15 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -205,7 +205,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>Kitara_ja_teoria_treenari_1.16.14</h1>
+  <h1>SightFret 1.16.15 — Designed by Jarkko Reijonaho</h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -276,7 +276,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.16.14';
+const APP_VERSION='1.16.15';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const $=id=>document.getElementById(id);
 const methodEl=$('method'), settingsEl=$('settings'), promptEl=$('prompt'), answerEl=$('answer'), feedbackEl=$('feedback'), stepInfo=$('stepInfo'), tabbox=$('tabbox'), staffWrap=$('staffWrap'), svg=$('staff');
@@ -508,7 +508,7 @@ if(data.settings && Number(data.settings.method7Reps)===3){
   data.settings.method7Reps=4;
   saveData();
 }
-function defaultData(){return {version:2,settings:{method:'1',timeLimit:5,singleString:3,sameFret:6,quizCount:20,method7Category:'all',method7Type:'random',method7Mode:'three',method7Reps:4,method8Mode:'three',method8Category:'all',method8Type:'random',method8Reps:4,method9Mode:'three',method9Category:'all',method9Type:'random',method9Reps:4,method9ShowTab:true,method9ShowStaff:true,method10Category:'basic',method10Type:'random',accidentals:false,sevenths:false,octaves:false,inv0:true,inv1:false,inv2:false,inv3:false,inv4:false,chordMode:'both'},methods:{},fretboard:{},method5:{},method9Mastery:{},method10Mastery:{}}}
+function defaultData(){return {version:3,settings:{method:'1',timeLimit:5,singleString:3,sameFret:6,quizCount:20,method7Category:'all',method7Type:'random',method7Mode:'three',method7Reps:4,method8Mode:'three',method8Category:'all',method8Type:'random',method8Reps:4,method9Mode:'three',method9Category:'all',method9Type:'random',method9Reps:4,method9ShowTab:true,method9ShowStaff:true,method10Category:'basic',method10Type:'random',accidentals:false,sevenths:false,octaves:false,inv0:true,inv1:false,inv2:false,inv3:false,inv4:false,chordMode:'both'},methods:{},fretboards:{'1':{},'2':{},'3':{},'4':{}},method5:{},method9Mastery:{},method10Mastery:{}}}
 function migrateData(raw){
   const d=defaultData();
   if(!raw||typeof raw!=='object')return d;
@@ -517,23 +517,34 @@ function migrateData(raw){
   if(raw.settings&&raw.settings.timeLimit!=null)d.settings.timeLimit=Number(raw.settings.timeLimit);
   if((raw.version||1)<2 && Number(d.settings.timeLimit)===2)d.settings.timeLimit=5;
   d.methods=raw.methods&&typeof raw.methods==='object'?raw.methods:{};
-  d.fretboard=raw.fretboard&&typeof raw.fretboard==='object'?raw.fretboard:{};
+  const legacyFretboard=raw.fretboard&&typeof raw.fretboard==='object'?raw.fretboard:{};
+  if(raw.fretboards&&typeof raw.fretboards==='object'){
+    for(const method of ['1','2','3','4']){
+      d.fretboards[method]=raw.fretboards[method]&&typeof raw.fretboards[method]==='object'?raw.fretboards[method]:{};
+    }
+  }else{
+    // Ennen versiota 1.16.15 menetelmät 1–4 jakoivat saman otelautadatan.
+    // Kopioidaan vanha historia jokaisen menetelmän omaksi lähtötilanteeksi.
+    for(const method of ['1','2','3','4'])d.fretboards[method]=JSON.parse(JSON.stringify(legacyFretboard));
+  }
   d.method5=raw.method5&&typeof raw.method5==='object'?raw.method5:{};
   d.method9Mastery=raw.method9Mastery&&typeof raw.method9Mastery==='object'?raw.method9Mastery:{};
   d.method10Mastery=raw.method10Mastery&&typeof raw.method10Mastery==='object'?raw.method10Mastery:{};
   const now=Date.now();
-  for(const v of Object.values(d.fretboard)){
-    if(!Array.isArray(v.times))v.times=[];
-    if(v.correct==null)v.correct=0;if(v.total==null)v.total=0;if(v.x==null)v.x=0;
-    if(v.wrong==null)v.wrong=Math.max(0,v.total-v.correct-v.x);
-    if(!v.lastSeen)v.lastSeen=now;
+  for(const board of Object.values(d.fretboards)){
+    for(const v of Object.values(board)){
+      if(!Array.isArray(v.times))v.times=[];
+      if(v.correct==null)v.correct=0;if(v.total==null)v.total=0;if(v.x==null)v.x=0;
+      if(v.wrong==null)v.wrong=Math.max(0,v.total-v.correct-v.x);
+      if(!v.lastSeen)v.lastSeen=now;
+    }
   }
   for(const v of Object.values(d.methods)){
     if(!Array.isArray(v.times))v.times=[];
     if(v.correct==null)v.correct=0;if(v.total==null)v.total=0;if(v.x==null)v.x=0;if(v.reveal==null)v.reveal=0;
     if(v.wrong==null)v.wrong=Math.max(0,v.total-v.correct-v.x-v.reveal);
   }
-  d.version=2;return d;
+  d.version=3;return d;
 }
 function loadData(){try{return migrateData(JSON.parse(localStorage.getItem(STORE_KEY)||'{}'))}catch{return defaultData()}}
 function saveData(){localStorage.setItem(STORE_KEY,JSON.stringify(data))}
@@ -566,7 +577,12 @@ function method5Complete(){
   return method5Candidates().length===0;
 }
 
-function fretMetric(s,f){const k=fretKey(s,f);if(!data.fretboard[k])data.fretboard[k]={correct:0,total:0,times:[],x:0,wrong:0,lastSeen:0};const v=data.fretboard[k];if(v.wrong==null)v.wrong=Math.max(0,(v.total||0)-(v.correct||0)-(v.x||0));return v}
+function fretboardForMethod(method=methodEl.value){
+  if(!data.fretboards)data.fretboards={'1':{},'2':{},'3':{},'4':{}};
+  if(!data.fretboards[method])data.fretboards[method]={};
+  return data.fretboards[method];
+}
+function fretMetric(s,f){const board=fretboardForMethod(),k=fretKey(s,f);if(!board[k])board[k]={correct:0,total:0,times:[],x:0,wrong:0,lastSeen:0};const v=board[k];if(v.wrong==null)v.wrong=Math.max(0,(v.total||0)-(v.correct||0)-(v.x||0));return v}
 function recordResult({good=false,x=false,reveal=false,timeMs=null,positions=[]}){
  const now=Date.now(),wrong=!good&&!x&&!reveal,m=metricBucket(methodEl.value);
  m.total++;if(good)m.correct++;if(x)m.x++;if(wrong)m.wrong=(m.wrong||0)+1;if(reveal)m.reveal++;
@@ -692,7 +708,7 @@ function fretPriority(v,now=Date.now()){
 }
 function weightedFretPoint(){
   const now=Date.now(),items=[];let total=0;
-  for(let s=0;s<6;s++)for(let f=0;f<=12;f++){const w=fretPriority(data.fretboard[fretKey(s,f)],now);total+=w;items.push({s,f,w})}
+  for(let s=0;s<6;s++)for(let f=0;f<=12;f++){const w=fretPriority(fretboardForMethod()[fretKey(s,f)],now);total+=w;items.push({s,f,w})}
   let r=Math.random()*total;for(const it of items){r-=it.w;if(r<=0)return it}return items[items.length-1];
 }
 function weightedFretOnString(s){
@@ -700,7 +716,7 @@ function weightedFretOnString(s){
   let total=0;
 
   for(let f=0;f<=12;f++){
-    const v=data.fretboard[fretKey(s,f)];
+    const v=fretboardForMethod()[fretKey(s,f)];
     const mastery=fretMastery(v,now);
 
     // Kaikki nauhat säilyvät kierrossa.
@@ -752,7 +768,7 @@ function renderStats(){
    const red=vals.filter(v=>v.state==='red').length;
    m={total:green+red,correct:green,x:0,wrong:red,reveal:0,times:[]};
  }else if(isMethod2){
-   const vals=Object.entries(data.fretboard)
+   const vals=Object.entries(fretboardForMethod())
      .filter(([k,v])=>Number(k.split('-')[0])===selectedString&&v.total>=1)
      .map(([,v])=>v);
    m={
@@ -799,7 +815,7 @@ function renderStats(){
    $('summaryStats').innerHTML=`Menetelmä: <b>${methodName(method)}${stringLabel}</b><br>Oikein: <b>${m.correct}/${m.total}</b>${detailLines}<br>Mediaaniaika: <b>${fmtTime(median(m.times))}</b>`;
  }
 
- let entries=Object.entries(data.fretboard).filter(([,v])=>v.total>=1);
+ let entries=Object.entries(fretboardForMethod()).filter(([,v])=>v.total>=1);
  // Menetelmä 2: Heikot alueet ja Vähän dataa koskevat vain valittua kieltä.
  if(isMethod2)entries=entries.filter(([k])=>Number(k.split('-')[0])===selectedString);
 
@@ -818,7 +834,7 @@ function renderStats(){
    }).map(([k,v])=>({k,score:fretMastery(v)??0}))
      .sort((a,b)=>a.score-b.score).slice(0,6);
    $('weakStats').innerHTML=weak.length?weak.map(w=>{
-     const [s,f]=w.k.split('-').map(Number),v=data.fretboard[w.k];
+     const [s,f]=w.k.split('-').map(Number),v=fretboardForMethod()[w.k];
      const slow=v.x||0,wrong=v.wrong||0;
      return `${stringNames[s]}${f}: ${v.correct}/${v.total}, med. ${fmtTime(median(v.times))} · hidas ${slow} · väärin ${wrong} · osaaminen ${Math.round(w.score*100)} %`;
    }).join('<br>'):'Ei havaittuja heikkoja alueita.';
@@ -833,7 +849,7 @@ function renderStats(){
    if(lowBlock)lowBlock.classList.add('hidden');
    const weak=entries.map(([k,v])=>({k,score:fretMastery(v)??0})).sort((a,b)=>a.score-b.score).slice(0,6);
    $('weakStats').innerHTML=weak.length?weak.map(w=>{
-     const [s,f]=w.k.split('-').map(Number),v=data.fretboard[w.k];
+     const [s,f]=w.k.split('-').map(Number),v=fretboardForMethod()[w.k];
      return `${stringNames[s]}${f}: ${v.correct}/${v.total}, med. ${fmtTime(median(v.times))} · osaaminen ${Math.round(w.score*100)} %`;
    }).join('<br>'):'Ei vielä tarpeeksi dataa.';
  }
@@ -904,7 +920,7 @@ function renderHeatmap(){
  }
 
  const fretHeaders=Array.from({length:13},(_,f)=>{
-   const automated=Array.from({length:6},(_,s)=>fretMastery(data.fretboard[fretKey(s,f)],now))
+   const automated=Array.from({length:6},(_,s)=>fretMastery(fretboardForMethod()[fretKey(s,f)],now))
      .every(score=>score!=null&&score>0.90);
    const label=automated
      ? `<span class="fret-automated" title="Nauha automatisoitu: kaikki kielet yli 90 %">${f}</span>`
@@ -914,7 +930,7 @@ function renderHeatmap(){
  h.innerHTML='<div class="heatcell heathead">kieli</div>'+fretHeaders;
 
  for(let s=5;s>=0;s--){
-   const stringMasteries=Array.from({length:13},(_,f)=>fretMastery(data.fretboard[fretKey(s,f)],now));
+   const stringMasteries=Array.from({length:13},(_,f)=>fretMastery(fretboardForMethod()[fretKey(s,f)],now));
    const stringAutomated=stringMasteries.every(score=>score!=null&&score>0.90);
    const stringLabel=stringAutomated
      ? `<span class="string-automated" title="Kieli automatisoitu: kaikki nauhat yli 90 %">${stringNames[s]}</span>`
@@ -923,7 +939,7 @@ function renderHeatmap(){
    h.insertAdjacentHTML('beforeend',`<div class="heatcell heathead">${stringLabel}</div>`);
 
    for(let f=0;f<=12;f++){
-     const v=data.fretboard[fretKey(s,f)],
+     const v=fretboardForMethod()[fretKey(s,f)],
            score=stringMasteries[f],
            med=v?median(v.times):null,
            title=v?`${v.correct}/${v.total}, mediaani ${fmtTime(med)}, hidas ${v.x||0}, väärin ${v.wrong||0}, osaaminen ${Math.round((score||0)*100)} %, viimeksi ${v.lastSeen?new Date(v.lastSeen).toLocaleDateString('fi-FI'):'–'}`:'Ei dataa',
@@ -1472,7 +1488,7 @@ function finishFretboardExamAnswer(good,t,slow){
 
 
 function getMethod3Candidates(){
-  return Object.entries(data.fretboard)
+  return Object.entries(fretboardForMethod())
     .filter(([,v])=>v && v.total>0 && (fretMastery(v)??0)<0.90)
     .map(([k,v])=>({k,score:fretMastery(v)??0}))
     .sort((a,b)=>a.score-b.score);
@@ -1495,7 +1511,7 @@ function refreshMethod3Points(){
 
   // Poista ne lukituista pisteistä, jotka ovat jo saavuttaneet 90 % rajan.
   method3Points=method3Points.filter(k=>{
-    const v=data.fretboard[k];
+    const v=fretboardForMethod()[k];
     return v && v.total>0 && (fretMastery(v)??0)<0.90;
   });
 
@@ -3326,7 +3342,7 @@ methodEl.value=data.settings.method||'1';methodEl.addEventListener('change',()=>
   if(methodEl.value==='5'){
     for(let f=0;f<=12;f++)delete data.method5[fretKey(s,f)];
   }else{
-    for(let f=0;f<=12;f++)delete data.fretboard[fretKey(s,f)];
+    for(let f=0;f<=12;f++)delete fretboardForMethod()[fretKey(s,f)];
   }
   if(methodEl.value==='3')method3Points=null;
   saveData();
@@ -3353,7 +3369,7 @@ $('resetFret').addEventListener('click',()=>{
   if(methodEl.value==='5'){
     for(let s=0;s<6;s++)delete data.method5[fretKey(s,f)];
   }else{
-    for(let s=0;s<6;s++)delete data.fretboard[fretKey(s,f)];
+    for(let s=0;s<6;s++)delete fretboardForMethod()[fretKey(s,f)];
   }
   saveData();
   renderStats();
@@ -3380,7 +3396,16 @@ $('resetMethod5All').addEventListener('click',()=>{
   renderStats();
   showStartState();
 });
-$('resetMethod').addEventListener('click',()=>{delete data.methods[methodEl.value];saveData();renderStats()});$('resetAll').addEventListener('click',()=>{if(confirm('Nollataanko kaikki oppimistiedot?')){data=defaultData();method3Points=null;saveData();methodEl.value='1';settingHTML();renderStats();showStartState()}});
+$('resetMethod').addEventListener('click',()=>{
+  const method=methodEl.value;
+  if(!confirm(`Nollataanko valitun menetelmän (${methodName(method)}) osaamisdata?`))return;
+  delete data.methods[method];
+  if(['1','2','3','4'].includes(method))data.fretboards[method]={};
+  if(method==='3')method3Points=null;
+  saveData();
+  renderStats();
+  showStartState();
+});$('resetAll').addEventListener('click',()=>{if(confirm('Nollataanko kaikki oppimistiedot?')){data=defaultData();method3Points=null;saveData();methodEl.value='1';settingHTML();renderStats();showStartState()}});
 settingHTML();renderStats();showStartState();
 
 // Näppäimistöfokuksen hallinta.
