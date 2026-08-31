@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.16.16 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.16.17 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -205,7 +205,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.16.16 — Designed by Jarkko Reijonaho</h1>
+  <h1>SightFret 1.16.17 — Designed by Jarkko Reijonaho</h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -276,7 +276,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.16.16';
+const APP_VERSION='1.16.17';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const $=id=>document.getElementById(id);
 const methodEl=$('method'), settingsEl=$('settings'), promptEl=$('prompt'), answerEl=$('answer'), feedbackEl=$('feedback'), stepInfo=$('stepInfo'), tabbox=$('tabbox'), staffWrap=$('staffWrap'), svg=$('staff');
@@ -1295,7 +1295,6 @@ function openSeventhChordGuide(){
 </div>
 <div class="summary">Tiivistettynä: lue nuotit → kokoa terssiketju → löydä root → laske 3/5/7 rootista → tunnista lukusarja.</div>
 <p class="note">Tämän ikkunan voi siirtää toiselle monitorille ja pitää auki harjoittelun aikana.</p>
-<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "6bed9d48f854429291e149e940b56f3b"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>`);
   d.close();
@@ -3511,5 +3510,8 @@ answerEl.addEventListener('beforeinput', (e) => {
 });
 
 </script>
+<!-- Cloudflare Web Analytics -->
+<script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "6bed9d48f854429291e149e940b56f3b"}'></script>
+<!-- End Cloudflare Web Analytics -->
 </body>
 </html>
