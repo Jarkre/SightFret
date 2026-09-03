@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.17.5 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.17.6 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -218,7 +218,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.17.5 — Designed by Jarkko Reijonaho</h1>
+  <h1>SightFret 1.17.6 — Designed by Jarkko Reijonaho</h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -290,7 +290,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.17.5';
+const APP_VERSION='1.17.6';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const $=id=>document.getElementById(id);
 const methodEl=$('method'), settingsEl=$('settings'), promptEl=$('prompt'), answerEl=$('answer'), feedbackEl=$('feedback'), stepInfo=$('stepInfo'), tabbox=$('tabbox'), staffWrap=$('staffWrap'), svg=$('staff');
@@ -905,11 +905,12 @@ function flashCurrentFretAnswer(good,mark=null){
  if(!current||(current.type!=='fret'&&current.type!=='fretExam'))return;
  if(currentFretAnswerFlashTimer)clearTimeout(currentFretAnswerFlashTimer);
  currentFretAnswerFlash={s:current.s,f:current.f,mark:mark||(good?'✓':'✗')};
+ settleCurrentFretPosition();
  renderHeatmap();
  currentFretAnswerFlashTimer=setTimeout(()=>{
    currentFretAnswerFlash=null;
    currentFretAnswerFlashTimer=null;
-   settleCurrentFretPosition();renderHeatmap();
+   renderHeatmap();
  },1000);
 }
 function clearCurrentFretAnswerFlash(){
@@ -977,7 +978,7 @@ function renderHeatmap(){
            title=v?`${v.correct}/${v.total}, mediaani ${fmtTime(med)}, hidas ${v.x||0}, väärin ${v.wrong||0}, osaaminen ${Math.round((score||0)*100)} %, viimeksi ${v.lastSeen?new Date(v.lastSeen).toLocaleDateString('fi-FI'):'–'}`:'Ei dataa',
            style=score==null?'':` style="background:${masteryColor(score)}"`,
            cell=med==null?'':fmtTime(med).replace(' s','s');
-     const currentClass=isCurrentFretPosition(s,f)?' current-fret':'';
+     const currentClass=isSettledFretPosition(s,f)?' current-fret-settled':(isCurrentFretPosition(s,f)&&!answered?' current-fret':'');
      const flash=currentFretAnswerFlash&&currentFretAnswerFlash.s===s&&currentFretAnswerFlash.f===f?currentFretAnswerFlash.mark:null;
      const answerClass=flash?' current-fret-answer':'';
      const currentLabel=currentFretPositionLabel(s,f);
