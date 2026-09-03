@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.17.10 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.17.11 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -219,7 +219,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.17.10 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.17.11 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -291,7 +291,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.17.10';
+const APP_VERSION='1.17.11';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const $=id=>document.getElementById(id);
 const methodEl=$('method'), settingsEl=$('settings'), promptEl=$('prompt'), answerEl=$('answer'), feedbackEl=$('feedback'), stepInfo=$('stepInfo'), tabbox=$('tabbox'), staffWrap=$('staffWrap'), svg=$('staff');
@@ -775,7 +775,7 @@ function renderStats(){
  const resetMethod10AllBtn=$('resetMethod10All');
  if(resetMethod10AllBtn)resetMethod10AllBtn.classList.toggle('hidden',method!=='10');
  const resetMethodBtn=$('resetMethod');
- if(resetMethodBtn)resetMethodBtn.classList.toggle('hidden',method==='5'||method==='9'||method==='10');
+ if(resetMethodBtn)resetMethodBtn.classList.toggle('hidden',method==='5'||method==='5Q'||method==='9'||method==='10');
 
  // Menetelmässä 2 yhteenveto seuraa vain valittua kieltä.
  // Muiden kielten oppimisdata säilyy silti normaalisti otelautakartassa.
@@ -873,9 +873,12 @@ function renderStats(){
  }
  const heatTitle=$('heatmapTitle'),heatLegend=$('heatmapLegend');
  if(heatTitle)heatTitle.textContent=method==='10'?'Sointukategoriat':'Otelauta 0–12';
- if(heatLegend)heatLegend.innerHTML=method==='10'
-   ? '<span>heikko</span><span class="heatlegend-bar"></span><span>automatisoitunut</span><span>· nopea oikea kasvattaa eniten · yli 30 s oikein ei muuta · väärä −1</span>'
-   : '<span>heikko</span><span class="heatlegend-bar"></span><span>automatisoitunut</span><span>· ruudussa mediaanivastausaika</span>';
+ if(heatLegend){
+   heatLegend.classList.toggle('hidden',method==='5Q');
+   heatLegend.innerHTML=method==='10'
+     ? '<span>heikko</span><span class="heatlegend-bar"></span><span>automatisoitunut</span><span>· nopea oikea kasvattaa eniten · yli 30 s oikein ei muuta · väärä −1</span>'
+     : '<span>heikko</span><span class="heatlegend-bar"></span><span>automatisoitunut</span><span>· ruudussa mediaanivastausaika</span>';
+ }
  renderHeatmap()
 }
 let currentFretAnswerFlash=null;
@@ -935,6 +938,23 @@ function renderHeatmap(){
    return;
  }
  h.className='heatmap';
+ if(methodEl.value==='5Q'){
+   h.innerHTML='<div class="heatcell heathead">kieli</div>'+Array.from({length:13},(_,f)=>`<div class="heatcell heathead">${f}</div>`).join('');
+   const results=fretboardExam?.results||{};
+   for(let s=5;s>=0;s--){
+     h.insertAdjacentHTML('beforeend',`<div class="heatcell heathead">${stringNames[s]}</div>`);
+     for(let f=0;f<=12;f++){
+       const result=results[fretKey(s,f)]||'';
+       const style=result==='green'?' style="background:#8fe3a4"':result==='red'?' style="background:#ff6b6b"':'';
+       const title=result==='green'?'Oikein aikarajassa':result==='red'?'Väärin tai liian hitaasti':'Ei vielä kysytty';
+       const currentClass=isCurrentFretPosition(s,f)&&!answered?' current-fret':'';
+       const flash=currentFretAnswerFlash&&currentFretAnswerFlash.s===s&&currentFretAnswerFlash.f===f?currentFretAnswerFlash.mark:null;
+       const currentLabel=flash||(currentFretPositionLabel(s,f)||'');
+       h.insertAdjacentHTML('beforeend',`<div class="heatcell${currentClass}${flash?' current-fret-answer':''}"${style} title="${title}">${currentLabel}</div>`);
+     }
+   }
+   return;
+ }
  if(methodEl.value==='5'){
    h.innerHTML='<div class="heatcell heathead">kieli</div>'+Array.from({length:13},(_,f)=>`<div class="heatcell heathead">${f}</div>`).join('');
    for(let s=5;s>=0;s--){
@@ -997,7 +1017,7 @@ function settingHTML(){const m=methodEl.value;let html='';if(['1','2','4'].inclu
  if(m==='2')html+=stringSetting();if(m==='3')html+=`<div><div class="group-title">Heikot pisteet</div><span class="small">Valitaan automaattisesti menetelmän 1 otelautaosaamisdatasta. Menetelmässä 3 tehdyt vastaukset päivittävät samaa dataa.</span></div>`;
  if(m==='4')html+=`<div><div class="group-title">Nauha</div><select id="sameFret">${Array.from({length:13},(_,i)=>`<option>${i}</option>`).join('')}</select></div>`;
  if(['5'].includes(m))html+=`<div><div class="group-title">Alue</div><span class="small">Satunnainen koko otelauta 0–12.</span></div>`;
- if(m==='5Q')html+=`<div><div class="group-title">Pistokoe</div><label>Kysymysten määrä <input id="quizCount" type="number" min="10" max="50" step="1" value="20" style="width:90px"></label><div class="small" style="margin-top:6px">10–50 satunnaista eri otelautapositiota. Aikaraja 5 s / kysymys. Pistokoe ei muuta osaamisdataa.</div></div>`;
+ if(m==='5Q')html+=`<div><div class="group-title">Pistokoe</div><label>Kysymysten määrä <input id="quizCount" type="number" min="20" max="78" step="1" value="20" style="width:90px"></label><div class="small" style="margin-top:6px">20–78 satunnaista eri otelautapositiota. Samaa positiota ei kysytä kahdesti saman pistokokeen aikana. Aikaraja 5 s / kysymys. Vihreä = oikein aikarajassa, punainen = väärin tai liian hitaasti. Pistokokeen tulokset säilyvät vain käynnissä olevan pistokokeen ajan.</div></div>`;
  if(m==='7')html+=method7ChordSettings();if(m==='8')html+=method8ChordSettings();if(m==='9')html+=method9Settings();if(m==='10')html+=method10Settings();
  if(m==='11')html+=`<div><div class="group-title">Prototyyppi: guide tones 3 + 7</div><span class="small">Valitse seuraavan soinnun 3- ja 7-sävelille se otelautaratkaisu, jossa kokonaisliike on pienin. Tarkoitus on automatisoida läheisen voicingin löytäminen — ei opetella progressioita ulkoa.</span></div>`;
  settingsEl.innerHTML=html;wireSettings()}
@@ -1495,12 +1515,12 @@ function restartFretboardExam(){
 }
 function startFretboardExam(){
   let count=Math.round(Number(data.settings.quizCount||20));
-  count=Math.max(10,Math.min(50,count));
+  count=Math.max(20,Math.min(78,count));
   data.settings.quizCount=count;saveData();
   const pool=[];
   for(let s=0;s<6;s++)for(let f=0;f<=12;f++)pool.push({s,f});
   for(let i=pool.length-1;i>0;i--){const j=randomInt(i+1);[pool[i],pool[j]]=[pool[j],pool[i]]}
-  fretboardExam={count,index:0,correct:0,wrong:0,slow:0,times:[],positions:pool.slice(0,count)};
+  fretboardExam={count,index:0,correct:0,wrong:0,slow:0,times:[],positions:pool.slice(0,count),results:{}};
 }
 function pickFretboardExamTask(){
   if(!fretboardExam || fretboardExam.index>=fretboardExam.count)startFretboardExam();
@@ -1512,6 +1532,7 @@ function pickFretboardExamTask(){
 }
 function finishFretboardExamAnswer(good,t,slow){
   answered=true;
+  fretboardExam.results[fretKey(current.s,current.f)]=good&&!slow?'green':'red';
   flashCurrentFretAnswer(good&&!slow,good&&slow?'hidas':null);
   if(good&&!slow){fretboardExam.correct++;fretboardExam.times.push(t)}
   else if(slow)fretboardExam.slow++;
@@ -1531,7 +1552,6 @@ function finishFretboardExamAnswer(good,t,slow){
     promptEl.innerHTML=`<span class="big">Pistokoe valmis — arvosana ${grade}</span>`;
     feedbackEl.innerHTML=`Oikein aikarajassa: <b>${fretboardExam.correct}/${fretboardExam.count} (${pct} %)</b> · väärin: <b>${fretboardExam.wrong}</b> · aikaraja: <b>${fretboardExam.slow}</b> · mediaaniaika: <b>${fmtTime(med)}</b><br>Arvosana: <b>${grade}</b> (4–10)`;
     $('next').textContent='Seuraava';
-    fretboardExam=null;
   }else{
     $('next').textContent='Seuraava';
   }
