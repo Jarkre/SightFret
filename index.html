@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.17.15 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.17.16 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -219,7 +219,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.17.15 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.17.16 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -291,7 +291,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.17.15';
+const APP_VERSION='1.17.16';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const $=id=>document.getElementById(id);
 const methodEl=$('method'), settingsEl=$('settings'), promptEl=$('prompt'), answerEl=$('answer'), feedbackEl=$('feedback'), stepInfo=$('stepInfo'), tabbox=$('tabbox'), staffWrap=$('staffWrap'), svg=$('staff');
@@ -466,7 +466,21 @@ function method10CorrectWeight(timeMs){
   return 0;
 }
 
-const METHOD7_CHORD_CATEGORIES=[
+// Menetelmä 7 käyttää samoja sointukategorioita kuin menetelmä 10.
+// Kopioidaan rakenne, jotta myöhemmät muutokset eivät vahingossa muuta
+// menetelmän 10 taulukkoa ajonaikaisesti.
+const METHOD7_CHORD_CATEGORIES=METHOD10_CHORD_CATEGORIES.map(c=>({
+  ...c,
+  types:c.types.map(t=>({...t}))
+}));
+function method7AllTypes(){return METHOD7_CHORD_CATEGORIES.flatMap(c=>c.types)}
+function method7TypesForCategory(category){
+  if(category==='all')return method7AllTypes();
+  return METHOD7_CHORD_CATEGORIES.find(c=>c.id===category)?.types||[];
+}
+
+// Menetelmä 8 säilyttää oman aiemman kategoriavalikoimansa.
+const METHOD8_CHORD_CATEGORIES=[
   {id:'basic',label:'Perussoinnut',types:[
     {id:'major',label:'Duuri',example:'C'},
     {id:'minor',label:'Molli',example:'Cm'}
@@ -501,10 +515,10 @@ const METHOD7_CHORD_CATEGORIES=[
     {id:'power',label:'5-sointu / power chord',example:'C5'}
   ]}
 ];
-function method7AllTypes(){return METHOD7_CHORD_CATEGORIES.flatMap(c=>c.types)}
-function method7TypesForCategory(category){
-  if(category==='all')return method7AllTypes();
-  return METHOD7_CHORD_CATEGORIES.find(c=>c.id===category)?.types||[];
+function method8AllTypes(){return METHOD8_CHORD_CATEGORIES.flatMap(c=>c.types)}
+function method8TypesForCategory(category){
+  if(category==='all')return method8AllTypes();
+  return METHOD8_CHORD_CATEGORIES.find(c=>c.id===category)?.types||[];
 }
 function method7SelectedQuality(){
   const category=data.settings.method7Category||'all';
@@ -1159,8 +1173,8 @@ function method7ChordSettings(){
 }
 
 function method8ChordSettings(){
-  const category=data.settings.method8Category||'all',types=method7TypesForCategory(category);
-  const categoryOptions=[`<option value="all">Kaikki</option>`,...METHOD7_CHORD_CATEGORIES.map(c=>`<option value="${c.id}">${c.label}</option>`)].join('');
+  const category=data.settings.method8Category||'all',types=method8TypesForCategory(category);
+  const categoryOptions=[`<option value="all">Kaikki</option>`,...METHOD8_CHORD_CATEGORIES.map(c=>`<option value="${c.id}">${c.label}</option>`)].join('');
   const randomLabel=category==='all'?'Satunnainen kaikista':'Satunnainen kategoriasta';
   const typeOptions=[`<option value="random">${randomLabel}</option>`,...types.map(x=>`<option value="${x.id}">${x.label} — ${x.example}</option>`)].join('');
   return `<div><div class="group-title">Harjoitustapa</div><select id="method8Mode"><option value="three"${(data.settings.method8Mode||'three')==='three'?' selected':''}>3 soinnun tehoharjoittelu</option><option value="free"${data.settings.method8Mode==='free'?' selected':''}>Vapaa harjoittelu</option></select></div>
@@ -1994,7 +2008,7 @@ function pickBuildChordTask(){
 }
 function method8SelectedQuality(){
   const category=data.settings.method8Category||'all';
-  const pool=method7TypesForCategory(category);
+  const pool=method8TypesForCategory(category);
   if(!pool.length)return 'major';
   const requested=data.settings.method8Type||'random';
   if(requested!=='random'&&pool.some(x=>x.id===requested))return requested;
