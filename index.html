@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.17.12 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.17.13 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -219,7 +219,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.17.12 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.17.13 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -270,14 +270,14 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </section>
 
   <details class="panel" id="progressPanel">
-    <summary><b>Osaaminen ja seuranta</b></summary>
+    <summary><b id="progressSummaryTitle">Osaaminen ja seuranta</b></summary>
     <div class="grid" id="progressStatsGrid" style="margin-top:12px">
       <div><div class="group-title">Yhteenveto</div><div id="summaryStats" class="small"></div></div>
       <div><div class="group-title">Heikot alueet</div><div id="weakStats" class="small"></div></div>
       <div id="lowDataBlock"><div class="group-title">Vähän dataa</div><div id="lowDataStats" class="small"></div></div>
     </div>
     <div style="margin-top:14px"><div id="heatmapTitle" class="group-title">Otelauta 0–12</div><div id="heatmap" class="heatmap"></div><div id="heatmapLegend" class="heatlegend"><span>heikko</span><span class="heatlegend-bar"></span><span>automatisoitunut</span><span>· ruudussa mediaanivastausaika</span></div></div>
-    <div class="actions"><button class="ghost hidden" id="resetString">Nollaa valitun kielen osaamisdata</button><button class="ghost hidden" id="resetFret">Nollaa nauhan osaamisdata kaikilta kieliltä</button><button class="ghost hidden" id="resetMethod5All">Nollaa valitun menetelmän osaamisdata</button><button class="ghost hidden" id="resetMethod9All">Nollaa intervallien osaamisdata</button><button class="ghost hidden" id="resetMethod10All">Nollaa sointukategorioiden osaamisdata</button><button class="ghost" id="resetMethod">Nollaa valitun menetelmän osaamisdata</button></div>
+    <div class="actions" id="progressResetActions"><button class="ghost hidden" id="resetString">Nollaa valitun kielen osaamisdata</button><button class="ghost hidden" id="resetFret">Nollaa nauhan osaamisdata kaikilta kieliltä</button><button class="ghost hidden" id="resetMethod5All">Nollaa valitun menetelmän osaamisdata</button><button class="ghost hidden" id="resetMethod9All">Nollaa intervallien osaamisdata</button><button class="ghost hidden" id="resetMethod10All">Nollaa sointukategorioiden osaamisdata</button><button class="ghost" id="resetMethod">Nollaa valitun menetelmän osaamisdata</button></div>
   </details>
 
   <div class="panel" style="padding:14px 20px">
@@ -291,7 +291,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.17.12';
+const APP_VERSION='1.17.13';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const $=id=>document.getElementById(id);
 const methodEl=$('method'), settingsEl=$('settings'), promptEl=$('prompt'), answerEl=$('answer'), feedbackEl=$('feedback'), stepInfo=$('stepInfo'), tabbox=$('tabbox'), staffWrap=$('staffWrap'), svg=$('staff');
@@ -813,7 +813,11 @@ function renderStats(){
  const stringLabel=isMethod2?` — ${stringNames[selectedString]}-kieli`:'';
  const lowBlock=$('lowDataBlock');
  const progressStatsGrid=$('progressStatsGrid');
- if(progressStatsGrid)progressStatsGrid.classList.toggle('hidden',method==='5Q');
+ if(progressStatsGrid)progressStatsGrid.classList.toggle('hidden',method==='5Q'||method==='7');
+ const progressSummaryTitle=$('progressSummaryTitle');
+ if(progressSummaryTitle)progressSummaryTitle.textContent=method==='7'?'Tee sointu klikkaamalla':'Osaaminen ja seuranta';
+ const progressResetActions=$('progressResetActions');
+ if(progressResetActions)progressResetActions.classList.toggle('hidden',method==='7'||method==='5Q');
  const weakBlock=$('weakStats')?.parentElement;
  if(weakBlock)weakBlock.classList.toggle('hidden',method==='5');
  if(lowBlock)lowBlock.classList.toggle('hidden',method==='5');
@@ -876,7 +880,7 @@ function renderStats(){
  const heatTitle=$('heatmapTitle'),heatLegend=$('heatmapLegend');
  if(heatTitle)heatTitle.textContent=method==='10'?'Sointukategoriat':'Otelauta 0–12';
  if(heatLegend){
-   heatLegend.classList.toggle('hidden',method==='5Q');
+   heatLegend.classList.toggle('hidden',method==='5Q'||method==='7');
    heatLegend.innerHTML=method==='10'
      ? '<span>heikko</span><span class="heatlegend-bar"></span><span>automatisoitunut</span><span>· nopea oikea kasvattaa eniten · yli 30 s oikein ei muuta · väärä −1</span>'
      : '<span>heikko</span><span class="heatlegend-bar"></span><span>automatisoitunut</span><span>· ruudussa mediaanivastausaika</span>';
@@ -940,6 +944,21 @@ function renderHeatmap(){
    return;
  }
  h.className='heatmap';
+ if(methodEl.value==='7'){
+   h.innerHTML='<div class="heatcell heathead">kieli</div>'+Array.from({length:13},(_,f)=>`<div class="heatcell heathead">${f}</div>`).join('');
+   const allowed=new Set(current&&current.type==='build'?(current.strings||[]):[]);
+   const selected=current&&current.type==='build'?(current.selectedFrets||{}):{};
+   for(let s=5;s>=0;s--){
+     h.insertAdjacentHTML('beforeend',`<div class="heatcell heathead">${stringNames[s]}</div>`);
+     for(let f=0;f<=12;f++){
+       const canPick=allowed.has(s),isSelected=canPick&&Number(selected[s])===f;
+       const style=isSelected?' style="background:#8fe3a4;cursor:pointer"':canPick?' style="cursor:pointer"':' style="opacity:.38;cursor:not-allowed"';
+       const title=canPick?(isSelected?'Valittu — poista valinta klikkaamalla':'Valitse tämä positio'):'Tätä kieltä ei käytetä tehtävässä';
+       h.insertAdjacentHTML('beforeend',`<div class="heatcell method7-pick" data-s="${s}" data-f="${f}"${style} title="${title}"></div>`);
+     }
+   }
+   return;
+ }
  if(methodEl.value==='5Q'){
    h.innerHTML='<div class="heatcell heathead">kieli</div>'+Array.from({length:13},(_,f)=>`<div class="heatcell heathead">${f}</div>`).join('');
    const results=fretboardExam?.results||{};
@@ -1943,10 +1962,24 @@ function showMethod7Task(x,idx=null){
     return {s,f,m,pc:mod(m,12)};
   }):null;
 
-  current={type:'build',chord:x.ch,strings:[...x.strings],method7DrillIndex:idx,inv:x.inv||0,listenVoicing};
+  current={type:'build',chord:x.ch,strings:[...x.strings],method7DrillIndex:idx,inv:x.inv||0,listenVoicing,selectedFrets:{}};
   const invText=x.ch.pcs.length===3?` (${method7InversionLabel(x.inv||0)})`:'';
   promptEl.innerHTML=`Muodosta <b>${x.root}${QUALITIES[x.q].suffix}</b> kieliltä <b>${x.strings.map(s=>stringNames[s]).join(' – ')}</b>${invText}. Anna yksi nauha jokaiselle samassa järjestyksessä.${method7DrillProgressHTML()}`;
   answerEl.placeholder=x.strings.length===2?'Esim. 3, 5':x.strings.length===3?'Esim. 8, 7, 5':'Esim. 8, 7, 5, 5';$('listenBtn').classList.remove('hidden');
+}
+function method7SyncAnswerFromClicks(){
+  if(!current||current.type!=='build')return;
+  const sel=current.selectedFrets||{};
+  const vals=current.strings.map(s=>Object.prototype.hasOwnProperty.call(sel,s)?sel[s]:'');
+  answerEl.value=vals.every(v=>v!=='')?vals.join(', '):'';
+}
+function method7SyncClicksFromAnswer(){
+  if(methodEl.value!=='7'||!current||current.type!=='build')return;
+  const fs=parseList(answerEl.value).map(Number);
+  if(fs.length!==current.strings.length||!fs.every(f=>Number.isInteger(f)&&f>=0&&f<=12))return;
+  current.selectedFrets={};
+  current.strings.forEach((s,i)=>current.selectedFrets[s]=fs[i]);
+  renderHeatmap();
 }
 function pickBuildChordTask(){
   if((data.settings.method7Mode||'three')==='three'){
@@ -3104,6 +3137,20 @@ function checkCurrent(){if(answered||!current)return;const m=methodEl.value,v=an
    $('next').focus();
    return;
  }}
+
+$('heatmap').addEventListener('click',e=>{
+  if(methodEl.value!=='7'||answered||!current||current.type!=='build')return;
+  const cell=e.target.closest('.method7-pick');if(!cell)return;
+  const s=Number(cell.dataset.s),f=Number(cell.dataset.f);
+  if(!current.strings.includes(s))return;
+  current.selectedFrets=current.selectedFrets||{};
+  if(Number(current.selectedFrets[s])===f)delete current.selectedFrets[s];
+  else current.selectedFrets[s]=f;
+  method7SyncAnswerFromClicks();
+  renderHeatmap();
+  answerEl.focus();
+});
+answerEl.addEventListener('input',()=>{if(methodEl.value==='7')method7SyncClicksFromAnswer()});
 
 function revealCurrent(){
   if(answered||!current)return;
