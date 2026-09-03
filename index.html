@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.17.6 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.17.7 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -218,7 +218,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.17.6 — Designed by Jarkko Reijonaho</h1>
+  <h1>SightFret 1.17.7 — Designed by Jarkko Reijonaho</h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -290,7 +290,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.17.6';
+const APP_VERSION='1.17.7';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const $=id=>document.getElementById(id);
 const methodEl=$('method'), settingsEl=$('settings'), promptEl=$('prompt'), answerEl=$('answer'), feedbackEl=$('feedback'), stepInfo=$('stepInfo'), tabbox=$('tabbox'), staffWrap=$('staffWrap'), svg=$('staff');
@@ -1703,7 +1703,11 @@ function pickFretTask(m){let s,f;if(m==='1'){({s,f}=weightedFretPoint())}else if
 current={type:'fret',s,f,pc:noteAt(s,f)%12};
 promptEl.innerHTML=m==='5'?`Paikanna kitaralta <span class="big">${stringNames[s]}-kieli, ${f}. nauha</span>. Soita ja kuuntele rauhallisesti. Nimeä sävel kenttään.`:`Mikä sävel on <span class="big">${stringNames[s]}-kielen ${f}. nauhalla</span>?`;
 answerEl.placeholder='Esim. C#';
-$('xBtn').classList.toggle('hidden',m==='5')
+$('xBtn').classList.toggle('hidden',m==='5');
+if(m==='5'){
+  $('listenBtn').textContent='Kuuntele (L)';
+  $('listenBtn').classList.remove('hidden');
+}
 }
 function selectedTriadQuality(){const mode=data.settings.chordMode||'both';if(mode==='major')return 'major';if(mode==='minor')return 'minor';return Math.random()<.5?'major':'minor'}
 function chordRootFor(q,allowAcc=false){const pool=q==='minor'?minorRoots:majorRoots;if(allowAcc)return pool[randomInt(pool.length)];const naturals=pool.filter(r=>!/[#b]/.test(r));return naturals[randomInt(naturals.length)]}
@@ -3134,7 +3138,10 @@ function listenChord(){
   if(!current)return;
 
   let notes=[];
-  if(current.type==='build'&&current.listenVoicing){
+  if(methodEl.value==='5'&&current.type==='fret'&&Number.isInteger(current.s)&&Number.isInteger(current.f)){
+    const openMidi=[40,45,50,55,59,64];
+    notes=[openMidi[current.s]+current.f];
+  }else if(current.type==='build'&&current.listenVoicing){
     notes=current.listenVoicing.map(p=>p.m);
   }else if((current.type==='interval9'||current.type==='interval9quality')&&current.positions){
     notes=current.positions.map(p=>p.m);
@@ -3148,6 +3155,21 @@ function listenChord(){
 
   const ctx=ensureAudio(),now=ctx.currentTime;
   const sorted=[...notes].sort((a,b)=>a-b);
+
+  if(methodEl.value==='5'&&current.type==='fret'){
+    const m=sorted[0];
+    const o=ctx.createOscillator(),g=ctx.createGain(),f=440*Math.pow(2,(m-69)/12);
+    o.type='triangle';
+    o.frequency.value=f;
+    g.gain.setValueAtTime(.0001,now);
+    g.gain.exponentialRampToValueAtTime(.32,now+.03);
+    g.gain.setValueAtTime(.32,now+2.65);
+    g.gain.exponentialRampToValueAtTime(.0001,now+3.0);
+    o.connect(g).connect(ctx.destination);
+    o.start(now);
+    o.stop(now+3.05);
+    return;
+  }
 
   // 1) Koko sointu: aiempaa selvästi kovempana ja noin kaksi kertaa pidempänä.
   sorted.forEach((m,i)=>{
@@ -3613,6 +3635,15 @@ document.addEventListener('pointerup', (e) => {
   }, 0);
 });
 
+
+// Menetelmä 5: L kuuntelee kysytyn nauhapaikan sävelen noin 3 sekunnin ajan.
+document.addEventListener('keydown', (e) => {
+  if(methodEl.value!=='5') return;
+  if(e.key!=='l' && e.key!=='L') return;
+  if(!current || current.type!=='fret') return;
+  e.preventDefault();
+  listenChord();
+});
 
 // Etumerkkien nopeat syöttöoikotiet sävelnimien vastauskenttään:
 // ↑ = ylennys (#), ↓ = alennus (b).
