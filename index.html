@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.17.7 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.17.8 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
-h1{margin:0 0 4px;font-size:1.7rem}.sub{color:var(--muted);margin:0 0 16px}.topbar,.actions,.inline{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.topbar{justify-content:space-between;margin-bottom:14px}.panel{border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin:12px 0;background:#fbfbfd}.panel h2,.panel h3{margin:0 0 10px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px 18px}.grid>div{min-width:0}.grid select{width:100%;min-width:0;max-width:100%;box-sizing:border-box}.group-title{font-size:.83rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:800;margin-bottom:6px}.check{display:flex;align-items:center;gap:8px;margin:6px 0}.check input{width:18px;height:18px}
+h1{margin:0 0 4px;font-size:1.7rem}.designer-credit{font-size:.48em;font-weight:500;color:var(--muted);white-space:nowrap}.sub{color:var(--muted);margin:0 0 16px}.topbar,.actions,.inline{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.topbar{justify-content:space-between;margin-bottom:14px}.panel{border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin:12px 0;background:#fbfbfd}.panel h2,.panel h3{margin:0 0 10px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px 18px}.grid>div{min-width:0}.grid select{width:100%;min-width:0;max-width:100%;box-sizing:border-box}.group-title{font-size:.83rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:800;margin-bottom:6px}.check{display:flex;align-items:center;gap:8px;margin:6px 0}.check input{width:18px;height:18px}
 select,input,button{font:inherit}select,input[type=text],input[type=number]{border:1px solid var(--border);border-radius:10px;padding:10px 11px;background:#fff;color:var(--text)}input[type=text]{min-width:240px;flex:1}button{border:0;border-radius:10px;padding:10px 14px;cursor:pointer;background:var(--accent);color:#fff;font-weight:700}button.secondary{background:#e9edf2;color:#20242b}button.ghost{background:#fff;color:#20242b;border:1px solid var(--border)}button:disabled{opacity:.45;cursor:not-allowed}.score{font-weight:750}.muted{color:var(--muted)}.ok{color:var(--ok)}.bad{color:var(--bad)}.warn{color:var(--warn)}
 #prompt{font-size:1.18rem;font-weight:750;line-height:1.45;margin:8px 0}.big{font-size:1.35rem}.answer-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.feedback{min-height:30px;margin-top:10px;font-weight:750}.stage{margin-top:12px}.hidden{display:none!important}
 
@@ -218,7 +218,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.17.7 — Designed by Jarkko Reijonaho</h1>
+  <h1>SightFret 1.17.8 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -290,7 +290,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.17.7';
+const APP_VERSION='1.17.8';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const $=id=>document.getElementById(id);
 const methodEl=$('method'), settingsEl=$('settings'), promptEl=$('prompt'), answerEl=$('answer'), feedbackEl=$('feedback'), stepInfo=$('stepInfo'), tabbox=$('tabbox'), staffWrap=$('staffWrap'), svg=$('staff');
