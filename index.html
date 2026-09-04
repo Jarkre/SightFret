@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.18.0 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.18.1 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -219,7 +219,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.18.0 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.18.1 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -231,12 +231,13 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
         <option value="3">4 – Kolmen heikon otelautakohdan harjoitus</option>
         <option value="4">5 – Saman nauhan harjoitus eri kielillä</option>
         <option value="5Q">6 – Otelauta pistokoe</option>
-        <option value="7I">7 – Tunnista intervalli otelaudalta</option>
-        <option value="9">8 – Tunnista intervalli nuoteista</option>
-        <option value="7">9 – Löydä soinnun nauhat kieliltä</option>
-        <option value="8">10 – Tunnista sointu otteesta</option>
-        <option value="10">11 – Tunnista sointu nuoteista</option>
-        <option value="11">12 – Äänenkuljetus</option>
+        <option value="7F">7 – Löydä intervalli otelaudalta</option>
+        <option value="7I">8 – Tunnista intervalli otelaudalta</option>
+        <option value="9">9 – Tunnista intervalli nuoteista</option>
+        <option value="7">10 – Löydä soinnun nauhat kieliltä</option>
+        <option value="8">11 – Tunnista sointu otteesta</option>
+        <option value="10">12 – Tunnista sointu nuoteista</option>
+        <option value="11">13 – Äänenkuljetus</option>
       </select>
     </label>
     <button class="ghost" id="resetAll">Nollaa kaikki oppimistiedot</button>
@@ -249,7 +250,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </details>
 
   <section class="panel">
-    <div id="methodTitle" class="group-title"></div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><div id="methodTitle" class="group-title"></div><button class="secondary hidden" id="methodHelpBtn" type="button">Ohje</button></div>
     <div id="prompt"></div>
     <div id="staffWrap" class="staff-wrap hidden"><svg id="staff" viewBox="0 0 760 280" aria-label="Nuottiviivasto"></svg></div>
     <div id="tabbox" class="tabbox hidden"></div>
@@ -292,7 +293,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.18.0';
+const APP_VERSION='1.18.1';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const $=id=>document.getElementById(id);
 const methodEl=$('method'), settingsEl=$('settings'), promptEl=$('prompt'), answerEl=$('answer'), feedbackEl=$('feedback'), stepInfo=$('stepInfo'), tabbox=$('tabbox'), staffWrap=$('staffWrap'), svg=$('staff');
@@ -786,11 +787,11 @@ function renderStats(){
  const resetMethod5AllBtn=$('resetMethod5All');
  if(resetMethod5AllBtn)resetMethod5AllBtn.classList.toggle('hidden',method!=='5');
  const resetMethod9AllBtn=$('resetMethod9All');
- if(resetMethod9AllBtn)resetMethod9AllBtn.classList.toggle('hidden',method!=='9'&&method!=='7I');
+ if(resetMethod9AllBtn)resetMethod9AllBtn.classList.toggle('hidden',method!=='9'&&method!=='7I'&&method!=='7F');
  const resetMethod10AllBtn=$('resetMethod10All');
  if(resetMethod10AllBtn)resetMethod10AllBtn.classList.toggle('hidden',method!=='10');
  const resetMethodBtn=$('resetMethod');
- if(resetMethodBtn)resetMethodBtn.classList.toggle('hidden',method==='5'||method==='5Q'||method==='9'||method==='7I'||method==='10');
+ if(resetMethodBtn)resetMethodBtn.classList.toggle('hidden',method==='5'||method==='5Q'||method==='9'||method==='7I'||method==='7F'||method==='10');
 
  // Menetelmässä 2 yhteenveto seuraa vain valittua kieltä.
  // Muiden kielten oppimisdata säilyy silti normaalisti otelautakartassa.
@@ -1055,7 +1056,7 @@ function settingHTML(){const m=methodEl.value;let html='';if(['1','2','4'].inclu
  if(m==='4')html+=`<div><div class="group-title">Nauha</div><select id="sameFret">${Array.from({length:13},(_,i)=>`<option>${i}</option>`).join('')}</select></div>`;
  if(['5'].includes(m))html+=`<div><div class="group-title">Alue</div><span class="small">Satunnainen koko otelauta 0–12.</span></div>`;
  if(m==='5Q')html+=`<div><div class="group-title">Pistokoe</div><label>Kysymysten määrä <input id="quizCount" type="number" min="20" max="78" step="1" value="20" style="width:90px"></label><div class="small" style="margin-top:6px">20–78 satunnaista eri otelautapositiota. Samaa positiota ei kysytä kahdesti saman pistokokeen aikana. Aikaraja 5 s / kysymys. Vihreä = oikein aikarajassa, punainen = väärin tai liian hitaasti. Pistokokeen tulokset säilyvät vain käynnissä olevan pistokokeen ajan.</div></div>`;
- if(m==='7')html+=method7ChordSettings();if(m==='8')html+=method8ChordSettings();if(m==='9'||m==='7I')html+=method9Settings();if(m==='10')html+=method10Settings();
+ if(m==='7')html+=method7ChordSettings();if(m==='8')html+=method8ChordSettings();if(m==='9'||m==='7I'||m==='7F')html+=method9Settings();if(m==='10')html+=method10Settings();
  if(m==='11')html+=`<div><div class="group-title">Prototyyppi: guide tones 3 + 7</div><span class="small">Valitse seuraavan soinnun 3- ja 7-sävelille se otelautaratkaisu, jossa kokonaisliike on pienin. Tarkoitus on automatisoida läheisen voicingin löytäminen — ei opetella progressioita ulkoa.</span></div>`;
  settingsEl.innerHTML=html;wireSettings()}
 
@@ -1446,11 +1447,60 @@ document.addEventListener('touchmove',moveSeventhChordGuide,{passive:false});
 document.addEventListener('touchend',stopSeventhChordGuideDrag);
 document.addEventListener('touchcancel',stopSeventhChordGuideDrag);
 
+const METHOD_HELP_CONTENT={
+  '5':{
+    title:'1 – Otelautaharjoitus kitara kädessä',
+    practice:'Harjoituksessa saat yhden kitaran kielen ja nauhan. Paikanna kohta ensin fyysisesti kitaralta. Yritä laulaa sävel ennen kuin soitat sen, soita ja kuuntele sävel rauhallisesti, laula se uudelleen ja nimeä lopuksi sävel SightFretiin. Kuuntele-painikkeella (L) voit tarvittaessa kuulla kyseisen position sävelen.',
+    develops:'Harjoitus yhdistää otelaudan visuaalisen ja motorisen hahmottamisen, sävelnimen, kuullun sävelkorkeuden ja oman äänen. Se kehittää otelautatuntemuksen lisäksi sisäistä sävelkuvaa, korvan ja käden yhteyttä sekä sävelten aktiivista muistamista.'
+  },
+  '1':{
+    title:'2 – Otelautaharjoitus',
+    practice:'Sovellus näyttää satunnaisen kielen ja nauhan. Nimeä kyseisessä kohdassa oleva sävel mahdollisimman suoraan ilman nauhojen laskemista tai muuta pitkää päättelyketjua. Voit käyttää asetuksista aikarajaa, kun haluat harjoitella nopeaa palauttamista muistista.',
+    develops:'Harjoitus rakentaa koko otelaudan sävelkarttaa pitkäaikaiseen muistiin ja tähtää siihen, että sävelen nimi palautuu position nähdessä automaattisesti. Tämä tukee nuotinlukua, improvisointia, sointujen hahmottamista ja yleistä liikkumista otelaudalla.'
+  },
+  '2':{
+    title:'3 – Yhden kielen täsmäharjoitus',
+    practice:'Valitse yksi kieli ja nimeä siltä kysytyt sävelet. Pidä huomio vain tämän yhden kielen 0–12-nauhoissa ja pyri vähitellen vastaamaan ilman laskemista. Vaihda kieltä, kun haluat kohdistaa harjoittelun seuraavaan alueeseen.',
+    develops:'Yhden kielen rajaaminen vähentää tehtävän kognitiivista kuormaa ja auttaa rakentamaan tarkkaa sävelkarttaa kieli kerrallaan. Taito tukee erityisesti melodista liikkumista pitkin kaulaa sekä sävelten löytämistä eri rekistereistä.'
+  },
+  '3':{
+    title:'4 – Kolmen heikon otelautakohdan harjoitus',
+    practice:'SightFret valitsee Otelautaharjoituksen osaamisdatasta kolme heikkoa positiota. Harjoittele niitä toistuvasti ja nimeä sävel jokaisessa tehtävässä. Tässä tehdyt vastaukset päivittävät samaa osaamisdataa kuin Otelautaharjoitus.',
+    develops:'Harjoitus kohdistaa toiston juuri niihin kohtiin, joiden palauttaminen muistista on vielä epävarmaa. Se tehostaa otelaudan automatisoitumista ja auttaa tasoittamaan yksittäisiä muistiaukkoja ilman, että jo vahvoja kohtia tarvitsee harjoitella yhtä paljon.'
+  },
+  '4':{
+    title:'5 – Saman nauhan harjoitus eri kielillä',
+    practice:'Valitse yksi nauha. Sovellus kysyy tämän saman nauhan säveliä eri kieliltä. Nimeä jokainen sävel ja pyri hahmottamaan nauha pystysuuntaisena kokonaisuutena kuuden kielen yli.',
+    develops:'Harjoitus kehittää otelaudan poikittaista hahmottamista eli kykyä nähdä sävelet eri kielillä samalla nauhalla. Tämä täydentää kielensuuntaista muistia ja tukee sointujen, intervallien ja lähimpien sävelvaihtoehtojen löytämistä eri kieliltä.'
+  },
+  '5Q':{
+    title:'6 – Otelauta pistokoe',
+    practice:'Valitse 20–78 kysymystä ja käynnistä pistokoe. Sama positio esiintyy kokeessa vain kerran. Vastaa viidessä sekunnissa: oikein ja ajoissa vastattu positio muuttuu vihreäksi, väärä tai liian hidas punaiseksi. Kokeen lopussa otelauta näyttää yhdellä silmäyksellä koko suorituksen. Uusi pistokoe alkaa puhtaalta pöydältä.',
+    develops:'Pistokoe mittaa, kuinka varmasti ja nopeasti otelaudan sävelnimet palautuvat muistista aikapaineessa. Se toimii yleisen otelautaosaamisen testinä ja auttaa havaitsemaan yksittäiset positiot, joissa muistaminen vielä takeltelee.'
+  }
+};
+function updateMethodHelpButton(){
+  const b=$('methodHelpBtn');
+  if(!b)return;
+  b.classList.toggle('hidden',!METHOD_HELP_CONTENT[methodEl.value]);
+}
+function openMethodHelp(){
+  const info=METHOD_HELP_CONTENT[methodEl.value];
+  if(!info)return;
+  const esc=x=>String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const w=window.open('','SightFretMethodHelp','width=760,height=680,resizable=yes,scrollbars=yes');
+  if(!w)return;
+  w.document.open();
+  w.document.write(`<!doctype html><html lang="fi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(info.title)} – Ohje</title><style>body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;max-width:760px;margin:0 auto;padding:28px;line-height:1.6;background:Canvas;color:CanvasText}h1{font-size:1.45rem;margin:0 0 1.2rem}h2{font-size:1.05rem;margin:1.5rem 0 .35rem}p{margin:.35rem 0}button{margin-top:1.6rem;padding:.65rem 1rem;font:inherit;border:1px solid ButtonBorder;border-radius:8px;background:ButtonFace;color:ButtonText;cursor:pointer}</style></head><body><h1>${esc(info.title)}</h1><h2>Mitä harjoitellaan ja miten?</h2><p>${esc(info.practice)}</p><h2>Mitä soiton tai musiikin teorian aluetta harjoitus kehittää?</h2><p>${esc(info.develops)}</p><button type="button" onclick="window.close()">Sulje</button></body></html>`);
+  w.document.close();
+  w.focus();
+}
 function resetUI(){answerEl.classList.remove('hidden');$('check').classList.remove('hidden');if($('next'))$('next').textContent='Seuraava';answered=false;step=0;stepAnswers={};feedbackEl.textContent='';feedbackEl.className='feedback';tabbox.classList.add('hidden');tabbox.innerHTML='';staffWrap.classList.add('hidden');svg.innerHTML='';stepInfo.textContent='';answerEl.value='';answerEl.disabled=false;$('check').disabled=false;$('xBtn').classList.add('hidden');$('tabBtn').classList.add('hidden');$('tabBtn').textContent='Näytä tabulatuurina';$('listenBtn').classList.add('hidden');$('listenBtn').textContent='Kuuntele sointu';$('method10HintBtn').classList.add('hidden');$('method10HintBtn').disabled=false;$('method10HintBtn').textContent='Vihje: Root';$('reveal').disabled=false}
 function showStartState(){
   resetUI();current=null;startTime=0;
   renderHeatmap();
   $('methodTitle').textContent=methodName(methodEl.value);
+  updateMethodHelpButton();
   const isExam=methodEl.value==='5Q';
   const isMethod3=methodEl.value==='3';
 
@@ -1736,7 +1786,7 @@ function pickTask(){clearSettledFretPosition();
       return;
     }
   }
-  resetUI();$('methodTitle').textContent=methodName(m);if(['1','2','3','4','5'].includes(m))pickFretTask(m);else if(m==='5Q')pickFretboardExamTask();else if(m==='7')pickBuildChordTask();else if(m==='8')pickReverseChordTask();else if(m==='9'||m==='7I')pickIntervalTask();else if(m==='10')pickNotationTask();else if(m==='11')pickVoiceLeadingTask();renderHeatmap();startTime=performance.now();answerEl.focus()}
+  resetUI();$('methodTitle').textContent=methodName(m);updateMethodHelpButton();if(['1','2','3','4','5'].includes(m))pickFretTask(m);else if(m==='5Q')pickFretboardExamTask();else if(m==='7')pickBuildChordTask();else if(m==='8')pickReverseChordTask();else if(m==='9'||m==='7I'||m==='7F')pickIntervalTask();else if(m==='10')pickNotationTask();else if(m==='11')pickVoiceLeadingTask();renderHeatmap();startTime=performance.now();answerEl.focus()}
 function randomInt(n){return Math.floor(Math.random()*n)}
 function pickFretTask(m){let s,f;if(m==='1'){({s,f}=weightedFretPoint())}else if(m==='2'){s=Number(data.settings.singleString??3);f=weightedFretOnString(s)}else if(m==='3'){
   if(!method3Points || !method3Points.length){
@@ -3081,7 +3131,7 @@ function checkCurrent(){if(answered||!current)return;const m=methodEl.value,v=an
    setMethod10Mastery(cat,before+delta);
    finish(good,{positions:[]});return
  }
- if(m==='9'||m==='7I'){
+ if(m==='9'||m==='7I'||m==='7F'){
    if(current.type==='interval9quality'){
      const picked=v.trim().toLowerCase();
      const good=picked===current.quality;
@@ -3201,10 +3251,10 @@ function revealCurrent(){
   }else if(methodEl.value==='8'&&current.type==='reverse8'){
     const bass=[...current.voicing].sort((a,b)=>a.m-b.m)[0];
     feedbackEl.innerHTML=`Vastaus: <b>${chordSymbol(current.chord)}</b><div class="small" style="margin-top:6px">${inversionLabel(current.inv)} (${pcName(bass.pc)} bassossa)</div>${method8ProgressHTML()}`;
-  }else if((methodEl.value==='9'||methodEl.value==='7I')&&current.type==='interval9quality'){
+  }else if((methodEl.value==='9'||methodEl.value==='7I'||methodEl.value==='7F')&&current.type==='interval9quality'){
     const [a,b]=current.positions;
     feedbackEl.innerHTML=`Vastaus: <b>${current.interval.name}</b> — ${current.quality}<div class="small" style="margin-top:6px">${pcName(a.pc)} → ${pcName(b.pc)} · ${current.interval.semitones} puolisävelaskelta</div>`;
-  }else if((methodEl.value==='9'||methodEl.value==='7I')&&current.type==='interval9'){
+  }else if((methodEl.value==='9'||methodEl.value==='7I'||methodEl.value==='7F')&&current.type==='interval9'){
     const [a,b]=current.positions;
     feedbackEl.innerHTML=`Vastaus: <b>${current.interval.name}</b><div class="small" style="margin-top:6px">${pcName(a.pc)} → ${pcName(b.pc)} · ${current.interval.semitones} puolisävelaskelta</div>${method9ProgressHTML()}`;
   }else{
@@ -3602,7 +3652,7 @@ function showMethod10IntervalHints(){
   updateMethod10HintButton();
 }
 
-methodEl.value=data.settings.method||'1';methodEl.addEventListener('change',()=>{fretboardExam=null;method3Points=null;method8Drill=null;method9Drill=null;data.settings.method=methodEl.value;saveData();settingHTML();renderStats();showStartState()});$('check').addEventListener('click',checkCurrent);$('next').addEventListener('click',pickTask);$('startExam').addEventListener('click',restartFretboardExam);$('reveal').addEventListener('click',revealCurrent);$('xBtn').addEventListener('click',markX);$('tabBtn').addEventListener('click',toggleTab);$('listenBtn').addEventListener('click',listenChord);$('method10HintBtn').addEventListener('click',showMethod10IntervalHints);answerEl.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();checkCurrent()}});$('saveFile').addEventListener('click',exportTrainingData);$('loadFile').addEventListener('click',chooseTrainingDataFile);$('loadFileInput').addEventListener('change',e=>{importTrainingData(e.target.files?.[0]);e.target.value=''});$('resetString').addEventListener('click',()=>{
+methodEl.value=data.settings.method||'1';methodEl.addEventListener('change',()=>{fretboardExam=null;method3Points=null;method8Drill=null;method9Drill=null;data.settings.method=methodEl.value;saveData();settingHTML();renderStats();showStartState()});$('methodHelpBtn').addEventListener('click',openMethodHelp);$('check').addEventListener('click',checkCurrent);$('next').addEventListener('click',pickTask);$('startExam').addEventListener('click',restartFretboardExam);$('reveal').addEventListener('click',revealCurrent);$('xBtn').addEventListener('click',markX);$('tabBtn').addEventListener('click',toggleTab);$('listenBtn').addEventListener('click',listenChord);$('method10HintBtn').addEventListener('click',showMethod10IntervalHints);answerEl.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();checkCurrent()}});$('saveFile').addEventListener('click',exportTrainingData);$('loadFile').addEventListener('click',chooseTrainingDataFile);$('loadFileInput').addEventListener('change',e=>{importTrainingData(e.target.files?.[0]);e.target.value=''});$('resetString').addEventListener('click',()=>{
   if(!['1','2','3','5'].includes(methodEl.value))return;
 
   const choices={
