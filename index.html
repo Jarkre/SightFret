@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.18.2 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.18.3 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -28,7 +28,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 .method9-staff svg text,.staff-wrap svg text{fill:currentColor!important}
 .staff-wrap svg{color:CanvasText}
 @media(max-width:760px){.method9-visual{align-items:flex-start}.method9-staff{flex-basis:100%;max-width:420px}}
-.tabbox{border:1px solid var(--border);border-radius:12px;background:#fafafa;padding:12px;margin-top:12px;overflow:auto}.tabbox pre{margin:0;font:700 15px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}.staff-wrap{border:1px solid var(--border);border-radius:14px;padding:10px;overflow-x:auto;background:#fff;margin:12px 0}.staff-wrap svg{display:block;width:100%;min-width:620px;height:280px}.progress{height:10px;background:#e8ebef;border-radius:999px;overflow:hidden;margin-top:6px}.progress>span{display:block;height:100%;background:#606b7a;width:0}.heatmap{display:grid;grid-template-columns:52px repeat(13,minmax(34px,1fr));gap:3px;font-size:.78rem}.heatcell{padding:7px 3px;text-align:center;border-radius:7px;background:#eef1f4;border:1px solid #e1e5ea}.heatcell.fret-zero{margin-right:10px;position:relative}.heatcell.fret-zero::after{content:"";position:absolute;right:-7px;top:-4px;bottom:-4px;width:2px;background:var(--border);border-radius:2px}.heatcell.current-fret{border:3px solid #22c55e;box-shadow:0 0 0 1px rgba(34,197,94,.18) inset;animation:currentFretPulse 1.6s ease-in-out infinite}
+.tabbox{border:1px solid var(--border);border-radius:12px;background:#fafafa;padding:12px;margin-top:12px;overflow:auto}.tabbox pre{margin:0;font:700 15px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}.staff-wrap{border:1px solid var(--border);border-radius:14px;padding:10px;overflow-x:auto;background:#fff;margin:12px 0}.staff-wrap svg{display:block;width:100%;min-width:620px;height:280px}.progress{height:10px;background:#e8ebef;border-radius:999px;overflow:hidden;margin-top:6px}.progress>span{display:block;height:100%;background:#606b7a;width:0}.heatmap{display:grid;grid-template-columns:52px repeat(13,minmax(34px,1fr));gap:3px;font-size:.78rem}.heatcell{padding:7px 3px;text-align:center;border-radius:7px;background:#eef1f4;border:1px solid #e1e5ea}.heatcell.fret-zero{margin-right:12px;position:relative}.heatcell.fret-zero::after{content:"";position:absolute;right:-9px;top:-4px;bottom:-4px;width:4px;background:#fff;border-radius:2px;pointer-events:none}.heatcell.current-fret{border:3px solid #22c55e;box-shadow:0 0 0 1px rgba(34,197,94,.18) inset;animation:currentFretPulse 1.6s ease-in-out infinite}
 .heatcell.current-fret-settled{
   border:3px solid white !important;
   animation:none !important;
@@ -219,7 +219,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.18.2 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.18.3 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -293,7 +293,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.18.2';
+const APP_VERSION='1.18.3';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const $=id=>document.getElementById(id);
 const methodEl=$('method'), settingsEl=$('settings'), promptEl=$('prompt'), answerEl=$('answer'), feedbackEl=$('feedback'), stepInfo=$('stepInfo'), tabbox=$('tabbox'), staffWrap=$('staffWrap'), svg=$('staff');
