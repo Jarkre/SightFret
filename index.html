@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.18.7 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.18.9 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -224,7 +224,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.18.7 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.18.9 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -298,7 +298,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.18.7';
+const APP_VERSION='1.18.9';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const $=id=>document.getElementById(id);
 const methodEl=$('method'), settingsEl=$('settings'), promptEl=$('prompt'), answerEl=$('answer'), feedbackEl=$('feedback'), stepInfo=$('stepInfo'), tabbox=$('tabbox'), staffWrap=$('staffWrap'), svg=$('staff');
@@ -784,7 +784,7 @@ function methodName(v){return methodEl.querySelector(`option[value="${v}"]`)?.te
 function syncProgressPanelMode(){
  const panel=$('progressPanel');
  if(!panel)return;
- const alwaysOpen=methodEl.value==='5';
+ const alwaysOpen=['5','1'].includes(methodEl.value);
  panel.classList.toggle('always-open',alwaysOpen);
  if(alwaysOpen)panel.open=true;
 }
@@ -865,6 +865,8 @@ function renderStats(){
    const weakCats=[...METHOD10_CHORD_CATEGORIES].sort((a,b)=>method10MasteryValue(a.id)-method10MasteryValue(b.id));
    $('weakStats').innerHTML=weakCats.slice(0,3).map(c=>`${c.label}: <b>${Math.round(method10MasteryValue(c.id))} %</b>`).join('<br>');
    if(lowBlock)lowBlock.classList.add('hidden');
+ }else if(method==='1'){
+   $('summaryStats').innerHTML=`Menetelmä: <b>${methodName(method)}</b><br>Mediaaniaika (kaikki nauhat): <b>${fmtTime(median(m.times))}</b>`;
  }else{
    $('summaryStats').innerHTML=`Menetelmä: <b>${methodName(method)}${stringLabel}</b><br>Oikein: <b>${m.correct}/${m.total}</b>${detailLines}<br>Mediaaniaika: <b>${fmtTime(median(m.times))}</b>`;
  }
@@ -1488,12 +1490,12 @@ const METHOD_HELP_CONTENT={
   },
   '1':{
     title:'2 – Otelautaharjoitus',
-    practice:'Sovellus näyttää satunnaisen kielen ja nauhan. Nimeä kyseisessä kohdassa oleva sävel mahdollisimman suoraan ilman nauhojen laskemista tai muuta pitkää päättelyketjua. Voit käyttää asetuksista aikarajaa, kun haluat harjoitella nopeaa palauttamista muistista.',
+    practice:'Harjoituksessa kysytään yksittäistä kielen ja nauhan osoittamaa kohtaa otelaudalla. Nimeä kyseisessä kohdassa oleva sävel mahdollisimman suoraan ilman nauhojen laskemista tai muuta pitkää päättelyketjua. Kysymykset tulevat kaikilta kieliltä nauhoilta 0–12. Voit käyttää asetuksista aikarajaa, kun haluat harjoitella nopeaa palauttamista muistista.',
     develops:'Harjoitus rakentaa koko otelaudan sävelkarttaa pitkäaikaiseen muistiin ja tähtää siihen, että sävelen nimi palautuu position nähdessä automaattisesti. Tämä tukee nuotinlukua, improvisointia, sointujen hahmottamista ja yleistä liikkumista otelaudalla.'
   },
   '2':{
     title:'3 – Yhden kielen täsmäharjoitus',
-    practice:'Valitse yksi kieli ja nimeä siltä kysytyt sävelet. Pidä huomio vain tämän yhden kielen 0–12-nauhoissa ja pyri vähitellen vastaamaan ilman laskemista. Vaihda kieltä, kun haluat kohdistaa harjoittelun seuraavaan alueeseen.',
+    practice:'Valitse yksi kieli ja nimeä siltä kysytyt sävelet. Pidä huomio vain tämän yhden kielen 0–12-nauhoissa ja pyri vähitellen vastaamaan ilman laskemista. Vaihda kieltä, kun haluat kohdistaa harjoittelun seuraavaan alueeseen. Lämpökartta näyttää, miten osaaminen kehittyy: oikein vastatessa position väri muuttuu vähitellen kohti vihreää, ja väärin vastatessa se liikkuu takaisin kohti punaista. Näin kartasta näkee nopeasti, mitkä kohdat ovat jo automatisoitumassa ja mitkä tarvitsevat lisää harjoittelua.',
     develops:'Yhden kielen rajaaminen vähentää tehtävän kognitiivista kuormaa ja auttaa rakentamaan tarkkaa sävelkarttaa kieli kerrallaan. Taito tukee erityisesti melodista liikkumista pitkin kaulaa sekä sävelten löytämistä eri rekistereistä.'
   },
   '3':{
@@ -3465,7 +3467,7 @@ async function exportTrainingData(){
 function applyImportedData(parsed){
   const raw=parsed&&parsed.data?parsed.data:parsed;
   data=migrateData(raw);saveData();
-$('progressPanel').addEventListener('toggle',()=>{if(methodEl.value==='5'&&!$('progressPanel').open)$('progressPanel').open=true});
+$('progressPanel').addEventListener('toggle',()=>{if(['5','1'].includes(methodEl.value)&&!$('progressPanel').open)$('progressPanel').open=true});
 methodEl.value=data.settings.method||'1';settingHTML();renderStats();pickTask();alert('Harjoitusdata ladattu onnistuneesti.');
 }
 function importTrainingData(file){
