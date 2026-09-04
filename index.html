@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.18.13 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.18.14 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -224,7 +224,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.18.13 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.18.14 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -268,7 +268,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
       <button class="secondary" id="next">Seuraava</button>
       <button class="secondary" id="reveal">Näytä vastaus</button>
       <button class="secondary hidden" id="startExam">Aloita</button>
-      <button class="secondary hidden" id="xBtn">X / liian hidas</button>
+      <button class="secondary hidden" id="xBtn">En tiedä / Olen liian hidas</button>
       <button class="secondary hidden" id="tabBtn">Näytä tabulatuurina</button>
       <button class="secondary hidden" id="listenBtn">Kuuntele sointu</button>
       <button class="secondary hidden" id="method10HintBtn">Vihje: intervallit</button>
@@ -297,7 +297,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.18.13';
+const APP_VERSION='1.18.14';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const $=id=>document.getElementById(id);
 const methodEl=$('method'), settingsEl=$('settings'), promptEl=$('prompt'), answerEl=$('answer'), feedbackEl=$('feedback'), stepInfo=$('stepInfo'), tabbox=$('tabbox'), staffWrap=$('staffWrap'), svg=$('staff');
@@ -624,7 +624,7 @@ function fretMetric(s,f){const board=fretboardForMethod(),k=fretKey(s,f);if(!boa
 function recordResult({good=false,x=false,reveal=false,timeMs=null,positions=[]}){
  const now=Date.now(),wrong=!good&&!x&&!reveal,m=metricBucket(methodEl.value);
  m.total++;if(good)m.correct++;if(x)m.x++;if(wrong)m.wrong=(m.wrong||0)+1;if(reveal)m.reveal++;
- if(timeMs!=null)m.times.push(timeMs);
+ if(good&&timeMs!=null)m.times.push(timeMs);
 
  for(const p of positions){
    const fm=fretMetric(p.s,p.f);
@@ -636,7 +636,7 @@ function recordResult({good=false,x=false,reveal=false,timeMs=null,positions=[]}
    if(good)fm.correct++;
    if(x)fm.x++;
    if(wrong)fm.wrong=(fm.wrong||0)+1;
-   if(timeMs!=null){
+   if(good&&timeMs!=null){
      fm.times.push(timeMs);
      if(fm.times.length>80)fm.times=fm.times.slice(-80);
    }
@@ -1089,7 +1089,7 @@ function renderHeatmap(){
  renderFretboardNutBar(h);
 }
 function settingHTML(){const m=methodEl.value;let html='';if(['1','2','4'].includes(m))html+=`<div><div class="group-title">Automaatiotesti</div><label>Aikaraja <select id="timeLimit"><option value="0">Ei aikarajaa</option><option value="10">10 s</option><option value="5">5 s</option><option value="3">3 s</option><option value="2">2 s</option><option value="1.5">1,5 s</option></select></label></div>`;
- if(m==='2')html+=stringSetting();if(m==='3')html+=`<div><div class="group-title">Heikot pisteet</div><span class="small">Valitaan automaattisesti menetelmän 1 otelautaosaamisdatasta. Menetelmässä 3 tehdyt vastaukset päivittävät samaa dataa.</span></div>`;
+ if(m==='2')html+=stringSetting();if(m==='3')html+=`<div><div class="group-title">Heikot pisteet</div><span class="small">Valitaan automaattisesti menetelmän 3 otelautaosaamisdatasta. Menetelmässä 4 tehdyt vastaukset päivittävät samaa dataa.</span></div>`;
  if(m==='4')html+=`<div><div class="group-title">Nauha</div><select id="sameFret">${Array.from({length:13},(_,i)=>`<option>${i}</option>`).join('')}</select></div>`;
  if(['5'].includes(m))html+=`<div><div class="group-title">Alue</div><span class="small">Nauhat 0 - 12</span></div>`;
  if(m==='5Q')html+=`<div><div class="group-title">Pistokoe</div><label>Kysymysten määrä <input id="quizCount" type="number" min="20" max="78" step="1" value="20" style="width:90px"></label><div class="small" style="margin-top:6px">20–78 satunnaista eri otelautapositiota. Samaa positiota ei kysytä kahdesti saman pistokokeen aikana. Aikaraja 5 s / kysymys. Vihreä = oikein aikarajassa, punainen = väärin tai liian hitaasti. Pistokokeen tulokset säilyvät vain käynnissä olevan pistokokeen ajan.</div></div>`;
@@ -1502,7 +1502,7 @@ const METHOD_HELP_CONTENT={
   },
   '3':{
     title:'4 – Kolmen heikon otelautakohdan harjoitus',
-    practice:'SightFret valitsee Otelautaharjoituksen osaamisdatasta kolme heikkoa positiota. Harjoittele niitä toistuvasti ja nimeä sävel jokaisessa tehtävässä. Tässä tehdyt vastaukset päivittävät samaa osaamisdataa kuin Otelautaharjoitus.',
+    practice:'SightFret valitsee menetelmän 3 Otelautaharjoituksen osaamisdatasta enintään kolme tällä hetkellä heikointa positiota, joissa on havaittu väärä tai liian hidas vastaus. Harjoittele näitä positioita toistuvasti ja nimeä sävel jokaisessa tehtävässä. Tässä harjoituksessa ei ole aikarajaa: tarkoitus on vahvistaa heikko kohta rauhallisesti oikeaksi ja varmaksi muistoksi. Kun position osaaminen vahvistuu riittävästi, se poistuu harjoituksen kohteista ja tilalle voidaan ottaa seuraava heikko positio. Tässä tehdyt vastaukset päivittävät samaa osaamisdataa kuin menetelmä 3. Lämpökartta päivittyy samalla: oikein vastatessa position väri liikkuu vähitellen kohti vihreää ja väärin vastatessa takaisin kohti punaista. Vihreämpi positio tarkoittaa vahvempaa osaamista, punaisempi enemmän harjoittelun tarvetta. Ruudussa näkyvä aika kertoo kyseisen position onnistuneiden itsenäisten vastausten mediaaniajan.',
     develops:'Harjoitus kohdistaa toiston juuri niihin kohtiin, joiden palauttaminen muistista on vielä epävarmaa. Se tehostaa otelaudan automatisoitumista ja auttaa tasoittamaan yksittäisiä muistiaukkoja ilman, että jo vahvoja kohtia tarvitsee harjoitella yhtä paljon.'
   },
   '4':{
@@ -1532,7 +1532,7 @@ function openMethodHelp(){
   w.document.close();
   w.focus();
 }
-function resetUI(){answerEl.classList.remove('hidden');$('check').classList.toggle('hidden',methodEl.value==='5');if($('next'))$('next').textContent='Seuraava';answered=false;step=0;stepAnswers={};feedbackEl.textContent='';feedbackEl.className='feedback';tabbox.classList.add('hidden');tabbox.innerHTML='';staffWrap.classList.add('hidden');svg.innerHTML='';stepInfo.textContent='';answerEl.value='';answerEl.disabled=false;$('check').disabled=false;$('xBtn').classList.add('hidden');$('tabBtn').classList.add('hidden');$('tabBtn').textContent='Näytä tabulatuurina';$('listenBtn').classList.add('hidden');$('listenBtn').textContent='Kuuntele sointu';$('method10HintBtn').classList.add('hidden');$('method10HintBtn').disabled=false;$('method10HintBtn').textContent='Vihje: Root';$('reveal').disabled=false}
+function resetUI(){answerEl.classList.remove('hidden');$('check').classList.toggle('hidden',['5','1','2','3'].includes(methodEl.value));if($('next'))$('next').textContent='Seuraava';answered=false;step=0;stepAnswers={};feedbackEl.textContent='';feedbackEl.className='feedback';tabbox.classList.add('hidden');tabbox.innerHTML='';staffWrap.classList.add('hidden');svg.innerHTML='';stepInfo.textContent='';answerEl.value='';answerEl.disabled=false;$('check').disabled=false;$('xBtn').classList.add('hidden');$('tabBtn').classList.add('hidden');$('tabBtn').textContent='Näytä tabulatuurina';$('listenBtn').classList.add('hidden');$('listenBtn').textContent='Kuuntele sointu';$('method10HintBtn').classList.add('hidden');$('method10HintBtn').disabled=false;$('method10HintBtn').textContent='Vihje: Root';$('reveal').disabled=false}
 function showStartState(){
   resetUI();current=null;startTime=0;
   renderHeatmap();
@@ -1546,7 +1546,7 @@ function showStartState(){
   answerEl.disabled=true;
   answerEl.classList.remove('hidden');
   $('check').disabled=true;
-  $('check').classList.toggle('hidden',methodEl.value==='5');
+  $('check').classList.toggle('hidden',['5','1','2','3'].includes(methodEl.value));
   hideMethod9AnswerButtons();
   $('reveal').disabled=true;
   $('xBtn').classList.add('hidden');
@@ -1579,7 +1579,7 @@ function showStartState(){
     promptEl.textContent='Paina Seuraava aloittaaksesi guide tone -äänenkuljetusharjoituksen.';
   }else{
     answerEl.classList.remove('hidden');
-    $('check').classList.toggle('hidden',methodEl.value==='5');
+    $('check').classList.toggle('hidden',['5','1','2','3'].includes(methodEl.value));
     promptEl.textContent=isExam?'Paina Aloita käynnistääksesi pistokokeen.':'Paina Enter tai Seuraava aloittaaksesi harjoituksen.';
   }
   (isExam?$('startExam'):$('next')).focus();
@@ -1684,8 +1684,20 @@ function finishFretboardExamAnswer(good,t,slow){
 
 
 function getMethod3Candidates(){
+  // Menetelmä 4 käyttää menetelmän 3 yhteistä otelautadataa, mutta ottaa
+  // täsmäharjoitteluun vain aidosti heikoksi havaitut positiot. Pelkkä vähäinen
+  // havaintomäärä ei enää tee positiosta "heikkoa".
+  const limitMs=Number(data.settings.timeLimit||5)*1000||5000;
   return Object.entries(fretboardForMethod())
-    .filter(([,v])=>v && v.total>0 && (fretMastery(v)??0)<0.90)
+    .filter(([,v])=>{
+      if(!v||!v.total)return false;
+      const score=fretMastery(v)??0;
+      const med=median(v.times||[]);
+      const hasWrong=(v.wrong||0)>0;
+      const hasSlow=(v.x||0)>0;
+      const repeatedSlow=v.total>=3&&med!=null&&med>limitMs;
+      return score<0.90&&(hasWrong||hasSlow||repeatedSlow);
+    })
     .map(([k,v])=>({k,score:fretMastery(v)??0}))
     .sort((a,b)=>a.score-b.score);
 }
@@ -1854,6 +1866,7 @@ current={type:'fret',s,f,pc:noteAt(s,f)%12};
 promptEl.innerHTML=m==='5'?`Paikanna kitaralta <span class="big">${stringNames[s]}-kieli, ${f}. nauha</span>. Yritä ensin laulaa sävel. Sitten soita ja kuuntele rauhallisesti. Laula uudelleen. Nimeä sävel kenttään.`:`Mikä sävel on <span class="big">${stringNames[s]}-kielen ${f}. nauhalla</span>?`;
 answerEl.placeholder='Esim. C#';
 $('xBtn').classList.toggle('hidden',m==='5');
+if(['1','2','3'].includes(m))$('check').classList.add('hidden');
 if(m==='5'){
   $('check').classList.add('hidden');
   $('listenBtn').textContent='Kuuntele (L)';
@@ -3109,7 +3122,7 @@ function checkCurrent(){if(answered||!current)return;const m=methodEl.value,v=an
     answered=true;
     flashCurrentFretAnswer(false,'hidas');
     recordResult({good:false,x:true,timeMs:t,positions:[{s:current.s,f:current.f}]});
-    feedbackEl.textContent=`✗ X / liian hidas — ${pcName(current.pc)} — ${fmtTime(t)}`;
+    feedbackEl.textContent=`✗ En tiedä / Olen liian hidas — ${pcName(current.pc)} — ${fmtTime(t)}`;
     feedbackEl.className='feedback warn';
     answerEl.disabled=true;$('check').disabled=true;$('next').focus()
   }else finish(good,{positions:[{s:current.s,f:current.f}]});
@@ -3303,7 +3316,7 @@ function revealCurrent(){
   $('check').disabled=true;
   $('next').focus();
 }
-function markX(){if(answered||!current||current.type!=='fret')return;answered=true;flashCurrentFretAnswer(false);const t=elapsed();recordResult({good:false,x:true,timeMs:t,positions:[{s:current.s,f:current.f}]});feedbackEl.textContent='✗ X / liian hidas — '+pcName(current.pc)+' — '+fmtTime(t);feedbackEl.className='feedback warn';answerEl.disabled=true;$('check').disabled=true;$('next').focus()}
+function markX(){if(answered||!current||current.type!=='fret')return;answered=true;flashCurrentFretAnswer(false);const t=elapsed();recordResult({good:false,x:true,timeMs:t,positions:[{s:current.s,f:current.f}]});feedbackEl.textContent='✗ En tiedä / Olen liian hidas — '+pcName(current.pc)+' — '+fmtTime(t);feedbackEl.className='feedback warn';answerEl.disabled=true;$('check').disabled=true;$('next').focus()}
 function toggleTab(){
   if(current?.notationOnlyVoicing)return;
   if(!current?.voicing)return;
