@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.18.4 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.18.5 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -28,7 +28,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 .method9-staff svg text,.staff-wrap svg text{fill:currentColor!important}
 .staff-wrap svg{color:CanvasText}
 @media(max-width:760px){.method9-visual{align-items:flex-start}.method9-staff{flex-basis:100%;max-width:420px}}
-.tabbox{border:1px solid var(--border);border-radius:12px;background:#fafafa;padding:12px;margin-top:12px;overflow:auto}.tabbox pre{margin:0;font:700 15px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}.staff-wrap{border:1px solid var(--border);border-radius:14px;padding:10px;overflow-x:auto;background:#fff;margin:12px 0}.staff-wrap svg{display:block;width:100%;min-width:620px;height:280px}.progress{height:10px;background:#e8ebef;border-radius:999px;overflow:hidden;margin-top:6px}.progress>span{display:block;height:100%;background:#606b7a;width:0}.heatmap{display:grid;grid-template-columns:52px repeat(13,minmax(34px,1fr));gap:3px;font-size:.78rem}.heatcell{padding:7px 3px;text-align:center;border-radius:7px;background:#eef1f4;border:1px solid #e1e5ea}.heatcell.fret-zero{margin-right:16px;position:relative}.heatcell.fret-zero::after{content:"";position:absolute;right:-12px;top:-4px;bottom:-4px;width:7px;background-color:#fff !important;border:1px solid #fff !important;border-radius:2px;pointer-events:none;forced-color-adjust:none;-webkit-print-color-adjust:exact;print-color-adjust:exact}.heatcell.current-fret{border:3px solid #22c55e;box-shadow:0 0 0 1px rgba(34,197,94,.18) inset;animation:currentFretPulse 1.6s ease-in-out infinite}
+.tabbox{border:1px solid var(--border);border-radius:12px;background:#fafafa;padding:12px;margin-top:12px;overflow:auto}.tabbox pre{margin:0;font:700 15px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}.staff-wrap{border:1px solid var(--border);border-radius:14px;padding:10px;overflow-x:auto;background:#fff;margin:12px 0}.staff-wrap svg{display:block;width:100%;min-width:620px;height:280px}.progress{height:10px;background:#e8ebef;border-radius:999px;overflow:hidden;margin-top:6px}.progress>span{display:block;height:100%;background:#606b7a;width:0}.heatmap{display:grid;grid-template-columns:52px repeat(13,minmax(34px,1fr));gap:3px;font-size:.78rem;position:relative}.heatcell{padding:7px 3px;text-align:center;border-radius:7px;background:#eef1f4;border:1px solid #e1e5ea}.heatcell.fret-zero{margin-right:16px;position:relative}.heatcell.fret-zero::after{content:none}.fretboard-nut-bar{position:absolute;width:9px;background:CanvasText;border-radius:1px;pointer-events:none;z-index:5}.heatcell.current-fret{border:3px solid #22c55e;box-shadow:0 0 0 1px rgba(34,197,94,.18) inset;animation:currentFretPulse 1.6s ease-in-out infinite}
 .heatcell.current-fret-settled{
   border:3px solid white !important;
   animation:none !important;
@@ -219,7 +219,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.18.4 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.18.5 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -293,7 +293,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.18.4';
+const APP_VERSION='1.18.5';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const $=id=>document.getElementById(id);
 const methodEl=$('method'), settingsEl=$('settings'), promptEl=$('prompt'), answerEl=$('answer'), feedbackEl=$('feedback'), stepInfo=$('stepInfo'), tabbox=$('tabbox'), staffWrap=$('staffWrap'), svg=$('staff');
@@ -896,7 +896,7 @@ function renderStats(){
  const heatTitle=$('heatmapTitle'),heatLegend=$('heatmapLegend');
  if(heatTitle)heatTitle.textContent=method==='10'?'Sointukategoriat':'Otelauta 0–12';
  if(heatLegend){
-   heatLegend.classList.toggle('hidden',method==='5Q'||method==='7');
+   heatLegend.classList.toggle('hidden',method==='5Q'||method==='7'||method==='5');
    heatLegend.innerHTML=method==='10'
      ? '<span>heikko</span><span class="heatlegend-bar"></span><span>automatisoitunut</span><span>· nopea oikea kasvattaa eniten · yli 30 s oikein ei muuta · väärä −1</span>'
      : '<span>heikko</span><span class="heatlegend-bar"></span><span>automatisoitunut</span><span>· ruudussa mediaanivastausaika</span>';
@@ -948,6 +948,21 @@ function clearCurrentFretAnswerFlash(){
  currentFretAnswerFlashTimer=null;
  currentFretAnswerFlash=null;
 }
+function renderFretboardNutBar(h){
+ const old=h.querySelector('.fretboard-nut-bar');
+ if(old)old.remove();
+ const cells=[...h.querySelectorAll('.heatcell.fret-zero:not(.heathead)')];
+ if(!cells.length)return;
+ const first=cells[0];
+ const top=Math.min(...cells.map(c=>c.offsetTop));
+ const bottom=Math.max(...cells.map(c=>c.offsetTop+c.offsetHeight));
+ const bar=document.createElement('div');
+ bar.className='fretboard-nut-bar';
+ bar.style.left=`${first.offsetLeft+first.offsetWidth+5}px`;
+ bar.style.top=`${top}px`;
+ bar.style.height=`${bottom-top}px`;
+ h.appendChild(bar);
+}
 function renderHeatmap(){
  const h=$('heatmap'),now=Date.now();
  if(methodEl.value==='10'){
@@ -974,6 +989,7 @@ function renderHeatmap(){
        h.insertAdjacentHTML('beforeend',`<div class="heatcell${f===0?' fret-zero':''} method7-pick${isSelected?' current-fret-note':''}" data-s="${s}" data-f="${f}"${style} title="${title}">${noteLabel}</div>`);
      }
    }
+   renderFretboardNutBar(h);
    return;
  }
  if(methodEl.value==='5Q'){
@@ -991,6 +1007,7 @@ function renderHeatmap(){
        h.insertAdjacentHTML('beforeend',`<div class="heatcell${f===0?' fret-zero':''}${currentClass}${flash?' current-fret-answer':''}"${style} title="${title}">${currentLabel}</div>`);
      }
    }
+   renderFretboardNutBar(h);
    return;
  }
  if(methodEl.value==='5'){
@@ -1013,6 +1030,7 @@ function renderHeatmap(){
        h.insertAdjacentHTML('beforeend',`<div class="heatcell${f===0?' fret-zero':''}${currentClass}${answerClass}"${style} title="${title}">${currentLabel}</div>`);
      }
    }
+   renderFretboardNutBar(h);
    return;
  }
 
@@ -1050,11 +1068,12 @@ function renderHeatmap(){
      h.insertAdjacentHTML('beforeend',`<div class="heatcell${f===0?' fret-zero':''}${currentClass}${answerClass}"${style} title="${title}">${displayCell}</div>`);
    }
  }
+ renderFretboardNutBar(h);
 }
 function settingHTML(){const m=methodEl.value;let html='';if(['1','2','4'].includes(m))html+=`<div><div class="group-title">Automaatiotesti</div><label>Aikaraja <select id="timeLimit"><option value="0">Ei aikarajaa</option><option value="10">10 s</option><option value="5">5 s</option><option value="3">3 s</option><option value="2">2 s</option><option value="1.5">1,5 s</option></select></label></div>`;
  if(m==='2')html+=stringSetting();if(m==='3')html+=`<div><div class="group-title">Heikot pisteet</div><span class="small">Valitaan automaattisesti menetelmän 1 otelautaosaamisdatasta. Menetelmässä 3 tehdyt vastaukset päivittävät samaa dataa.</span></div>`;
  if(m==='4')html+=`<div><div class="group-title">Nauha</div><select id="sameFret">${Array.from({length:13},(_,i)=>`<option>${i}</option>`).join('')}</select></div>`;
- if(['5'].includes(m))html+=`<div><div class="group-title">Alue</div><span class="small">Satunnainen koko otelauta 0–12.</span></div>`;
+ if(['5'].includes(m))html+=`<div><div class="group-title">Alue</div><span class="small">Nauhat 0 - 12</span></div>`;
  if(m==='5Q')html+=`<div><div class="group-title">Pistokoe</div><label>Kysymysten määrä <input id="quizCount" type="number" min="20" max="78" step="1" value="20" style="width:90px"></label><div class="small" style="margin-top:6px">20–78 satunnaista eri otelautapositiota. Samaa positiota ei kysytä kahdesti saman pistokokeen aikana. Aikaraja 5 s / kysymys. Vihreä = oikein aikarajassa, punainen = väärin tai liian hitaasti. Pistokokeen tulokset säilyvät vain käynnissä olevan pistokokeen ajan.</div></div>`;
  if(m==='7')html+=method7ChordSettings();if(m==='8')html+=method8ChordSettings();if(m==='9'||m==='7I'||m==='7F')html+=method9Settings();if(m==='10')html+=method10Settings();
  if(m==='11')html+=`<div><div class="group-title">Prototyyppi: guide tones 3 + 7</div><span class="small">Valitse seuraavan soinnun 3- ja 7-sävelille se otelautaratkaisu, jossa kokonaisliike on pienin. Tarkoitus on automatisoida läheisen voicingin löytäminen — ei opetella progressioita ulkoa.</span></div>`;
@@ -1495,7 +1514,7 @@ function openMethodHelp(){
   w.document.close();
   w.focus();
 }
-function resetUI(){answerEl.classList.remove('hidden');$('check').classList.remove('hidden');if($('next'))$('next').textContent='Seuraava';answered=false;step=0;stepAnswers={};feedbackEl.textContent='';feedbackEl.className='feedback';tabbox.classList.add('hidden');tabbox.innerHTML='';staffWrap.classList.add('hidden');svg.innerHTML='';stepInfo.textContent='';answerEl.value='';answerEl.disabled=false;$('check').disabled=false;$('xBtn').classList.add('hidden');$('tabBtn').classList.add('hidden');$('tabBtn').textContent='Näytä tabulatuurina';$('listenBtn').classList.add('hidden');$('listenBtn').textContent='Kuuntele sointu';$('method10HintBtn').classList.add('hidden');$('method10HintBtn').disabled=false;$('method10HintBtn').textContent='Vihje: Root';$('reveal').disabled=false}
+function resetUI(){answerEl.classList.remove('hidden');$('check').classList.toggle('hidden',methodEl.value==='5');if($('next'))$('next').textContent='Seuraava';answered=false;step=0;stepAnswers={};feedbackEl.textContent='';feedbackEl.className='feedback';tabbox.classList.add('hidden');tabbox.innerHTML='';staffWrap.classList.add('hidden');svg.innerHTML='';stepInfo.textContent='';answerEl.value='';answerEl.disabled=false;$('check').disabled=false;$('xBtn').classList.add('hidden');$('tabBtn').classList.add('hidden');$('tabBtn').textContent='Näytä tabulatuurina';$('listenBtn').classList.add('hidden');$('listenBtn').textContent='Kuuntele sointu';$('method10HintBtn').classList.add('hidden');$('method10HintBtn').disabled=false;$('method10HintBtn').textContent='Vihje: Root';$('reveal').disabled=false}
 function showStartState(){
   resetUI();current=null;startTime=0;
   renderHeatmap();
@@ -1509,7 +1528,7 @@ function showStartState(){
   answerEl.disabled=true;
   answerEl.classList.remove('hidden');
   $('check').disabled=true;
-  $('check').classList.remove('hidden');
+  $('check').classList.toggle('hidden',methodEl.value==='5');
   hideMethod9AnswerButtons();
   $('reveal').disabled=true;
   $('xBtn').classList.add('hidden');
@@ -1542,7 +1561,7 @@ function showStartState(){
     promptEl.textContent='Paina Seuraava aloittaaksesi guide tone -äänenkuljetusharjoituksen.';
   }else{
     answerEl.classList.remove('hidden');
-    $('check').classList.remove('hidden');
+    $('check').classList.toggle('hidden',methodEl.value==='5');
     promptEl.textContent=isExam?'Paina Aloita käynnistääksesi pistokokeen.':'Paina Enter tai Seuraava aloittaaksesi harjoituksen.';
   }
   (isExam?$('startExam'):$('next')).focus();
@@ -1818,6 +1837,7 @@ promptEl.innerHTML=m==='5'?`Paikanna kitaralta <span class="big">${stringNames[s
 answerEl.placeholder='Esim. C#';
 $('xBtn').classList.toggle('hidden',m==='5');
 if(m==='5'){
+  $('check').classList.add('hidden');
   $('listenBtn').textContent='Kuuntele (L)';
   $('listenBtn').classList.remove('hidden');
 }
