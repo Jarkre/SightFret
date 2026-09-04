@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.18.1 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.18.2 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -28,7 +28,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 .method9-staff svg text,.staff-wrap svg text{fill:currentColor!important}
 .staff-wrap svg{color:CanvasText}
 @media(max-width:760px){.method9-visual{align-items:flex-start}.method9-staff{flex-basis:100%;max-width:420px}}
-.tabbox{border:1px solid var(--border);border-radius:12px;background:#fafafa;padding:12px;margin-top:12px;overflow:auto}.tabbox pre{margin:0;font:700 15px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}.staff-wrap{border:1px solid var(--border);border-radius:14px;padding:10px;overflow-x:auto;background:#fff;margin:12px 0}.staff-wrap svg{display:block;width:100%;min-width:620px;height:280px}.progress{height:10px;background:#e8ebef;border-radius:999px;overflow:hidden;margin-top:6px}.progress>span{display:block;height:100%;background:#606b7a;width:0}.heatmap{display:grid;grid-template-columns:52px repeat(13,minmax(34px,1fr));gap:3px;font-size:.78rem}.heatcell{padding:7px 3px;text-align:center;border-radius:7px;background:#eef1f4;border:1px solid #e1e5ea}.heatcell.current-fret{border:3px solid #22c55e;box-shadow:0 0 0 1px rgba(34,197,94,.18) inset;animation:currentFretPulse 1.6s ease-in-out infinite}
+.tabbox{border:1px solid var(--border);border-radius:12px;background:#fafafa;padding:12px;margin-top:12px;overflow:auto}.tabbox pre{margin:0;font:700 15px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}.staff-wrap{border:1px solid var(--border);border-radius:14px;padding:10px;overflow-x:auto;background:#fff;margin:12px 0}.staff-wrap svg{display:block;width:100%;min-width:620px;height:280px}.progress{height:10px;background:#e8ebef;border-radius:999px;overflow:hidden;margin-top:6px}.progress>span{display:block;height:100%;background:#606b7a;width:0}.heatmap{display:grid;grid-template-columns:52px repeat(13,minmax(34px,1fr));gap:3px;font-size:.78rem}.heatcell{padding:7px 3px;text-align:center;border-radius:7px;background:#eef1f4;border:1px solid #e1e5ea}.heatcell.fret-zero{margin-right:10px;position:relative}.heatcell.fret-zero::after{content:"";position:absolute;right:-7px;top:-4px;bottom:-4px;width:2px;background:var(--border);border-radius:2px}.heatcell.current-fret{border:3px solid #22c55e;box-shadow:0 0 0 1px rgba(34,197,94,.18) inset;animation:currentFretPulse 1.6s ease-in-out infinite}
 .heatcell.current-fret-settled{
   border:3px solid white !important;
   animation:none !important;
@@ -219,7 +219,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.18.1 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.18.2 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -293,7 +293,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.18.1';
+const APP_VERSION='1.18.2';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const $=id=>document.getElementById(id);
 const methodEl=$('method'), settingsEl=$('settings'), promptEl=$('prompt'), answerEl=$('answer'), feedbackEl=$('feedback'), stepInfo=$('stepInfo'), tabbox=$('tabbox'), staffWrap=$('staffWrap'), svg=$('staff');
@@ -961,7 +961,7 @@ function renderHeatmap(){
  }
  h.className='heatmap';
  if(methodEl.value==='7'){
-   h.innerHTML='<div class="heatcell heathead">kieli</div>'+Array.from({length:13},(_,f)=>`<div class="heatcell heathead">${f}</div>`).join('');
+   h.innerHTML='<div class="heatcell heathead">kieli</div>'+Array.from({length:13},(_,f)=>`<div class="heatcell heathead${f===0?' fret-zero':''}">${f}</div>`).join('');
    const allowed=new Set(current&&current.type==='build'?(current.strings||[]):[]);
    const selected=current&&current.type==='build'?(current.selectedFrets||{}):{};
    for(let s=5;s>=0;s--){
@@ -971,13 +971,13 @@ function renderHeatmap(){
        const style=isSelected?' style="background:#8fe3a4;cursor:pointer"':canPick?' style="cursor:pointer"':' style="opacity:.38;cursor:not-allowed"';
        const noteLabel=isSelected?pcName(noteAt(s,f)):'';
        const title=canPick?(isSelected?`${noteLabel} — valittu, poista valinta klikkaamalla`:'Valitse tämä positio'):'Tätä kieltä ei käytetä tehtävässä';
-       h.insertAdjacentHTML('beforeend',`<div class="heatcell method7-pick${isSelected?' current-fret-note':''}" data-s="${s}" data-f="${f}"${style} title="${title}">${noteLabel}</div>`);
+       h.insertAdjacentHTML('beforeend',`<div class="heatcell${f===0?' fret-zero':''} method7-pick${isSelected?' current-fret-note':''}" data-s="${s}" data-f="${f}"${style} title="${title}">${noteLabel}</div>`);
      }
    }
    return;
  }
  if(methodEl.value==='5Q'){
-   h.innerHTML='<div class="heatcell heathead">kieli</div>'+Array.from({length:13},(_,f)=>`<div class="heatcell heathead">${f}</div>`).join('');
+   h.innerHTML='<div class="heatcell heathead">kieli</div>'+Array.from({length:13},(_,f)=>`<div class="heatcell heathead${f===0?' fret-zero':''}">${f}</div>`).join('');
    const results=fretboardExam?.results||{};
    for(let s=5;s>=0;s--){
      h.insertAdjacentHTML('beforeend',`<div class="heatcell heathead">${stringNames[s]}</div>`);
@@ -988,13 +988,13 @@ function renderHeatmap(){
        const currentClass=isCurrentFretPosition(s,f)&&!answered?' current-fret':'';
        const flash=currentFretAnswerFlash&&currentFretAnswerFlash.s===s&&currentFretAnswerFlash.f===f?currentFretAnswerFlash.mark:null;
        const currentLabel=flash||(currentFretPositionLabel(s,f)||'');
-       h.insertAdjacentHTML('beforeend',`<div class="heatcell${currentClass}${flash?' current-fret-answer':''}"${style} title="${title}">${currentLabel}</div>`);
+       h.insertAdjacentHTML('beforeend',`<div class="heatcell${f===0?' fret-zero':''}${currentClass}${flash?' current-fret-answer':''}"${style} title="${title}">${currentLabel}</div>`);
      }
    }
    return;
  }
  if(methodEl.value==='5'){
-   h.innerHTML='<div class="heatcell heathead">kieli</div>'+Array.from({length:13},(_,f)=>`<div class="heatcell heathead">${f}</div>`).join('');
+   h.innerHTML='<div class="heatcell heathead">kieli</div>'+Array.from({length:13},(_,f)=>`<div class="heatcell heathead${f===0?' fret-zero':''}">${f}</div>`).join('');
    for(let s=5;s>=0;s--){
      h.insertAdjacentHTML('beforeend',`<div class="heatcell heathead">${stringNames[s]}</div>`);
      for(let f=0;f<=12;f++){
@@ -1010,7 +1010,7 @@ function renderHeatmap(){
        const settledLabel=isSettledFretPosition(s,f)?(currentFretSettledPosition.answerLabel||''):'';
        const answerClass=flash?' current-fret-answer':settledLabel?' current-fret-note':'';
        const currentLabel=flash||settledLabel||(currentFretPositionLabel(s,f)||'');
-       h.insertAdjacentHTML('beforeend',`<div class="heatcell${currentClass}${answerClass}"${style} title="${title}">${currentLabel}</div>`);
+       h.insertAdjacentHTML('beforeend',`<div class="heatcell${f===0?' fret-zero':''}${currentClass}${answerClass}"${style} title="${title}">${currentLabel}</div>`);
      }
    }
    return;
@@ -1047,7 +1047,7 @@ function renderHeatmap(){
      const answerClass=flash?' current-fret-answer':'';
      const currentLabel=currentFretPositionLabel(s,f);
      const displayCell=flash||(currentLabel!==null?currentLabel:cell);
-     h.insertAdjacentHTML('beforeend',`<div class="heatcell${currentClass}${answerClass}"${style} title="${title}">${displayCell}</div>`);
+     h.insertAdjacentHTML('beforeend',`<div class="heatcell${f===0?' fret-zero':''}${currentClass}${answerClass}"${style} title="${title}">${displayCell}</div>`);
    }
  }
 }
@@ -1450,7 +1450,7 @@ document.addEventListener('touchcancel',stopSeventhChordGuideDrag);
 const METHOD_HELP_CONTENT={
   '5':{
     title:'1 – Otelautaharjoitus kitara kädessä',
-    practice:'Harjoituksessa saat yhden kitaran kielen ja nauhan. Paikanna kohta ensin fyysisesti kitaralta. Yritä laulaa sävel ennen kuin soitat sen, soita ja kuuntele sävel rauhallisesti, laula se uudelleen ja nimeä lopuksi sävel SightFretiin. Kuuntele-painikkeella (L) voit tarvittaessa kuulla kyseisen position sävelen.',
+    practice:'Harjoituksessa kysytään yksittäistä kielen ja nauhan osoittamaa kohtaa otelaudalla. Paikanna kohta ensin fyysisesti kitaralta. Yritä laulaa sävel ennen kuin soitat sen, soita ja kuuntele sävel rauhallisesti, laula se uudelleen ja nimeä lopuksi sävel SightFretiin. Kuuntele-painikkeella (L) voit tarvittaessa kuulla kyseisen position sävelen.',
     develops:'Harjoitus yhdistää otelaudan visuaalisen ja motorisen hahmottamisen, sävelnimen, kuullun sävelkorkeuden ja oman äänen. Se kehittää otelautatuntemuksen lisäksi sisäistä sävelkuvaa, korvan ja käden yhteyttä sekä sävelten aktiivista muistamista.'
   },
   '1':{
