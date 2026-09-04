@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.18.17 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.19.0 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -43,6 +43,13 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 .chord-category-heatmap{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:10px}
 .chord-category-cell{border:1px solid var(--border);border-radius:12px;padding:12px 14px;min-height:70px;display:flex;flex-direction:column;justify-content:center;gap:4px;color:#20242b}
 .chord-category-cell b{font-size:.96rem}.chord-category-cell span{font-size:.82rem;font-weight:750}
+.method7f-board-wrap{margin-top:10px}
+.method7f-board .heatcell.method7f-target{border:2px solid #60a5fa;cursor:pointer}
+.method7f-board .heatcell.method7f-disabled{opacity:.42;cursor:not-allowed}
+.method7f-board .heatcell.method7f-start{background:#8fe3a4;color:#20242b;font-weight:850;opacity:1}
+.method7f-board .heatcell.method7f-wrong{background:#ff6b6b;color:#20242b;font-weight:850}
+.method7f-board .heatcell.method7f-answer{background:#8fe3a4;color:#20242b;font-weight:850}
+.method7f-target-label{display:inline-block;border:2px solid #60a5fa;border-radius:7px;padding:2px 7px}
 .heatlegend-bar{width:180px;height:12px;border-radius:999px;background:linear-gradient(90deg,hsl(0 92% 55%),hsl(25 88% 62%),hsl(60 78% 72%),hsl(95 72% 82%),hsl(120 72% 78%));border:1px solid var(--border)}.heathead{font-weight:800;background:transparent;border:0}.small{font-size:.9rem}.metric{font-variant-numeric:tabular-nums}.method-help{line-height:1.5;color:var(--muted)}
 #weakStats{white-space:nowrap;overflow-x:auto}@media(max-width:720px){#weakStats{white-space:normal;overflow-x:visible}body{padding:8px}.app{padding:14px}.answer-row{display:grid;grid-template-columns:1fr}.answer-row input{min-width:0;width:100%}.heatmap{grid-template-columns:44px repeat(13,32px);overflow:auto}.topbar{align-items:flex-start}}
 
@@ -224,7 +231,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.18.17 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.19.0 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -297,7 +304,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.18.17';
+const APP_VERSION='1.19.0';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const $=id=>document.getElementById(id);
 const methodEl=$('method'), settingsEl=$('settings'), promptEl=$('prompt'), answerEl=$('answer'), feedbackEl=$('feedback'), stepInfo=$('stepInfo'), tabbox=$('tabbox'), staffWrap=$('staffWrap'), svg=$('staff');
@@ -543,7 +550,7 @@ if(data.settings && Number(data.settings.method7Reps)===3){
   data.settings.method7Reps=4;
   saveData();
 }
-function defaultData(){return {version:3,settings:{method:'1',timeLimit:5,singleString:3,sameFret:6,quizCount:20,method7Category:'all',method7Type:'random',method7Mode:'three',method7Reps:4,method8Mode:'three',method8Category:'all',method8Type:'random',method8Reps:4,method9Mode:'three',method9Category:'all',method9Type:'random',method9Reps:4,method9ShowTab:true,method9ShowStaff:true,method10Category:'basic',method10Type:'random',accidentals:false,sevenths:false,octaves:false,inv0:true,inv1:false,inv2:false,inv3:false,inv4:false,chordMode:'both'},methods:{},fretboards:{'1':{},'2':{},'3':{},'4':{}},method5:{},method9Mastery:{},method10Mastery:{}}}
+function defaultData(){return {version:3,settings:{method:'1',timeLimit:5,singleString:3,sameFret:6,quizCount:20,method7Category:'all',method7Type:'random',method7Mode:'three',method7Reps:4,method8Mode:'three',method8Category:'all',method8Type:'random',method8Reps:4,method9Mode:'three',method9Category:'all',method9Type:'random',method9Reps:4,method9ShowTab:true,method9ShowStaff:true,method10Category:'basic',method10Type:'random',accidentals:false,sevenths:false,octaves:false,inv0:true,inv1:false,inv2:false,inv3:false,inv4:false,chordMode:'both'},methods:{},fretboards:{'1':{},'2':{},'3':{},'4':{}},method5:{},method7FMastery:{},method9Mastery:{},method10Mastery:{}}}
 function migrateData(raw){
   const d=defaultData();
   if(!raw||typeof raw!=='object')return d;
@@ -563,6 +570,7 @@ function migrateData(raw){
     for(const method of ['1','2','3','4'])d.fretboards[method]=JSON.parse(JSON.stringify(legacyFretboard));
   }
   d.method5=raw.method5&&typeof raw.method5==='object'?raw.method5:{};
+  d.method7FMastery=raw.method7FMastery&&typeof raw.method7FMastery==='object'?raw.method7FMastery:{};
   d.method9Mastery=raw.method9Mastery&&typeof raw.method9Mastery==='object'?raw.method9Mastery:{};
   d.method10Mastery=raw.method10Mastery&&typeof raw.method10Mastery==='object'?raw.method10Mastery:{};
   const now=Date.now();
@@ -796,7 +804,7 @@ function methodName(v){return methodEl.querySelector(`option[value="${v}"]`)?.te
 function syncProgressPanelMode(){
  const panel=$('progressPanel');
  if(!panel)return;
- const alwaysOpen=['5','1','2','3','4','5Q'].includes(methodEl.value);
+ const alwaysOpen=['5','1','2','3','4','5Q','7F'].includes(methodEl.value);
  panel.classList.toggle('always-open',alwaysOpen);
  if(alwaysOpen)panel.open=true;
 }
@@ -805,7 +813,7 @@ function renderStats(){
  syncProgressPanelMode();
  const method=methodEl.value;
  const topScore=correctEl?.closest('.score');
- if(topScore)topScore.classList.toggle('hidden',['1','2','3','4','5Q'].includes(method));
+ if(topScore)topScore.classList.toggle('hidden',['1','2','3','4','5Q','7F'].includes(method));
  const isMethod2=method==='2';
  const selectedString=isMethod2?Number(data.settings.singleString??3):null;
  const resetStringBtn=$('resetString');
@@ -815,7 +823,10 @@ function renderStats(){
  const resetMethod5AllBtn=$('resetMethod5All');
  if(resetMethod5AllBtn)resetMethod5AllBtn.classList.toggle('hidden',method!=='5');
  const resetMethod9AllBtn=$('resetMethod9All');
- if(resetMethod9AllBtn)resetMethod9AllBtn.classList.toggle('hidden',method!=='9'&&method!=='7I'&&method!=='7F');
+ if(resetMethod9AllBtn){
+   resetMethod9AllBtn.classList.toggle('hidden',method!=='9'&&method!=='7I'&&method!=='7F');
+   resetMethod9AllBtn.textContent=method==='7F'?'Nollaa tämän harjoituksen intervalliosaaminen':'Nollaa intervallien osaamisdata';
+ }
  const resetMethod10AllBtn=$('resetMethod10All');
  if(resetMethod10AllBtn)resetMethod10AllBtn.classList.toggle('hidden',method!=='10');
  const resetMethodBtn=$('resetMethod');
@@ -856,13 +867,13 @@ function renderStats(){
      : `<br>X/hidas: <b>${m.x||0}</b>`;
  const stringLabel=isMethod2?` — ${stringNames[selectedString]}-kieli`:'';
  const progressStatsGrid=$('progressStatsGrid');
- if(progressStatsGrid)progressStatsGrid.classList.toggle('hidden',method==='5Q'||method==='7');
+ if(progressStatsGrid)progressStatsGrid.classList.toggle('hidden',method==='5Q'||method==='7'||method==='7F');
  const progressSummaryTitle=$('progressSummaryTitle');
  if(progressSummaryTitle)progressSummaryTitle.textContent=method==='7'?'Tee sointu klikkaamalla':'Osaaminen ja seuranta';
  const progressResetActions=$('progressResetActions');
  if(progressResetActions)progressResetActions.classList.toggle('hidden',method==='7'||method==='5Q');
  const weakBlock=$('weakStats')?.parentElement;
- if(weakBlock)weakBlock.classList.toggle('hidden',method==='5');
+ if(weakBlock)weakBlock.classList.toggle('hidden',method==='5'||method==='7F');
 
  if(method==='5'){
    $('summaryStats').innerHTML=`Menetelmä: <b>${methodName(method)}</b><br>Tunnistettu oikein: <b>${m.correct}</b><br>Tunnistettu väärin: <b>${m.wrong||0}</b><br>Käymättä: <b>${78-m.total}</b>`;
@@ -916,12 +927,14 @@ function renderStats(){
    }).join('<br>'):'Ei vielä tarpeeksi dataa.';
  }
  const heatTitle=$('heatmapTitle'),heatLegend=$('heatmapLegend');
- if(heatTitle)heatTitle.textContent=method==='10'?'Sointukategoriat':'Otelauta 0–12';
+ if(heatTitle)heatTitle.textContent=method==='10'?'Sointukategoriat':method==='7F'?'Intervallien osaaminen':'Otelauta 0–12';
  if(heatLegend){
    heatLegend.classList.toggle('hidden',method==='5Q'||method==='7'||method==='5');
    heatLegend.innerHTML=method==='10'
      ? '<span>heikko</span><span class="heatlegend-bar"></span><span>automatisoitunut</span><span>· nopea oikea kasvattaa eniten · yli 30 s oikein ei muuta · väärä −1</span>'
-     : '<span>heikko</span><span class="heatlegend-bar"></span><span>automatisoitunut</span><span>· ruudussa mediaanivastausaika</span>';
+     : method==='7F'
+       ? '<span>heikko</span><span class="heatlegend-bar"></span><span>automatisoitunut</span>'
+       : '<span>heikko</span><span class="heatlegend-bar"></span><span>automatisoitunut</span><span>· ruudussa mediaanivastausaika</span>';
  }
  renderHeatmap()
 }
@@ -987,6 +1000,14 @@ function renderFretboardNutBar(h){
 }
 function renderHeatmap(){
  const h=$('heatmap'),now=Date.now();
+ if(methodEl.value==='7F'){
+   h.className='chord-category-heatmap';
+   h.innerHTML=METHOD9_INTERVALS.map(interval=>{
+     const level=method7FMasteryValue(interval.id);
+     return `<div class="chord-category-cell" style="background:${masteryColor(level/10)}" title="${interval.name}: ${level}/10"><b>${interval.name}</b></div>`;
+   }).join('');
+   return;
+ }
  if(methodEl.value==='10'){
    h.className='chord-category-heatmap';
    h.innerHTML=METHOD10_CHORD_CATEGORIES.map(c=>{
@@ -1097,7 +1118,7 @@ function settingHTML(){const m=methodEl.value;let html='';if(['1','2','4'].inclu
  if(m==='4')html+=`<div><div class="group-title">Nauha</div><select id="sameFret">${Array.from({length:13},(_,i)=>`<option>${i}</option>`).join('')}</select></div>`;
  if(['5'].includes(m))html+=`<div><div class="group-title">Alue</div><span class="small">Nauhat 0 - 12</span></div>`;
  if(m==='5Q')html+=`<div><div class="group-title">Pistokoe</div><label>Kysymysten määrä <input id="quizCount" type="number" min="20" max="78" step="1" value="20" style="width:90px"></label><div class="small" style="margin-top:6px">20–78 satunnaista eri otelautapositiota. Samaa positiota ei kysytä kahdesti saman pistokokeen aikana. Aikaraja 5 s / kysymys. Vihreä = oikein aikarajassa, punainen = väärin tai liian hitaasti. Pistokokeen tulokset säilyvät vain käynnissä olevan pistokokeen ajan.</div></div>`;
- if(m==='7')html+=method7ChordSettings();if(m==='8')html+=method8ChordSettings();if(m==='9'||m==='7I'||m==='7F')html+=method9Settings();if(m==='10')html+=method10Settings();
+ if(m==='7')html+=method7ChordSettings();if(m==='8')html+=method8ChordSettings();if(m==='7F')html+=`<div><div class="group-title">Intervallit</div><span class="small">Kaikki intervallit pienestä sekunnista oktaaviin. Lähtösävel, suunta ja kohdekieli arvotaan vain tehtävistä, jotka voidaan toteuttaa nauhoilla 0–12.</span></div>`;if(m==='9'||m==='7I')html+=method9Settings();if(m==='10')html+=method10Settings();
  if(m==='11')html+=`<div><div class="group-title">Prototyyppi: guide tones 3 + 7</div><span class="small">Valitse seuraavan soinnun 3- ja 7-sävelille se otelautaratkaisu, jossa kokonaisliike on pienin. Tarkoitus on automatisoida läheisen voicingin löytäminen — ei opetella progressioita ulkoa.</span></div>`;
  settingsEl.innerHTML=html;wireSettings()}
 
@@ -1176,6 +1197,109 @@ function setMethod9Mastery(id,v){
 }
 function method9MasteryColor(id){
   return masteryColor(method9MasteryValue(id)/10);
+}
+
+function method7FMasteryValue(id){
+  const v=Number(data.method7FMastery?.[id]);
+  return Number.isFinite(v)?Math.max(0,Math.min(10,Math.round(v))):0;
+}
+function setMethod7FMastery(id,v){
+  if(!data.method7FMastery)data.method7FMastery={};
+  data.method7FMastery[id]=Math.max(0,Math.min(10,Math.round(Number(v)||0)));
+  saveData();
+}
+function method7FMidiName(m){
+  const names=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+  return names[mod(m,12)]+(Math.floor(m/12)-1);
+}
+function makeMethod7FTask(){
+  for(let guard=0;guard<1200;guard++){
+    const interval=METHOD9_INTERVALS[randomInt(METHOD9_INTERVALS.length)];
+    const startS=randomInt(6),startF=randomInt(13),startMidi=tuning[startS]+startF;
+    const direction=Math.random()<.5?-1:1;
+    const targetMidi=startMidi+direction*interval.semitones;
+    const candidates=[];
+    for(let targetS=0;targetS<6;targetS++){
+      const targetF=targetMidi-tuning[targetS];
+      if(Number.isInteger(targetF)&&targetF>=0&&targetF<=12)candidates.push({s:targetS,f:targetF});
+    }
+    if(!candidates.length)continue;
+    const target=candidates[randomInt(candidates.length)];
+    return {
+      type:'intervalFind7F',interval,direction,
+      start:{s:startS,f:startF,m:startMidi,pc:mod(startMidi,12)},
+      target:{s:target.s,f:target.f,m:targetMidi,pc:mod(targetMidi,12)},
+      positions:[{s:startS,f:startF,m:startMidi,pc:mod(startMidi,12)},{s:target.s,f:target.f,m:targetMidi,pc:mod(targetMidi,12)}],
+      revealed:false,hintShown:false,lastPick:null
+    };
+  }
+  return null;
+}
+function renderMethod7FFretboard(){
+  if(!current||current.type!=='intervalFind7F')return;
+  const start=current.start,target=current.target;
+  let html=`<div class="method7f-board-wrap"><div class="small" style="margin-bottom:8px">Lähtösävel: <b>${method7FMidiName(start.m)}</b> · valittu kieli: <b>${stringNames[target.s]}</b></div><div class="heatmap method7f-board" id="method7FBoard">`;
+  html+='<div class="heatcell heathead">kieli</div>'+Array.from({length:13},(_,f)=>`<div class="heatcell heathead${f===0?' fret-zero':''}">${f}</div>`).join('');
+  for(let s=5;s>=0;s--){
+    const targetString=s===target.s;
+    html+=`<div class="heatcell heathead">${targetString?`<span class="method7f-target-label">${stringNames[s]}</span>`:stringNames[s]}</div>`;
+    for(let f=0;f<=12;f++){
+      const isStart=s===start.s&&f===start.f;
+      const isAnswer=s===target.s&&f===target.f&&(current.revealed||answered);
+      const isWrong=current.lastPick&&!current.lastPick.good&&current.lastPick.s===s&&current.lastPick.f===f;
+      const cls=[f===0?'fret-zero':'',targetString?'method7f-target':'method7f-disabled',isStart?'method7f-start':'',isWrong?'method7f-wrong':'',isAnswer?'method7f-answer':''].filter(Boolean).join(' ');
+      let label='';
+      if(isStart)label=method7FMidiName(start.m);
+      if(isWrong)label='✗';
+      if(isAnswer)label=method7FMidiName(target.m);
+      const title=isStart?`Lähtösävel ${method7FMidiName(start.m)}`:targetString?'Valitse positio tältä kieleltä':'Tätä kieltä ei valita tässä tehtävässä';
+      html+=`<div class="heatcell ${cls}" data-s="${s}" data-f="${f}" title="${title}">${label}</div>`;
+    }
+  }
+  html+='</div>';
+  if(current.hintShown)html+=`<div class="small" style="margin-top:9px"><b>Vihje: ${current.interval.semitones} puolisävelaskelta</b></div>`;
+  html+='</div>';
+  stepInfo.innerHTML=html;
+  const board=$('method7FBoard');if(board)renderFretboardNutBar(board);
+}
+function pickMethod7FTask(){
+  current=makeMethod7FTask();
+  if(!current){
+    promptEl.textContent='Tehtävää ei saatu muodostettua. Paina Seuraava ja yritä uudelleen.';
+    answerEl.disabled=true;$('reveal').disabled=true;return;
+  }
+  const direction=current.direction>0?'ylöspäin':'alaspäin';
+  promptEl.innerHTML=`Lähtösävel on <b>${method7FMidiName(current.start.m)}</b>. Valitse otelaudalta <b>${current.interval.name.toLowerCase()} ${direction}</b> valitulta <b>${stringNames[current.target.s]}-kieleltä</b>.`;
+  answerEl.value='';answerEl.disabled=true;answerEl.classList.add('hidden');$('check').classList.add('hidden');
+  $('listenBtn').textContent='Kuuntele intervalli';$('listenBtn').classList.remove('hidden');
+  $('method10HintBtn').textContent='Vihje';$('method10HintBtn').disabled=false;$('method10HintBtn').classList.remove('hidden');
+  hideMethod9AnswerButtons();tabbox.classList.add('hidden');staffWrap.classList.add('hidden');
+  renderMethod7FFretboard();
+}
+function showMethod7FHint(){
+  if(answered||!current||current.type!=='intervalFind7F')return;
+  current.hintShown=true;
+  $('method10HintBtn').disabled=true;
+  renderMethod7FFretboard();
+}
+function handleMethod7FClick(s,f){
+  if(answered||!current||current.type!=='intervalFind7F'||s!==current.target.s)return;
+  const good=f===current.target.f;
+  current.lastPick={s,f,good};
+  const before=method7FMasteryValue(current.interval.id);
+  setMethod7FMastery(current.interval.id,before+(good?1:-1));
+  if(good){
+    answered=true;
+    feedbackEl.innerHTML=`✓ Oikein — <b>${method7FMidiName(current.target.m)}</b> · ${current.interval.name} ${current.direction>0?'ylöspäin':'alaspäin'}`;
+    feedbackEl.className='feedback ok';
+    $('method10HintBtn').disabled=true;
+    $('next').focus();
+  }else{
+    feedbackEl.textContent='✗ Väärin — yritä uudestaan.';
+    feedbackEl.className='feedback warn';
+  }
+  renderMethod7FFretboard();
+  renderStats();
 }
 
 function method9IntervalBySemitones(n){return METHOD9_INTERVALS.find(x=>x.semitones===n)||null}
@@ -1518,6 +1642,11 @@ const METHOD_HELP_CONTENT={
     title:'6 – Otelauta pistokoe',
     practice:'Valitse 20–78 kysymystä ja käynnistä pistokoe. Sama positio esiintyy kokeessa vain kerran. Vastaa viidessä sekunnissa. Oikein ja ajoissa vastattu positio muuttuu vihreäksi, väärä tai liian hidas punaiseksi. Kokeen lopussa otelauta näyttää yhdellä silmäyksellä koko suorituksen. Uusi pistokoe alkaa puhtaalta pöydältä.',
     develops:'Pistokoe mittaa, kuinka varmasti ja nopeasti otelaudan sävelnimet palautuvat muistista aikapaineessa. Se toimii yleisen otelautaosaamisen testinä ja auttaa havaitsemaan yksittäiset positiot, joissa muistaminen vielä takeltelee.'
+  },
+  '7F':{
+    title:'7 – Löydä intervalli otelaudalta',
+    practice:'SightFret näyttää lähtösävelen vihreänä ja valitsee kielen, jolta pyydetty intervalli pitää löytää. Tehtävä kertoo myös, kulkeeko intervalli lähtösävelestä ylös- vai alaspäin. Vastaa klikkaamalla valitulta kieleltä oikeaa positiota. Vihje näyttää intervallin puolisävelaskelten määrän. Näytä vastaus paljastaa oikean position. Intervallien osaamisruudut liikkuvat oikein vastatessa kohti vihreää ja väärin vastatessa kohti punaista.',
+    develops:'Harjoitus kehittää kykyä rakentaa intervalli aktiivisesti otelaudalle annetusta lähtösävelestä. Se yhdistää intervallin teoreettisen etäisyyden, suunnan ja kitaran kielten välisen geometrisen hahmottamisen käytännön sormilautakartaksi.'
   }
 };
 function updateMethodHelpButton(){
@@ -1536,7 +1665,7 @@ function openMethodHelp(){
   w.document.close();
   w.focus();
 }
-function resetUI(){answerEl.classList.remove('hidden');$('check').classList.toggle('hidden',['5','1','2','3','4','5Q'].includes(methodEl.value));if($('next'))$('next').textContent='Seuraava';answered=false;step=0;stepAnswers={};feedbackEl.textContent='';feedbackEl.className='feedback';tabbox.classList.add('hidden');tabbox.innerHTML='';staffWrap.classList.add('hidden');svg.innerHTML='';stepInfo.textContent='';answerEl.value='';answerEl.disabled=false;$('check').disabled=false;$('xBtn').classList.add('hidden');$('tabBtn').classList.add('hidden');$('tabBtn').textContent='Näytä tabulatuurina';$('listenBtn').classList.add('hidden');$('listenBtn').textContent='Kuuntele sointu';$('method10HintBtn').classList.add('hidden');$('method10HintBtn').disabled=false;$('method10HintBtn').textContent='Vihje: Root';$('reveal').disabled=false}
+function resetUI(){answerEl.classList.remove('hidden');$('check').classList.toggle('hidden',['5','1','2','3','4','5Q','7F'].includes(methodEl.value));if($('next'))$('next').textContent='Seuraava';answered=false;step=0;stepAnswers={};feedbackEl.textContent='';feedbackEl.className='feedback';tabbox.classList.add('hidden');tabbox.innerHTML='';staffWrap.classList.add('hidden');svg.innerHTML='';stepInfo.textContent='';answerEl.value='';answerEl.disabled=false;$('check').disabled=false;$('xBtn').classList.add('hidden');$('tabBtn').classList.add('hidden');$('tabBtn').textContent='Näytä tabulatuurina';$('listenBtn').classList.add('hidden');$('listenBtn').textContent='Kuuntele sointu';$('method10HintBtn').classList.add('hidden');$('method10HintBtn').disabled=false;$('method10HintBtn').textContent='Vihje: Root';$('reveal').disabled=false}
 function showStartState(){
   resetUI();current=null;startTime=0;
   renderHeatmap();
@@ -1550,7 +1679,7 @@ function showStartState(){
   answerEl.disabled=true;
   answerEl.classList.remove('hidden');
   $('check').disabled=true;
-  $('check').classList.toggle('hidden',['5','1','2','3','4','5Q'].includes(methodEl.value));
+  $('check').classList.toggle('hidden',['5','1','2','3','4','5Q','7F'].includes(methodEl.value));
   hideMethod9AnswerButtons();
   $('reveal').disabled=true;
   $('xBtn').classList.add('hidden');
@@ -1583,7 +1712,7 @@ function showStartState(){
     promptEl.textContent='Paina Seuraava aloittaaksesi guide tone -äänenkuljetusharjoituksen.';
   }else{
     answerEl.classList.remove('hidden');
-    $('check').classList.toggle('hidden',['5','1','2','3','4','5Q'].includes(methodEl.value));
+    $('check').classList.toggle('hidden',['5','1','2','3','4','5Q','7F'].includes(methodEl.value));
     promptEl.textContent=isExam?'Paina Aloita käynnistääksesi pistokokeen.':'Paina Enter tai Seuraava aloittaaksesi harjoituksen.';
   }
   (isExam?$('startExam'):$('next')).focus();
@@ -1839,7 +1968,7 @@ function pickTask(){clearSettledFretPosition();
       return;
     }
   }
-  resetUI();$('methodTitle').textContent=methodName(m);updateMethodHelpButton();if(['1','2','3','4','5'].includes(m))pickFretTask(m);else if(m==='5Q')pickFretboardExamTask();else if(m==='7')pickBuildChordTask();else if(m==='8')pickReverseChordTask();else if(m==='9'||m==='7I'||m==='7F')pickIntervalTask();else if(m==='10')pickNotationTask();else if(m==='11')pickVoiceLeadingTask();renderHeatmap();startTime=performance.now();answerEl.focus()}
+  resetUI();$('methodTitle').textContent=methodName(m);updateMethodHelpButton();if(['1','2','3','4','5'].includes(m))pickFretTask(m);else if(m==='5Q')pickFretboardExamTask();else if(m==='7')pickBuildChordTask();else if(m==='8')pickReverseChordTask();else if(m==='7F')pickMethod7FTask();else if(m==='9'||m==='7I')pickIntervalTask();else if(m==='10')pickNotationTask();else if(m==='11')pickVoiceLeadingTask();renderHeatmap();startTime=performance.now();answerEl.focus()}
 function randomInt(n){return Math.floor(Math.random()*n)}
 function pickFretTask(m){let s,f;if(m==='1'){({s,f}=weightedFretPoint())}else if(m==='2'){s=Number(data.settings.singleString??3);f=weightedFretOnString(s)}else if(m==='3'){
   if(!method3Points || !method3Points.length){
@@ -3259,6 +3388,12 @@ function checkCurrent(){if(answered||!current)return;const m=methodEl.value,v=an
    return;
  }}
 
+stepInfo.addEventListener('click',e=>{
+  if(methodEl.value!=='7F'||!current||current.type!=='intervalFind7F')return;
+  const cell=e.target.closest('#method7FBoard .heatcell[data-s][data-f]');if(!cell)return;
+  handleMethod7FClick(Number(cell.dataset.s),Number(cell.dataset.f));
+});
+
 $('heatmap').addEventListener('click',e=>{
   if(methodEl.value!=='7'||!current||current.type!=='build'||(answered&&!current.method7Revealed))return;
   const cell=e.target.closest('.method7-pick');if(!cell)return;
@@ -3278,6 +3413,15 @@ answerEl.addEventListener('input',()=>{if(methodEl.value==='7')method7SyncClicks
 
 function revealCurrent(){
   if(answered||!current)return;
+  if(methodEl.value==='7F'&&current.type==='intervalFind7F'){
+    answered=true;current.revealed=true;
+    const before=method7FMasteryValue(current.interval.id);
+    setMethod7FMastery(current.interval.id,before-1);
+    feedbackEl.innerHTML=`Vastaus: <b>${method7FMidiName(current.target.m)}</b> — ${stringNames[current.target.s]}-kieli, nauha ${current.target.f}`;
+    feedbackEl.className='feedback warn';
+    $('method10HintBtn').disabled=true;
+    renderMethod7FFretboard();renderStats();$('next').focus();return;
+  }
   if(methodEl.value==='5Q'&&current.type==='fretExam'){
     const t=elapsed(),shown=pcName(current.pc);
     finishFretboardExamAnswer(false,t,false);
@@ -3360,13 +3504,28 @@ function playFretPosition(s,f){
 function listenChord(){
   if(!current)return;
 
+  // Menetelmä 7F: kuuntele intervalli annetussa suunnassa, lähtösävelestä kohdesäveleen.
+  if(current.type==='intervalFind7F'&&current.start&&current.target){
+    const ctx=ensureAudio(),now=ctx.currentTime;
+    [current.start.m,current.target.m].forEach((m,i)=>{
+      const o=ctx.createOscillator(),g=ctx.createGain(),hz=440*Math.pow(2,(m-69)/12),t=now+i*.72;
+      o.type='triangle';o.frequency.value=hz;
+      g.gain.setValueAtTime(.0001,t);
+      g.gain.exponentialRampToValueAtTime(.30,t+.02);
+      g.gain.setValueAtTime(.30,t+.48);
+      g.gain.exponentialRampToValueAtTime(.0001,t+.66);
+      o.connect(g).connect(ctx.destination);o.start(t);o.stop(t+.7);
+    });
+    return;
+  }
+
   let notes=[];
   if(methodEl.value==='5'&&current.type==='fret'&&Number.isInteger(current.s)&&Number.isInteger(current.f)){
     const openMidi=[40,45,50,55,59,64];
     notes=[openMidi[current.s]+current.f];
   }else if(current.type==='build'&&current.listenVoicing){
     notes=current.listenVoicing.map(p=>p.m);
-  }else if((current.type==='interval9'||current.type==='interval9quality')&&current.positions){
+  }else if((current.type==='interval9'||current.type==='interval9quality'||current.type==='intervalFind7F')&&current.positions){
     notes=current.positions.map(p=>p.m);
   }else if(current.voicing){
     notes=current.voicing.map(p=>p.m);
@@ -3715,7 +3874,7 @@ function showMethod10IntervalHints(){
   updateMethod10HintButton();
 }
 
-methodEl.value=data.settings.method||'1';methodEl.addEventListener('change',()=>{fretboardExam=null;method3Points=null;method8Drill=null;method9Drill=null;data.settings.method=methodEl.value;saveData();settingHTML();renderStats();showStartState()});$('methodHelpBtn').addEventListener('click',openMethodHelp);$('check').addEventListener('click',checkCurrent);$('next').addEventListener('click',pickTask);$('startExam').addEventListener('click',restartFretboardExam);$('reveal').addEventListener('click',revealCurrent);$('xBtn').addEventListener('click',markX);$('tabBtn').addEventListener('click',toggleTab);$('listenBtn').addEventListener('click',listenChord);$('method10HintBtn').addEventListener('click',showMethod10IntervalHints);answerEl.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();checkCurrent()}});$('saveFile').addEventListener('click',exportTrainingData);$('loadFile').addEventListener('click',chooseTrainingDataFile);$('loadFileInput').addEventListener('change',e=>{importTrainingData(e.target.files?.[0]);e.target.value=''});$('resetString').addEventListener('click',()=>{
+methodEl.value=data.settings.method||'1';methodEl.addEventListener('change',()=>{fretboardExam=null;method3Points=null;method8Drill=null;method9Drill=null;data.settings.method=methodEl.value;saveData();settingHTML();renderStats();showStartState()});$('methodHelpBtn').addEventListener('click',openMethodHelp);$('check').addEventListener('click',checkCurrent);$('next').addEventListener('click',pickTask);$('startExam').addEventListener('click',restartFretboardExam);$('reveal').addEventListener('click',revealCurrent);$('xBtn').addEventListener('click',markX);$('tabBtn').addEventListener('click',toggleTab);$('listenBtn').addEventListener('click',listenChord);$('method10HintBtn').addEventListener('click',()=>{if(methodEl.value==='7F')showMethod7FHint();else showMethod10IntervalHints()});answerEl.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();checkCurrent()}});$('saveFile').addEventListener('click',exportTrainingData);$('loadFile').addEventListener('click',chooseTrainingDataFile);$('loadFileInput').addEventListener('change',e=>{importTrainingData(e.target.files?.[0]);e.target.value=''});$('resetString').addEventListener('click',()=>{
   if(!['1','2','3','5'].includes(methodEl.value))return;
 
   const choices={
@@ -3785,7 +3944,11 @@ $('resetMethod10All').addEventListener('click',()=>{
   data.method10Mastery={};saveData();renderStats();
 });
 $('resetMethod9All').addEventListener('click',()=>{
-  if(methodEl.value!=='9')return;
+  if(methodEl.value==='7F'){
+    if(!confirm('Nollataanko kaikki tämän harjoituksen intervalliosaaminen?'))return;
+    data.method7FMastery={};saveData();renderStats();return;
+  }
+  if(methodEl.value!=='9'&&methodEl.value!=='7I')return;
   if(!confirm('Nollataanko kaikki intervallien osaamisdata?'))return;
   data.method9Mastery={};
   saveData();
