@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.18.12 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.18.13 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -44,7 +44,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 .chord-category-cell{border:1px solid var(--border);border-radius:12px;padding:12px 14px;min-height:70px;display:flex;flex-direction:column;justify-content:center;gap:4px;color:#20242b}
 .chord-category-cell b{font-size:.96rem}.chord-category-cell span{font-size:.82rem;font-weight:750}
 .heatlegend-bar{width:180px;height:12px;border-radius:999px;background:linear-gradient(90deg,hsl(0 92% 55%),hsl(25 88% 62%),hsl(60 78% 72%),hsl(95 72% 82%),hsl(120 72% 78%));border:1px solid var(--border)}.heathead{font-weight:800;background:transparent;border:0}.small{font-size:.9rem}.metric{font-variant-numeric:tabular-nums}.method-help{line-height:1.5;color:var(--muted)}
-#weakStats{white-space:nowrap;overflow-x:auto}#lowDataStats{white-space:nowrap;overflow-x:auto}@media(max-width:720px){#weakStats,#lowDataStats{white-space:normal;overflow-x:visible}body{padding:8px}.app{padding:14px}.answer-row{display:grid;grid-template-columns:1fr}.answer-row input{min-width:0;width:100%}.heatmap{grid-template-columns:44px repeat(13,32px);overflow:auto}.topbar{align-items:flex-start}}
+#weakStats{white-space:nowrap;overflow-x:auto}@media(max-width:720px){#weakStats{white-space:normal;overflow-x:visible}body{padding:8px}.app{padding:14px}.answer-row{display:grid;grid-template-columns:1fr}.answer-row input{min-width:0;width:100%}.heatmap{grid-template-columns:44px repeat(13,32px);overflow:auto}.topbar{align-items:flex-start}}
 
 #fireworksOverlay{
   position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:9999
@@ -224,7 +224,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.18.12 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.18.13 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -281,7 +281,6 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
     <div class="grid" id="progressStatsGrid" style="margin-top:12px">
       <div><div class="group-title">Yhteenveto</div><div id="summaryStats" class="small"></div></div>
       <div><div class="group-title">Heikot alueet</div><div id="weakStats" class="small"></div></div>
-      <div id="lowDataBlock"><div class="group-title">Vähän dataa</div><div id="lowDataStats" class="small"></div></div>
     </div>
     <div style="margin-top:14px"><div id="heatmapTitle" class="group-title">Otelauta 0–12</div><div id="heatmap" class="heatmap"></div><div id="heatmapLegend" class="heatlegend"><span>heikko</span><span class="heatlegend-bar"></span><span>automatisoitunut</span><span>· ruudussa mediaanivastausaika</span></div></div>
     <div class="actions" id="progressResetActions"><button class="ghost hidden" id="resetString">Nollaa valitun kielen osaamisdata</button><button class="ghost hidden" id="resetFret">Nollaa nauhan osaamisdata kaikilta kieliltä</button><button class="ghost hidden" id="resetMethod5All">Nollaa valitun menetelmän osaamisdata</button><button class="ghost hidden" id="resetMethod9All">Nollaa intervallien osaamisdata</button><button class="ghost hidden" id="resetMethod10All">Nollaa sointukategorioiden osaamisdata</button><button class="ghost" id="resetMethod">Nollaa valitun menetelmän osaamisdata</button></div>
@@ -298,7 +297,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.18.12';
+const APP_VERSION='1.18.13';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const $=id=>document.getElementById(id);
 const methodEl=$('method'), settingsEl=$('settings'), promptEl=$('prompt'), answerEl=$('answer'), feedbackEl=$('feedback'), stepInfo=$('stepInfo'), tabbox=$('tabbox'), staffWrap=$('staffWrap'), svg=$('staff');
@@ -856,7 +855,6 @@ function renderStats(){
      ? `<br>Väärä sävel: <b>${m.wrong||0}</b>`
      : `<br>X/hidas: <b>${m.x||0}</b>`;
  const stringLabel=isMethod2?` — ${stringNames[selectedString]}-kieli`:'';
- const lowBlock=$('lowDataBlock');
  const progressStatsGrid=$('progressStatsGrid');
  if(progressStatsGrid)progressStatsGrid.classList.toggle('hidden',method==='5Q'||method==='7');
  const progressSummaryTitle=$('progressSummaryTitle');
@@ -865,21 +863,17 @@ function renderStats(){
  if(progressResetActions)progressResetActions.classList.toggle('hidden',method==='7'||method==='5Q');
  const weakBlock=$('weakStats')?.parentElement;
  if(weakBlock)weakBlock.classList.toggle('hidden',method==='5');
- if(lowBlock)lowBlock.classList.toggle('hidden',method==='5');
 
  if(method==='5'){
    $('summaryStats').innerHTML=`Menetelmä: <b>${methodName(method)}</b><br>Tunnistettu oikein: <b>${m.correct}</b><br>Tunnistettu väärin: <b>${m.wrong||0}</b><br>Käymättä: <b>${78-m.total}</b>`;
-   if(lowBlock)lowBlock.classList.add('hidden');
  }else if(method==='7'){
    $('summaryStats').innerHTML=`Menetelmä: <b>${methodName(method)}</b><br><span class="muted">Tästä menetelmästä ei kerätä osaamisdataa.</span>`;
-   if(lowBlock)lowBlock.classList.add('hidden');
  }else if(method==='10'){
    const selected=data.settings.method10Category||'basic';
    const selLabel=selected==='all'?'Kaikki kategoriat':(METHOD10_CHORD_CATEGORIES.find(c=>c.id===selected)?.label||selected);
    $('summaryStats').innerHTML=`Menetelmä: <b>${methodName(method)}</b><br>Kategoria: <b>${selLabel}</b><br>Oikein: <b>${m.correct}/${m.total}</b><br>Mediaaniaika: <b>${fmtTime(median(m.times))}</b>`;
    const weakCats=[...METHOD10_CHORD_CATEGORIES].sort((a,b)=>method10MasteryValue(a.id)-method10MasteryValue(b.id));
    $('weakStats').innerHTML=weakCats.slice(0,3).map(c=>`${c.label}: <b>${Math.round(method10MasteryValue(c.id))} %</b>`).join('<br>');
-   if(lowBlock)lowBlock.classList.add('hidden');
  }else if(method==='1'){
    $('summaryStats').innerHTML=`Menetelmä: <b>${methodName(method)}</b><br>Mediaaniaika (kaikki nauhat): <b>${fmtTime(median(m.times))}</b>`;
  }else if(method==='2'){
@@ -889,13 +883,12 @@ function renderStats(){
  }
 
  let entries=Object.entries(fretboardForMethod()).filter(([,v])=>v.total>=1);
- // Menetelmä 2: Heikot alueet ja Vähän dataa koskevat vain valittua kieltä.
+ // Menetelmä 2: Heikot alueet koskevat vain valittua kieltä.
  if(isMethod2)entries=entries.filter(([k])=>Number(k.split('-')[0])===selectedString);
 
  if(method==='5'||method==='10'){
    // Menetelmät 5 ja 10 käyttävät omia osaamisnäkymiään.
  }else if(isFretAutomation){
-   if(lowBlock)lowBlock.classList.remove('hidden');
    const limitMs=Number(data.settings.timeLimit||5)*1000||5000;
    const weak=entries.filter(([,v])=>{
      const med=median(v.times);
@@ -911,15 +904,7 @@ function renderStats(){
      const slow=v.x||0,wrong=v.wrong||0;
      return `${stringNames[s]}${f}: ${v.correct}/${v.total}, med. ${fmtTime(median(v.times))} · hidas ${slow} · väärin ${wrong} · osaaminen ${Math.round(w.score*100)} %`;
    }).join('<br>'):'Ei havaittuja heikkoja alueita.';
-   const low=entries.filter(([,v])=>v.total<3&&v.correct===v.total&&(v.x||0)===0&&(v.wrong||0)===0)
-     .map(([k,v])=>({k,v,score:fretMastery(v)??0}))
-     .sort((a,b)=>a.v.total-b.v.total||median(b.v.times)-median(a.v.times)).slice(0,8);
-   $('lowDataStats').innerHTML=low.length?low.map(w=>{
-     const [s,f]=w.k.split('-').map(Number);
-     return `${stringNames[s]}${f}: ${w.v.correct}/${w.v.total}, med. ${fmtTime(median(w.v.times))} · arvio vielä epävarma`;
-   }).join('<br>'):'Ei tällä hetkellä vähän dataa -kohtia.';
  }else{
-   if(lowBlock)lowBlock.classList.add('hidden');
    const weak=entries.map(([k,v])=>({k,score:fretMastery(v)??0})).sort((a,b)=>a.score-b.score).slice(0,6);
    $('weakStats').innerHTML=weak.length?weak.map(w=>{
      const [s,f]=w.k.split('-').map(Number),v=fretboardForMethod()[w.k];
