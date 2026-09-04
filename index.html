@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.18.16 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.18.17 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -224,7 +224,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.18.16 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.18.17 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -297,7 +297,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.18.16';
+const APP_VERSION='1.18.17';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const $=id=>document.getElementById(id);
 const methodEl=$('method'), settingsEl=$('settings'), promptEl=$('prompt'), answerEl=$('answer'), feedbackEl=$('feedback'), stepInfo=$('stepInfo'), tabbox=$('tabbox'), staffWrap=$('staffWrap'), svg=$('staff');
@@ -796,7 +796,7 @@ function methodName(v){return methodEl.querySelector(`option[value="${v}"]`)?.te
 function syncProgressPanelMode(){
  const panel=$('progressPanel');
  if(!panel)return;
- const alwaysOpen=['5','1','2','3','4'].includes(methodEl.value);
+ const alwaysOpen=['5','1','2','3','4','5Q'].includes(methodEl.value);
  panel.classList.toggle('always-open',alwaysOpen);
  if(alwaysOpen)panel.open=true;
 }
@@ -805,7 +805,7 @@ function renderStats(){
  syncProgressPanelMode();
  const method=methodEl.value;
  const topScore=correctEl?.closest('.score');
- if(topScore)topScore.classList.toggle('hidden',['1','2','3','4'].includes(method));
+ if(topScore)topScore.classList.toggle('hidden',['1','2','3','4','5Q'].includes(method));
  const isMethod2=method==='2';
  const selectedString=isMethod2?Number(data.settings.singleString??3):null;
  const resetStringBtn=$('resetString');
@@ -1511,12 +1511,12 @@ const METHOD_HELP_CONTENT={
   },
   '4':{
     title:'5 – Saman nauhan harjoitus eri kielillä',
-    practice:'Valitse yksi nauha. Harjoituksessa kysytään tämän saman nauhan yksittäisiä positioita eri kieliltä. Nimeä kysytty sävel ja pyri hahmottamaan valittu nauha yhtenä kokonaisuutena kuuden kielen yli. Aikarajaa voi käyttää, kun haluat harjoitella sävelten nopeaa palauttamista muistista. Lämpökartta päivittyy harjoittelun mukana: oikein vastatessa position väri liikkuu vähitellen kohti vihreää ja väärin tai liian hitaasti vastatessa takaisin kohti punaista. Vihreämpi positio tarkoittaa vahvempaa osaamista ja punaisempi enemmän harjoittelun tarvetta. Ruudussa näkyvä aika kertoo kyseisen position onnistuneiden itsenäisten vastausten mediaaniajan.',
+    practice:'Harjoituksessa kysytään valitun nauhan säveltä yksittäiseltä kieleltä. Nimeä sävel. Tavoitteena on automatisoida nauhan sävelten tunnistaminen pystysuuntaisena kokonaisuutena kuuden kielen yli. Aikarajaa voi käyttää, kun haluat harjoitella sävelten nopeaa palauttamista muistista. Lämpökartta päivittyy harjoittelun mukana: oikein vastatessa position väri liikkuu vähitellen kohti vihreää ja väärin tai liian hitaasti vastatessa takaisin kohti punaista. Vihreämpi positio tarkoittaa vahvempaa osaamista ja punaisempi enemmän harjoittelun tarvetta. Ruudussa näkyvä aika kertoo kyseisen position onnistuneiden itsenäisten vastausten mediaaniajan.',
     develops:'Harjoitus kehittää otelaudan vertikaalista hahmottamista eli kykyä nähdä saman nauhan sävelet eri kielillä. Se täydentää aiempien harjoitusten kielensuuntaista hahmottamista ja auttaa muodostamaan otelaudasta yhtenäisen kaksiulotteisen sävelkartan. Taito tukee sointujen, intervallien ja lähellä sijaitsevien sävelvaihtoehtojen löytämistä eri kieliltä.'
   },
   '5Q':{
     title:'6 – Otelauta pistokoe',
-    practice:'Valitse 20–78 kysymystä ja käynnistä pistokoe. Sama positio esiintyy kokeessa vain kerran. Vastaa viidessä sekunnissa: oikein ja ajoissa vastattu positio muuttuu vihreäksi, väärä tai liian hidas punaiseksi. Kokeen lopussa otelauta näyttää yhdellä silmäyksellä koko suorituksen. Uusi pistokoe alkaa puhtaalta pöydältä.',
+    practice:'Valitse 20–78 kysymystä ja käynnistä pistokoe. Sama positio esiintyy kokeessa vain kerran. Vastaa viidessä sekunnissa. Oikein ja ajoissa vastattu positio muuttuu vihreäksi, väärä tai liian hidas punaiseksi. Kokeen lopussa otelauta näyttää yhdellä silmäyksellä koko suorituksen. Uusi pistokoe alkaa puhtaalta pöydältä.',
     develops:'Pistokoe mittaa, kuinka varmasti ja nopeasti otelaudan sävelnimet palautuvat muistista aikapaineessa. Se toimii yleisen otelautaosaamisen testinä ja auttaa havaitsemaan yksittäiset positiot, joissa muistaminen vielä takeltelee.'
   }
 };
@@ -1536,7 +1536,7 @@ function openMethodHelp(){
   w.document.close();
   w.focus();
 }
-function resetUI(){answerEl.classList.remove('hidden');$('check').classList.toggle('hidden',['5','1','2','3','4'].includes(methodEl.value));if($('next'))$('next').textContent='Seuraava';answered=false;step=0;stepAnswers={};feedbackEl.textContent='';feedbackEl.className='feedback';tabbox.classList.add('hidden');tabbox.innerHTML='';staffWrap.classList.add('hidden');svg.innerHTML='';stepInfo.textContent='';answerEl.value='';answerEl.disabled=false;$('check').disabled=false;$('xBtn').classList.add('hidden');$('tabBtn').classList.add('hidden');$('tabBtn').textContent='Näytä tabulatuurina';$('listenBtn').classList.add('hidden');$('listenBtn').textContent='Kuuntele sointu';$('method10HintBtn').classList.add('hidden');$('method10HintBtn').disabled=false;$('method10HintBtn').textContent='Vihje: Root';$('reveal').disabled=false}
+function resetUI(){answerEl.classList.remove('hidden');$('check').classList.toggle('hidden',['5','1','2','3','4','5Q'].includes(methodEl.value));if($('next'))$('next').textContent='Seuraava';answered=false;step=0;stepAnswers={};feedbackEl.textContent='';feedbackEl.className='feedback';tabbox.classList.add('hidden');tabbox.innerHTML='';staffWrap.classList.add('hidden');svg.innerHTML='';stepInfo.textContent='';answerEl.value='';answerEl.disabled=false;$('check').disabled=false;$('xBtn').classList.add('hidden');$('tabBtn').classList.add('hidden');$('tabBtn').textContent='Näytä tabulatuurina';$('listenBtn').classList.add('hidden');$('listenBtn').textContent='Kuuntele sointu';$('method10HintBtn').classList.add('hidden');$('method10HintBtn').disabled=false;$('method10HintBtn').textContent='Vihje: Root';$('reveal').disabled=false}
 function showStartState(){
   resetUI();current=null;startTime=0;
   renderHeatmap();
@@ -1550,7 +1550,7 @@ function showStartState(){
   answerEl.disabled=true;
   answerEl.classList.remove('hidden');
   $('check').disabled=true;
-  $('check').classList.toggle('hidden',['5','1','2','3','4'].includes(methodEl.value));
+  $('check').classList.toggle('hidden',['5','1','2','3','4','5Q'].includes(methodEl.value));
   hideMethod9AnswerButtons();
   $('reveal').disabled=true;
   $('xBtn').classList.add('hidden');
@@ -1583,7 +1583,7 @@ function showStartState(){
     promptEl.textContent='Paina Seuraava aloittaaksesi guide tone -äänenkuljetusharjoituksen.';
   }else{
     answerEl.classList.remove('hidden');
-    $('check').classList.toggle('hidden',['5','1','2','3','4'].includes(methodEl.value));
+    $('check').classList.toggle('hidden',['5','1','2','3','4','5Q'].includes(methodEl.value));
     promptEl.textContent=isExam?'Paina Aloita käynnistääksesi pistokokeen.':'Paina Enter tai Seuraava aloittaaksesi harjoituksen.';
   }
   (isExam?$('startExam'):$('next')).focus();
@@ -3278,6 +3278,13 @@ answerEl.addEventListener('input',()=>{if(methodEl.value==='7')method7SyncClicks
 
 function revealCurrent(){
   if(answered||!current)return;
+  if(methodEl.value==='5Q'&&current.type==='fretExam'){
+    const t=elapsed(),shown=pcName(current.pc);
+    finishFretboardExamAnswer(false,t,false);
+    feedbackEl.textContent=`Vastaus: ${shown} — ${fmtTime(t)}`;
+    feedbackEl.className='feedback warn';
+    return;
+  }
   answered=true;
   if(methodEl.value!=='7'&&methodEl.value!=='8'&&methodEl.value!=='9'){
     recordResult({good:false,reveal:true,timeMs:elapsed(),positions:methodEl.value==='10'?[]:(current.positions||current.voicing||[])});
@@ -3486,7 +3493,7 @@ async function exportTrainingData(){
 function applyImportedData(parsed){
   const raw=parsed&&parsed.data?parsed.data:parsed;
   data=migrateData(raw);saveData();
-$('progressPanel').addEventListener('toggle',()=>{if(['5','1','2','3','4'].includes(methodEl.value)&&!$('progressPanel').open)$('progressPanel').open=true});
+$('progressPanel').addEventListener('toggle',()=>{if(['5','1','2','3','4','5Q'].includes(methodEl.value)&&!$('progressPanel').open)$('progressPanel').open=true});
 methodEl.value=data.settings.method||'1';settingHTML();renderStats();pickTask();alert('Harjoitusdata ladattu onnistuneesti.');
 }
 function importTrainingData(file){
