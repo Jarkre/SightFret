@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.19.16 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.19.17 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -231,7 +231,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.19.16 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.19.17 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -304,7 +304,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.19.16';
+const APP_VERSION='1.19.17';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const $=id=>document.getElementById(id);
 const methodEl=$('method'), settingsEl=$('settings'), promptEl=$('prompt'), answerEl=$('answer'), feedbackEl=$('feedback'), stepInfo=$('stepInfo'), tabbox=$('tabbox'), staffWrap=$('staffWrap'), svg=$('staff');
@@ -533,6 +533,18 @@ function method8TypesForCategory(category){
   if(category==='all')return method8AllTypes();
   return METHOD8_CHORD_CATEGORIES.find(c=>c.id===category)?.types||[];
 }
+function method8CategoryForQuality(qKey){
+  return METHOD8_CHORD_CATEGORIES.find(c=>c.types.some(x=>x.id===qKey))?.id||'basic';
+}
+function method8MasteryValue(id){
+  const v=Number(data.method8Mastery?.[id]);
+  return Number.isFinite(v)?Math.max(0,Math.min(100,v)):0;
+}
+function setMethod8Mastery(id,v){
+  if(!data.method8Mastery)data.method8Mastery={};
+  data.method8Mastery[id]=Math.max(0,Math.min(100,Math.round((Number(v)||0)*100)/100));
+  saveData();
+}
 function method7SelectedQuality(){
   const category=data.settings.method7Category||'all';
   const pool=method7TypesForCategory(category);
@@ -551,7 +563,7 @@ if(data.settings && Number(data.settings.method7Reps)===3){
   data.settings.method7Reps=4;
   saveData();
 }
-function defaultData(){return {version:3,settings:{method:'1',timeLimit:5,singleString:3,sameFret:6,quizCount:20,method7Category:'all',method7Type:'random',method7Mode:'three',method7Reps:4,method7Mute:false,method7GuitarAdaptation:true,method8Mode:'three',method8Category:'all',method8Type:'random',method8Reps:4,method9Mode:'three',method9Category:'all',method9Type:'random',method9Reps:4,method9ShowFretboard:true,method9ShowStaff:true,method9WithinOctave:true,method9Mute:false,method9GuitarAdaptation:true,method7FGuitarAdaptation:true,method7FWithinOctave:false,method7FMute:false,method7IWithinOctave:false,method7IMute:false,method7IGuitarAdaptation:true,method10Category:'basic',method10Type:'random',accidentals:false,sevenths:false,octaves:false,inv0:true,inv1:false,inv2:false,inv3:false,inv4:false,chordMode:'both'},methods:{},fretboards:{'1':{},'2':{},'3':{},'4':{}},method5:{},method7FMastery:{},method9Mastery:{},method10Mastery:{}}}
+function defaultData(){return {version:3,settings:{method:'1',timeLimit:5,singleString:3,sameFret:6,quizCount:20,method7Category:'all',method7Type:'random',method7Mode:'three',method7Reps:4,method7Mute:false,method7GuitarAdaptation:true,method8Mode:'three',method8Category:'all',method8Type:'random',method8Reps:4,method9Mode:'three',method9Category:'all',method9Type:'random',method9Reps:4,method9ShowFretboard:true,method9ShowStaff:true,method9WithinOctave:true,method9Mute:false,method9GuitarAdaptation:true,method7FGuitarAdaptation:true,method7FWithinOctave:false,method7FMute:false,method7IWithinOctave:false,method7IMute:false,method7IGuitarAdaptation:true,method10Category:'basic',method10Type:'random',accidentals:false,sevenths:false,octaves:false,inv0:true,inv1:false,inv2:false,inv3:false,inv4:false,chordMode:'both'},methods:{},fretboards:{'1':{},'2':{},'3':{},'4':{}},method5:{},method7FMastery:{},method8Mastery:{},method9Mastery:{},method10Mastery:{}}}
 function migrateData(raw){
   const d=defaultData();
   if(!raw||typeof raw!=='object')return d;
@@ -573,6 +585,7 @@ function migrateData(raw){
   }
   d.method5=raw.method5&&typeof raw.method5==='object'?raw.method5:{};
   d.method7FMastery=raw.method7FMastery&&typeof raw.method7FMastery==='object'?raw.method7FMastery:{};
+  d.method8Mastery=raw.method8Mastery&&typeof raw.method8Mastery==='object'?raw.method8Mastery:{};
   d.method9Mastery=raw.method9Mastery&&typeof raw.method9Mastery==='object'?raw.method9Mastery:{};
   d.method10Mastery=raw.method10Mastery&&typeof raw.method10Mastery==='object'?raw.method10Mastery:{};
   const now=Date.now();
@@ -806,9 +819,7 @@ function methodName(v){return methodEl.querySelector(`option[value="${v}"]`)?.te
 function syncProgressPanelMode(){
  const panel=$('progressPanel');
  if(!panel)return;
- const hidePanel=methodEl.value==='8';
- panel.classList.toggle('hidden',hidePanel);
- if(hidePanel)return;
+ panel.classList.remove('hidden');
  const alwaysOpen=['5','1','2','3','4','5Q','7F','7I','7'].includes(methodEl.value);
  panel.classList.toggle('always-open',alwaysOpen);
  if(alwaysOpen)panel.open=true;
@@ -818,7 +829,7 @@ function renderStats(){
  syncProgressPanelMode();
  const method=methodEl.value;
  const topScore=correctEl?.closest('.score');
- if(topScore)topScore.classList.toggle('hidden',['1','2','3','4','5Q','7F','7I','9','7','8'].includes(method));
+ if(topScore)topScore.classList.toggle('hidden',['1','2','3','4','5Q','7F','7I','9','7','8','10'].includes(method));
  const isMethod2=method==='2';
  const selectedString=isMethod2?Number(data.settings.singleString??3):null;
  const resetStringBtn=$('resetString');
@@ -872,13 +883,13 @@ function renderStats(){
      : `<br>X/hidas: <b>${m.x||0}</b>`;
  const stringLabel=isMethod2?` — ${stringNames[selectedString]}-kieli`:'';
  const progressStatsGrid=$('progressStatsGrid');
- if(progressStatsGrid)progressStatsGrid.classList.toggle('hidden',method==='5Q'||method==='7'||method==='7F'||method==='7I'||method==='9');
+ if(progressStatsGrid)progressStatsGrid.classList.toggle('hidden',method==='5Q'||method==='7'||method==='7F'||method==='7I'||method==='9'||method==='8'||method==='10');
  const progressSummaryTitle=$('progressSummaryTitle');
  if(progressSummaryTitle)progressSummaryTitle.textContent=method==='7'?'Tee sointu klikkaamalla':'Osaaminen ja seuranta';
  const progressResetActions=$('progressResetActions');
  if(progressResetActions)progressResetActions.classList.toggle('hidden',method==='7'||method==='5Q');
  const weakBlock=$('weakStats')?.parentElement;
- if(weakBlock)weakBlock.classList.toggle('hidden',method==='5'||method==='7F'||method==='7I'||method==='9');
+ if(weakBlock)weakBlock.classList.toggle('hidden',method==='5'||method==='7F'||method==='7I'||method==='9'||method==='8'||method==='10');
 
  if(method==='5'){
    $('summaryStats').innerHTML=`Menetelmä: <b>${methodName(method)}</b><br>Tunnistettu oikein: <b>${m.correct}</b><br>Tunnistettu väärin: <b>${m.wrong||0}</b><br>Käymättä: <b>${78-m.total}</b>`;
@@ -932,10 +943,10 @@ function renderStats(){
    }).join('<br>'):'Ei vielä tarpeeksi dataa.';
  }
  const heatTitle=$('heatmapTitle'),heatLegend=$('heatmapLegend');
- if(heatTitle)heatTitle.textContent=method==='10'?'Sointukategoriat':(method==='7F'||method==='7I'||method==='9')?'Intervallien osaaminen':'Otelauta 0–12';
+ if(heatTitle)heatTitle.textContent=(method==='8'||method==='10')?'Sointukategoriat':(method==='7F'||method==='7I'||method==='9')?'Intervallien osaaminen':'Otelauta 0–12';
  if(heatLegend){
    heatLegend.classList.toggle('hidden',method==='5Q'||method==='7'||method==='5');
-   heatLegend.innerHTML=method==='10'
+   heatLegend.innerHTML=(method==='8'||method==='10')
      ? '<span>heikko</span><span class="heatlegend-bar"></span><span>automatisoitunut</span><span>· nopea oikea kasvattaa eniten · yli 30 s oikein ei muuta · väärä −1</span>'
      : (method==='7F'||method==='9')
        ? '<span>heikko</span><span class="heatlegend-bar"></span><span>automatisoitunut</span>'
@@ -1010,6 +1021,15 @@ function renderHeatmap(){
    h.innerHTML=METHOD9_INTERVALS.map(interval=>{
      const level=methodEl.value==='7F'?method7FMasteryValue(interval.id):method9MasteryValue(interval.id);
      return `<div class="chord-category-cell" style="background:${masteryColor(level/10)}" title="${interval.name}: ${level}/10"><b>${interval.name}</b></div>`;
+   }).join('');
+   return;
+ }
+ if(methodEl.value==='8'){
+   h.className='chord-category-heatmap';
+   h.innerHTML=METHOD8_CHORD_CATEGORIES.map(c=>{
+     const level=method8MasteryValue(c.id),score=level/100;
+     const pct=Math.round(level);
+     return `<div class="chord-category-cell" style="background:${masteryColor(score)}" title="${c.label}: ${pct} %"><b>${c.label}</b><span>${pct} %</span></div>`;
    }).join('');
    return;
  }
@@ -3470,19 +3490,23 @@ function checkCurrent(){if(answered||!current)return;const m=methodEl.value,v=an
  }
  if(m==='8'){
    const p=parseChord(v),good=p&&p.pc===rootPC(current.chord.root)&&p.qKey===current.chord.qKey;
+   const cat=method8CategoryForQuality(current.chord.qKey);
    if(!good){
+     setMethod8Mastery(cat,method8MasteryValue(cat)-1);
+     renderStats();
      feedbackEl.textContent='Yritä uudestaan';
      feedbackEl.className='feedback warn';
      answerEl.value='';return;
    }
    answered=true;
+   setMethod8Mastery(cat,method8MasteryValue(cat)+method10CorrectWeight(elapsed()));
    if(method8Drill&&Number.isInteger(current.method8Index)){
      const x=method8Drill.tasks[current.method8Index];if(x&&x.count<method8Drill.target)x.count++;
    }
    const bass=[...current.voicing].sort((a,b)=>a.m-b.m)[0];
    feedbackEl.innerHTML=`✓ Oikein — <b>${chordSymbol(current.chord)}</b><div class="small" style="margin-top:6px">${inversionLabel(current.inv)} (${pcName(bass.pc)} bassossa)</div>${method8ProgressHTML()}`;
    feedbackEl.className='feedback method7-white';
-   answerEl.disabled=true;$('check').disabled=true;$('next').focus();return;
+   answerEl.disabled=true;$('check').disabled=true;$('next').focus();renderStats();return;
  }
  if(m==='10'){
    const p=parseChord(v),good=!!(p&&p.pc===rootPC(current.chord.root)&&p.qKey===current.chord.qKey);
@@ -4050,7 +4074,7 @@ function showMethod10IntervalHints(){
   updateMethod10HintButton();
 }
 
-methodEl.value=data.settings.method||'1';methodEl.addEventListener('change',()=>{fretboardExam=null;method3Points=null;method8Drill=null;method9Drill=null;data.settings.method=methodEl.value;saveData();settingHTML();renderStats();if(methodEl.value==='7'||methodEl.value==='7F'||methodEl.value==='7I'||methodEl.value==='9')pickTask();else showStartState()});$('methodHelpBtn').addEventListener('click',openMethodHelp);$('check').addEventListener('click',checkCurrent);$('next').addEventListener('click',pickTask);$('startExam').addEventListener('click',restartFretboardExam);$('reveal').addEventListener('click',revealCurrent);$('xBtn').addEventListener('click',markX);$('tabBtn').addEventListener('click',toggleTab);$('listenBtn').addEventListener('click',listenChord);$('method10HintBtn').addEventListener('click',()=>{if(methodEl.value==='7F')showMethod7FHint();else showMethod10IntervalHints()});answerEl.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();checkCurrent()}});$('saveFile').addEventListener('click',exportTrainingData);$('loadFile').addEventListener('click',chooseTrainingDataFile);$('loadFileInput').addEventListener('change',e=>{importTrainingData(e.target.files?.[0]);e.target.value=''});$('resetString').addEventListener('click',()=>{
+methodEl.value=data.settings.method||'1';methodEl.addEventListener('change',()=>{fretboardExam=null;method3Points=null;method8Drill=null;method9Drill=null;data.settings.method=methodEl.value;saveData();settingHTML();renderStats();if(['7','7F','7I','8','9','10'].includes(methodEl.value))pickTask();else showStartState()});$('methodHelpBtn').addEventListener('click',openMethodHelp);$('check').addEventListener('click',checkCurrent);$('next').addEventListener('click',pickTask);$('startExam').addEventListener('click',restartFretboardExam);$('reveal').addEventListener('click',revealCurrent);$('xBtn').addEventListener('click',markX);$('tabBtn').addEventListener('click',toggleTab);$('listenBtn').addEventListener('click',listenChord);$('method10HintBtn').addEventListener('click',()=>{if(methodEl.value==='7F')showMethod7FHint();else showMethod10IntervalHints()});answerEl.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();checkCurrent()}});$('saveFile').addEventListener('click',exportTrainingData);$('loadFile').addEventListener('click',chooseTrainingDataFile);$('loadFileInput').addEventListener('change',e=>{importTrainingData(e.target.files?.[0]);e.target.value=''});$('resetString').addEventListener('click',()=>{
   if(!['1','2','3','5'].includes(methodEl.value))return;
 
   const choices={
@@ -4148,11 +4172,12 @@ $('resetMethod').addEventListener('click',()=>{
   // Menetelmä 3 käyttää menetelmän 1 otelautadataa, joten sen resetointi
   // ei saa pyyhkiä menetelmän 1 osaamishistoriaa.
   if(method==='3')method3Points=null;
+  if(method==='8')data.method8Mastery={};
   saveData();
   renderStats();
   showStartState();
 });$('resetAll').addEventListener('click',()=>{if(confirm('Nollataanko kaikki oppimistiedot?')){data=defaultData();method3Points=null;saveData();methodEl.value='1';settingHTML();renderStats();showStartState()}});
-settingHTML();renderStats();if(methodEl.value==='7'||methodEl.value==='7F'||methodEl.value==='7I'||methodEl.value==='9')pickTask();else showStartState();
+settingHTML();renderStats();if(['7','7F','7I','8','9','10'].includes(methodEl.value))pickTask();else showStartState();
 
 // Näppäimistöfokuksen hallinta.
 // - Kun tehtävä on aktiivinen, fokus kuuluu vastauskentälle.
