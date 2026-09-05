@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.19.15 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.19.16 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -231,7 +231,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.19.15 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.19.16 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -277,6 +277,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
       <button class="secondary hidden" id="xBtn">En tiedä / Olen liian hidas</button>
       <button class="secondary hidden" id="tabBtn">Näytä tabulatuurina</button>
       <button class="secondary hidden" id="listenBtn">Kuuntele sointu</button>
+      <button class="secondary hidden" id="method7ChordHintBtn">Vihje: intervallit</button>
       <button class="secondary hidden" id="method10HintBtn">Vihje: intervallit</button>
     </div>
     <div id="feedback" class="feedback"></div>
@@ -303,7 +304,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.19.15';
+const APP_VERSION='1.19.16';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const $=id=>document.getElementById(id);
 const methodEl=$('method'), settingsEl=$('settings'), promptEl=$('prompt'), answerEl=$('answer'), feedbackEl=$('feedback'), stepInfo=$('stepInfo'), tabbox=$('tabbox'), staffWrap=$('staffWrap'), svg=$('staff');
@@ -1788,7 +1789,7 @@ const METHOD_HELP_CONTENT={
   },
   '7':{
     title:'9 – Löydä soinnun nauhat kieliltä',
-    practice:'SightFret antaa soinnun ja kielet, joilta sointu rakennetaan. Valitse jokaiselta annetulta kieleltä yksi nauha klikkaamalla otelautaa tai kirjoittamalla nauhanumerot. Guitar adaptation on oletuksena päällä ja rajaa tehtävät tavallisesti soitettaviin sointuotteisiin; avoimia kieliä ei lasketa venytykseen. Kun Guitar adaptation poistetaan, voit tutkia myös teoriassa oikeita mutta tavallisella yhdellä otteella epäkäytännöllisiä hajotuksia. Hiljennä äänet poistaa soinnun kuuntelun käytöstä muuttamatta nykyistä tehtävää.',
+    practice:'SightFret antaa soinnun ja kielet, joilta sointu rakennetaan. Valitse jokaiselta annetulta kieleltä yksi nauha klikkaamalla otelautaa tai kirjoittamalla nauhanumerot. Guitar adaptation on oletuksena päällä ja rajaa tehtävät tavallisesti soitettaviin sointuotteisiin; avoimia kieliä ei lasketa venytykseen. Kun Guitar adaptation poistetaan, voit tutkia myös teoriassa oikeita mutta tavallisella yhdellä otteella epäkäytännöllisiä hajotuksia. Hiljennä äänet poistaa soinnun kuuntelun käytöstä muuttamatta nykyistä tehtävää. Vihje näyttää soinnun sävelten intervallit root-säveleen verrattuna paljastamatta oikeita nauhapaikkoja.',
     develops:'Harjoitus kehittää soinnun sävelrakenteen aktiivista löytämistä otelaudalta valituilta kieliltä. Tavoitteena ei ole vain muistaa valmiita sointuotteita, vaan oppia rakentamaan sointuja sävel- ja intervallitiedon perusteella eri puolille otelautaa.'
   },
   '7F':{
@@ -1815,7 +1816,7 @@ function openMethodHelp(){
   w.document.close();
   w.focus();
 }
-function resetUI(){$('method9QualityHint')?.remove();$('method9GeneralHint')?.remove();$('method7IHintBtn')?.remove();hideMethod9AnswerButtons();answerEl.classList.remove('hidden');$('check').classList.toggle('hidden',['5','1','2','3','4','5Q','7F','7I'].includes(methodEl.value));if($('next'))$('next').textContent='Seuraava';answered=false;step=0;stepAnswers={};feedbackEl.textContent='';feedbackEl.className='feedback';tabbox.classList.add('hidden');tabbox.innerHTML='';staffWrap.classList.add('hidden');svg.innerHTML='';stepInfo.textContent='';answerEl.value='';answerEl.disabled=false;$('check').disabled=false;$('xBtn').classList.add('hidden');$('tabBtn').classList.add('hidden');$('tabBtn').textContent='Näytä tabulatuurina';$('listenBtn').classList.add('hidden');$('listenBtn').textContent='Kuuntele sointu';$('method10HintBtn').classList.add('hidden');$('method10HintBtn').disabled=false;$('method10HintBtn').textContent='Vihje: Root';$('reveal').disabled=false}
+function resetUI(){$('method9QualityHint')?.remove();$('method9GeneralHint')?.remove();$('method7IHintBtn')?.remove();hideMethod9AnswerButtons();answerEl.classList.remove('hidden');$('check').classList.toggle('hidden',['5','1','2','3','4','5Q','7F','7I'].includes(methodEl.value));if($('next'))$('next').textContent='Seuraava';answered=false;step=0;stepAnswers={};feedbackEl.textContent='';feedbackEl.className='feedback';tabbox.classList.add('hidden');tabbox.innerHTML='';staffWrap.classList.add('hidden');svg.innerHTML='';stepInfo.textContent='';answerEl.value='';answerEl.disabled=false;$('check').disabled=false;$('xBtn').classList.add('hidden');$('tabBtn').classList.add('hidden');$('tabBtn').textContent='Näytä tabulatuurina';$('listenBtn').classList.add('hidden');$('listenBtn').textContent='Kuuntele sointu';$('method7ChordHintBtn').classList.add('hidden');$('method10HintBtn').classList.add('hidden');$('method10HintBtn').disabled=false;$('method10HintBtn').textContent='Vihje: Root';$('reveal').disabled=false}
 function showStartState(){
   resetUI();current=null;startTime=0;
   renderHeatmap();
@@ -2353,6 +2354,31 @@ function chooseMethod7DrillTask(){
   if(a.length>1){const b=a.filter(y=>y.i!==method7Drill.lastIndex);if(b.length)a=b;}
   const y=a[randomInt(a.length)];method7Drill.lastIndex=y.i;return y;
 }
+function method7ChordIntervalLabel(semitones,degree){
+  const key=`${degree}:${mod(semitones,12)}`;
+  const labels={
+    '1:0':'puhdas priimi (P1)',
+    '2:1':'pieni sekunti (m2)','2:2':'suuri sekunti (M2)',
+    '3:3':'pieni terssi (m3)','3:4':'suuri terssi (M3)',
+    '4:5':'puhdas kvartti (P4)','4:6':'ylinouseva kvartti (A4)',
+    '5:6':'vähennetty kvintti (d5)','5:7':'puhdas kvintti (P5)','5:8':'ylinouseva kvintti (A5)',
+    '6:8':'pieni seksti (m6)','6:9':'suuri seksti (M6)',
+    '7:9':'vähennetty septimi (d7)','7:10':'pieni septimi (m7)','7:11':'suuri septimi (M7)',
+    '9:2':'suuri nooni (M9)'
+  };
+  return labels[key]||`${semitones} puolisävelaskelta`;
+}
+function showMethod7ChordHint(){
+  if(methodEl.value!=='7'||!current||current.type!=='build')return;
+  const ch=current.chord;
+  const parts=ch.structuralIntervals.map((semi,i)=>{
+    const degree=ch.degrees[i]||1;
+    return `<b>${ch.spellings[i]}</b>: ${method7ChordIntervalLabel(semi,degree)}`;
+  });
+  feedbackEl.innerHTML=`<span class="small">Vihje rootista <b>${ch.root}</b>: ${parts.join(' · ')}</span>`;
+  feedbackEl.className='feedback';
+}
+
 function showMethod7Task(x,idx=null){
   const listenChoices=buildChordVoicingsOnStrings(x.ch,x.strings,12,12)
     .filter(v=>method7VoicingMatchesInversion(x.ch,x.strings,v,x.inv||0));
@@ -2365,7 +2391,7 @@ function showMethod7Task(x,idx=null){
   current={type:'build',chord:x.ch,strings:[...x.strings],method7DrillIndex:idx,inv:x.inv||0,listenVoicing,selectedFrets:{}};
   const invText=x.ch.pcs.length===3?` (${method7InversionLabel(x.inv||0)})`:'';
   promptEl.innerHTML=`Muodosta <b>${x.root}${QUALITIES[x.q].suffix}</b> kieliltä <b>${x.strings.map(s=>stringNames[s]).join(' – ')}</b>${invText}. Anna yksi nauha jokaiselle samassa järjestyksessä.${method7DrillProgressHTML()}`;
-  answerEl.placeholder=x.strings.length===2?'Esim. 3, 5':x.strings.length===3?'Esim. 8, 7, 5':'Esim. 8, 7, 5, 5';$('listenBtn').classList.toggle('hidden',!!data.settings.method7Mute);
+  answerEl.placeholder=x.strings.length===2?'Esim. 3, 5':x.strings.length===3?'Esim. 8, 7, 5':'Esim. 8, 7, 5, 5';$('listenBtn').classList.toggle('hidden',!!data.settings.method7Mute);$('method7ChordHintBtn').classList.remove('hidden');
 }
 function method7SyncAnswerFromClicks(){
   if(!current||current.type!=='build')return;
@@ -4088,6 +4114,7 @@ $('resetFret').addEventListener('click',()=>{
   renderStats();
   showStartState();
 });
+$('method7ChordHintBtn').addEventListener('click',showMethod7ChordHint);
 $('resetMethod10All').addEventListener('click',()=>{
   if(methodEl.value!=='10')return;
   if(!confirm('Nollataanko kaikki menetelmän 10 sointukategorioiden osaamisdata?'))return;
