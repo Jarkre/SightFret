@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.19.11 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.19.12 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -231,7 +231,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.19.11 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.19.12 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -303,7 +303,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.19.11';
+const APP_VERSION='1.19.12';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const $=id=>document.getElementById(id);
 const methodEl=$('method'), settingsEl=$('settings'), promptEl=$('prompt'), answerEl=$('answer'), feedbackEl=$('feedback'), stepInfo=$('stepInfo'), tabbox=$('tabbox'), staffWrap=$('staffWrap'), svg=$('staff');
@@ -550,7 +550,7 @@ if(data.settings && Number(data.settings.method7Reps)===3){
   data.settings.method7Reps=4;
   saveData();
 }
-function defaultData(){return {version:3,settings:{method:'1',timeLimit:5,singleString:3,sameFret:6,quizCount:20,method7Category:'all',method7Type:'random',method7Mode:'three',method7Reps:4,method8Mode:'three',method8Category:'all',method8Type:'random',method8Reps:4,method9Mode:'three',method9Category:'all',method9Type:'random',method9Reps:4,method9ShowFretboard:true,method9ShowStaff:true,method9WithinOctave:true,method7FGuitarAdaptation:true,method7FWithinOctave:false,method7FMute:false,method7IWithinOctave:false,method7IMute:false,method7IGuitarAdaptation:true,method10Category:'basic',method10Type:'random',accidentals:false,sevenths:false,octaves:false,inv0:true,inv1:false,inv2:false,inv3:false,inv4:false,chordMode:'both'},methods:{},fretboards:{'1':{},'2':{},'3':{},'4':{}},method5:{},method7FMastery:{},method9Mastery:{},method10Mastery:{}}}
+function defaultData(){return {version:3,settings:{method:'1',timeLimit:5,singleString:3,sameFret:6,quizCount:20,method7Category:'all',method7Type:'random',method7Mode:'three',method7Reps:4,method8Mode:'three',method8Category:'all',method8Type:'random',method8Reps:4,method9Mode:'three',method9Category:'all',method9Type:'random',method9Reps:4,method9ShowFretboard:true,method9ShowStaff:true,method9WithinOctave:true,method9Mute:false,method9GuitarAdaptation:true,method7FGuitarAdaptation:true,method7FWithinOctave:false,method7FMute:false,method7IWithinOctave:false,method7IMute:false,method7IGuitarAdaptation:true,method10Category:'basic',method10Type:'random',accidentals:false,sevenths:false,octaves:false,inv0:true,inv1:false,inv2:false,inv3:false,inv4:false,chordMode:'both'},methods:{},fretboards:{'1':{},'2':{},'3':{},'4':{}},method5:{},method7FMastery:{},method9Mastery:{},method10Mastery:{}}}
 function migrateData(raw){
   const d=defaultData();
   if(!raw||typeof raw!=='object')return d;
@@ -1466,7 +1466,18 @@ function method9Settings(){
   const randomLabel=category==='all'?'Satunnainen kaikista':'Satunnainen kategoriasta';
   const types=[`<option value="random">${randomLabel}</option>`,...pool.map(x=>`<option value="${x.id}">${x.name} — ${x.short}</option>`)].join('');
 
-  return `<div><div class="group-title">Harjoitustapa</div><select id="method9Mode">
+  return `<div><div class="group-title">Intervallit</div>
+      <label class="check"><input type="checkbox" id="method9WithinOctave"> Vain oktaavin sisällä</label>
+      <div class="small">Päällä: intervallit rajataan oktaaviin asti. Pois: mukana voivat olla myös yhdysintervallit kahteen oktaaviin asti.</div>
+    </div>
+    <div><div class="group-title">Äänet</div>
+      <label class="check"><input type="checkbox" id="method9Mute"> Hiljennä äänet</label>
+    </div>
+    <div><div class="group-title">Kitarasovitus</div>
+      <label class="check"><input type="checkbox" id="method9GuitarAdaptation"> Guitar adaptation</label>
+      <div class="small">Päällä: tehtävät rajataan kitaralla käytännössä soitettaviin kahden sävelen otteisiin eri kielillä; kahden painetun sävelen nauhaväli on enintään neljä nauhaa. Avoimet kielet sallitaan ilman nauhavälirajoitusta. Pois: mukana ovat myös teoreettisesti oikeat mutta tavallisessa soitossa epäkäytännölliset positiot.</div>
+    </div>
+    <div><div class="group-title">Harjoitustapa</div><select id="method9Mode">
       <option value="three"${mode==='three'?' selected':''}>3 intervallin tehoharjoittelu</option>
       <option value="quality"${mode==='quality'?' selected':''}>Intervallin laatu</option>
       <option value="qualityThree"${mode==='qualityThree'?' selected':''}>Intervallin laatu — tehotreeni</option>
@@ -1479,10 +1490,6 @@ function method9Settings(){
     }
     ${(mode==='three'||mode==='qualityThree')?`<div><div class="group-title">Toistoja / intervalli</div><input id="method9Reps" type="number" min="1" max="50" step="1" value="${data.settings.method9Reps||4}"><div class="small">${mode==='qualityThree'?'Kolme intervallia pysyy samoina ja myös niiden absoluuttiset säveltasot lukitaan harjoitusjakson ajaksi.':'Kolme intervallia pysyy samoina. Sijainti otelaudalla vaihtuu kierrokselta toiselle.'}</div></div>`:''}
     ${mode==='free'?`<div><div class="group-title">Harjoitustapa</div><div class="small">Yksi satunnainen intervalli kerrallaan valittujen filttereiden mukaisesti.</div></div>`:''}
-    <div><div class="group-title">Intervallit</div>
-      <label class="check"><input type="checkbox" id="method9WithinOctave"> Vain oktaavin sisällä</label>
-      <div class="small">Päällä: intervallit rajataan oktaaviin asti. Pois: mukana voivat olla myös yhdysintervallit kahteen oktaaviin asti.</div>
-    </div>
     <div><div class="group-title">Näyttö</div>
       <label class="check"><input type="checkbox" id="method9ShowFretboard"> Näytä otelauta</label>
       <label class="check"><input type="checkbox" id="method9ShowStaff"> Näytä nuotti</label>
@@ -1513,7 +1520,7 @@ function method10Settings(){
 }
 function chordSettings(m){let inv=m==='9A'||m==='9B'||m==='10';return `<div><div class="group-title">Sointulaatu</div><select id="chordMode"><option value="both">Duuri + molli</option><option value="major">Vain duurit</option><option value="minor">Vain mollit</option></select>${m==='10'?'<label class="check"><input type="checkbox" id="sevenths"> Seiskasoinnut</label>':''}${['8B','10'].includes(m)?'<label class="check"><input type="checkbox" id="accidentals"> Ylennykset/alennukset</label>':''}${m==='10'?'<label class="check"><input type="checkbox" id="octaves"> Eri oktaavit/rekisterit</label>':''}</div>${inv?`<div><div class="group-title">Inversiot</div><label class="check"><input type="checkbox" id="inv0"> Root-asento</label><label class="check"><input type="checkbox" id="inv1"> 1. inversio</label><label class="check"><input type="checkbox" id="inv2"> 2. inversio</label></div>`:''}`}
 function wireSettings(){
-  for(const id of ['timeLimit','singleString','sameFret','quizCount','method7Mode','method7Category','method7Type','method7Reps','method8Mode','method8Category','method8Type','method8Reps','method9Mode','method9Category','method9Type','method9Reps','method9ShowFretboard','method9ShowStaff','method9WithinOctave','method7FGuitarAdaptation','method7FWithinOctave','method7FMute','method7IWithinOctave','method7IMute','method7IGuitarAdaptation','method10Category','method10Type','chordMode','accidentals','sevenths','guitarAdaptation','inv0','inv1','inv2','inv3','inv4']){
+  for(const id of ['timeLimit','singleString','sameFret','quizCount','method7Mode','method7Category','method7Type','method7Reps','method8Mode','method8Category','method8Type','method8Reps','method9Mode','method9Category','method9Type','method9Reps','method9ShowFretboard','method9ShowStaff','method9WithinOctave','method9Mute','method9GuitarAdaptation','method7FGuitarAdaptation','method7FWithinOctave','method7FMute','method7IWithinOctave','method7IMute','method7IGuitarAdaptation','method10Category','method10Type','chordMode','accidentals','sevenths','guitarAdaptation','inv0','inv1','inv2','inv3','inv4']){
     const el=$(id);if(!el)continue;
     const val=data.settings[id];
     if(el.type==='checkbox'){
@@ -1529,6 +1536,14 @@ function wireSettings(){
       // current interval, fretboard positions, answer state or feedback.
       if(id==='method7FMute'){
         if(el.checked)method7FAudioBusyUntil=0;
+        saveData();
+        renderStats();
+        return;
+      }
+
+      // Method 8 (internal method 9) mute is a live control: changing it must
+      // preserve the current interval, notation, fretboard and answer state.
+      if(id==='method9Mute'){
         saveData();
         renderStats();
         return;
@@ -1761,7 +1776,7 @@ const METHOD_HELP_CONTENT={
     develops:'Harjoitus kehittää kykyä rakentaa intervalli aktiivisesti otelaudalle annetusta lähtösävelestä. Se yhdistää intervallin teoreettisen etäisyyden, suunnan ja kitaran kielten välisen geometrisen hahmottamisen käytännön sormilautakartaksi. Harjoitus kehittää otelaudan hahmottamista yksittäisten muistettujen positioiden sijaan toisiinsa liittyvien sävelten ja intervallien verkostona. Toistojen myötä tavoitteena on, että intervallien sijainnit eri kielillä automatisoituvat ja otelaudan mahdolliset reitit alkavat hahmottua suoraan lähtöpositiosta.'
   },
   '7I':{title:'8 – Tunnista intervalli otelaudalta',practice:'SightFret näyttää otelaudalla lähtö- ja kohdeposition sekä kertoo, kuljetaanko lähtösävelestä kohdesäveleen sävelkorkeudessa ylöspäin vai alaspäin. Tunnista suunnallinen intervalli ja vastaa intervallipainikkeella. Suunta määräytyy absoluuttisesta sävelkorkeudesta, ei otelaudan visuaalisesta suunnasta. Harjoitusta kannattaa tehdä kitara kädessä ja soittaa samat kaksi positiota myös fyysiseltä otelaudalta. Vain oktaavin sisällä rajaa tehtävät oktaaviin asti. Hiljennä äänet poistaa kuuntelun. Guitar adaptation rajaa tehtävät käytännössä soitettaviin kahden sävelen otteisiin ja sallii avoimet kielet ilman nauhavälirajoitusta.',develops:'Harjoitus on menetelmän 7 peilikuva: siinä otelaudan kahdesta positiosta päätellään niiden välinen intervalli. Se vahvistaa kykyä lukea otelautaa toisiinsa liittyvien positioiden ja intervallien verkostona sekä automatisoi intervallisuhteiden tunnistamista eri kieliltä.'},
-  '9':{title:'8 – Tunnista intervalli',practice:'Tunnista nuottiviivastolla ja/tai otelaudalla esitetty intervalli. Näytä otelauta -valinta näyttää intervallin kitaran otelaudalla lähtö- ja kohdepositiona. Näytä nuotti -valinta näyttää tai piilottaa nuottiviivaston. Kun Vain oktaavin sisällä on pois päältä, mukana voi olla myös yhdysintervalleja kahteen oktaaviin asti. Jos sekä nuotti että otelauta piilotetaan, intervallin voi tunnistaa kuuntelemalla.',develops:'Harjoitus yhdistää nuottikuvan, intervallin nimen ja saman sävelsuhteen kitaran otelaudalla. Tavoitteena on, että nähty intervalli alkaa hahmottua sekä teoreettisena etäisyytenä että konkreettisena otelautasuhteena.'}
+  '9':{title:'8 – Tunnista intervalli',practice:'Tunnista nuottiviivastolla ja/tai otelaudalla esitetty intervalli. Vain oktaavin sisällä rajaa tehtävät oktaaviin asti; pois päältä mukana voi olla myös yhdysintervalleja kahteen oktaaviin asti. Hiljennä äänet poistaa intervallin kuuntelun. Guitar adaptation rajaa otelautapositiot kitaralla käytännössä soitettavaan intervalliverkostoon: sävelet ovat eri kielillä ja kahden painetun sävelen nauhaväli on enintään neljä nauhaa, mutta avoimet kielet sallitaan ilman nauhavälirajoitusta. Kun Guitar adaptation poistetaan, mukana ovat myös teoriassa mahdolliset mutta tavallisessa soitossa epäkäytännölliset positiot. Näytä otelauta -valinta näyttää intervallin kitaran otelaudalla lähtö- ja kohdepositiona. Näytä nuotti -valinta näyttää tai piilottaa nuottiviivaston. Jos sekä nuotti että otelauta piilotetaan, intervallin voi tunnistaa kuuntelemalla.',develops:'Harjoitus yhdistää nuottikuvan, intervallin nimen ja saman sävelsuhteen kitaran otelaudalla. Tavoitteena on, että nähty intervalli alkaa hahmottua sekä teoreettisena etäisyytenä että konkreettisena otelautasuhteena.'}
 };
 function updateMethodHelpButton(){
   const b=$('methodHelpBtn');
@@ -2459,7 +2474,6 @@ function method9PairForInterval(interval){
     for(let f1=0;f1<=12;f1++){
       const m1=noteAt(s1,f1);
       for(let s2=0;s2<6;s2++){
-        if(s2===s1)continue;
         for(let f2=0;f2<=12;f2++){
           const m2=noteAt(s2,f2);
           if(Math.abs(m2-m1)!==interval.semitones)continue;
@@ -2467,9 +2481,9 @@ function method9PairForInterval(interval){
           const a=m1<=m2?{s:s1,f:f1,m:m1,pc:mod(m1,12)}:{s:s2,f:f2,m:m2,pc:mod(m2,12)};
           const b=m1<=m2?{s:s2,f:f2,m:m2,pc:mod(m2,12)}:{s:s1,f:f1,m:m1,pc:mod(m1,12)};
 
-          // Fyysisesti uskottava kahden sävelen ote.
-          const fretted=[a.f,b.f].filter(f=>f>0);
-          if(fretted.length>1 && Math.max(...fretted)-Math.min(...fretted)>3)continue;
+          // Guitar adaptation käyttää samaa kahden sävelen soitettavuusperiaatetta
+          // kuin menetelmä 7. Avoin kieli ei ole venytys.
+          if(data.settings.method9GuitarAdaptation!==false && !method7FPlayablePair(a.s,a.f,b.s,b.f))continue;
 
           // Find a notation spelling whose LETTER distance matches the requested
           // interval number. This prevents e.g. A–A# from being shown as a
@@ -3608,6 +3622,7 @@ function playFretPosition(s,f){
 function listenChord(){
   if(!current)return;
   if(methodEl.value==='7I'&&data.settings.method7IMute)return;
+  if(methodEl.value==='9'&&data.settings.method9Mute)return;
 
   // Menetelmä 7F: sama kuuntelurakenne kuin positiota klikattaessa.
   if(current.type==='intervalFind7F'&&current.start&&current.target){
