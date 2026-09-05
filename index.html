@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.19.10 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.19.11 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -231,7 +231,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.19.10 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.19.11 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -244,12 +244,11 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
         <option value="4">5 – Saman nauhan harjoitus eri kielillä</option>
         <option value="5Q">6 – Otelauta pistokoe</option>
         <option value="7F">7 – Löydä intervalli otelaudalta</option>
-        <option value="7I">8 – Tunnista intervalli otelaudalta</option>
-        <option value="9">9 – Tunnista intervalli nuoteista</option>
-        <option value="7">10 – Löydä soinnun nauhat kieliltä</option>
-        <option value="8">11 – Tunnista sointu otteesta</option>
-        <option value="10">12 – Tunnista sointu nuoteista</option>
-        <option value="11">13 – Äänenkuljetus</option>
+        <option value="9">8 – Tunnista intervalli</option>
+        <option value="7">9 – Löydä soinnun nauhat kieliltä</option>
+        <option value="8">10 – Tunnista sointu otteesta</option>
+        <option value="10">11 – Tunnista sointu nuoteista</option>
+        <option value="11">12 – Äänenkuljetus</option>
       </select>
     </label>
     <button class="ghost" id="resetAll">Nollaa kaikki oppimistiedot</button>
@@ -304,7 +303,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.19.10';
+const APP_VERSION='1.19.11';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const $=id=>document.getElementById(id);
 const methodEl=$('method'), settingsEl=$('settings'), promptEl=$('prompt'), answerEl=$('answer'), feedbackEl=$('feedback'), stepInfo=$('stepInfo'), tabbox=$('tabbox'), staffWrap=$('staffWrap'), svg=$('staff');
@@ -546,6 +545,7 @@ let current=null,answered=false,startTime=0,step=0,stepAnswers={},audioCtx=null,
 let data=loadData();
 if(data.settings && (data.settings.method==='9A'||data.settings.method==='9B')){data.settings.method='9';saveData();}
 if(/^8[A-D]$/.test(data.settings?.method||'')){data.settings.method='8';saveData();}
+if(data.settings && data.settings.method==='7I'){data.settings.method='9';saveData();}
 if(data.settings && Number(data.settings.method7Reps)===3){
   data.settings.method7Reps=4;
   saveData();
@@ -1761,7 +1761,7 @@ const METHOD_HELP_CONTENT={
     develops:'Harjoitus kehittää kykyä rakentaa intervalli aktiivisesti otelaudalle annetusta lähtösävelestä. Se yhdistää intervallin teoreettisen etäisyyden, suunnan ja kitaran kielten välisen geometrisen hahmottamisen käytännön sormilautakartaksi. Harjoitus kehittää otelaudan hahmottamista yksittäisten muistettujen positioiden sijaan toisiinsa liittyvien sävelten ja intervallien verkostona. Toistojen myötä tavoitteena on, että intervallien sijainnit eri kielillä automatisoituvat ja otelaudan mahdolliset reitit alkavat hahmottua suoraan lähtöpositiosta.'
   },
   '7I':{title:'8 – Tunnista intervalli otelaudalta',practice:'SightFret näyttää otelaudalla lähtö- ja kohdeposition sekä kertoo, kuljetaanko lähtösävelestä kohdesäveleen sävelkorkeudessa ylöspäin vai alaspäin. Tunnista suunnallinen intervalli ja vastaa intervallipainikkeella. Suunta määräytyy absoluuttisesta sävelkorkeudesta, ei otelaudan visuaalisesta suunnasta. Harjoitusta kannattaa tehdä kitara kädessä ja soittaa samat kaksi positiota myös fyysiseltä otelaudalta. Vain oktaavin sisällä rajaa tehtävät oktaaviin asti. Hiljennä äänet poistaa kuuntelun. Guitar adaptation rajaa tehtävät käytännössä soitettaviin kahden sävelen otteisiin ja sallii avoimet kielet ilman nauhavälirajoitusta.',develops:'Harjoitus on menetelmän 7 peilikuva: siinä otelaudan kahdesta positiosta päätellään niiden välinen intervalli. Se vahvistaa kykyä lukea otelautaa toisiinsa liittyvien positioiden ja intervallien verkostona sekä automatisoi intervallisuhteiden tunnistamista eri kieliltä.'},
-  '9':{title:'9 – Tunnista intervalli nuoteista',practice:'Tunnista nuottiviivastolla esitetty intervalli. Näytä otelauta -valinta näyttää saman intervallin myös kitaran otelaudalla lähtö- ja kohdepositiona. Näytä nuotti -valinta näyttää tai piilottaa nuottiviivaston. Kun Vain oktaavin sisällä on pois päältä, mukana voi olla myös yhdysintervalleja kahteen oktaaviin asti. Jos sekä nuotti että otelauta piilotetaan, intervallin voi tunnistaa kuuntelemalla.',develops:'Harjoitus yhdistää nuottikuvan, intervallin nimen ja saman sävelsuhteen kitaran otelaudalla. Tavoitteena on, että nuoteista nähty intervalli alkaa hahmottua sekä teoreettisena etäisyytenä että konkreettisena otelautasuhteena.'}
+  '9':{title:'8 – Tunnista intervalli',practice:'Tunnista nuottiviivastolla ja/tai otelaudalla esitetty intervalli. Näytä otelauta -valinta näyttää intervallin kitaran otelaudalla lähtö- ja kohdepositiona. Näytä nuotti -valinta näyttää tai piilottaa nuottiviivaston. Kun Vain oktaavin sisällä on pois päältä, mukana voi olla myös yhdysintervalleja kahteen oktaaviin asti. Jos sekä nuotti että otelauta piilotetaan, intervallin voi tunnistaa kuuntelemalla.',develops:'Harjoitus yhdistää nuottikuvan, intervallin nimen ja saman sävelsuhteen kitaran otelaudalla. Tavoitteena on, että nähty intervalli alkaa hahmottua sekä teoreettisena etäisyytenä että konkreettisena otelautasuhteena.'}
 };
 function updateMethodHelpButton(){
   const b=$('methodHelpBtn');
