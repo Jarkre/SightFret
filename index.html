@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.19.17 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.19.18 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -47,6 +47,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 .method7f-board .heatcell.method7f-target{border:2px solid #60a5fa;cursor:pointer}
 .method7f-board .heatcell.method7f-disabled{opacity:.42;cursor:not-allowed}
 .method7f-board .heatcell.method7f-start{background:#8fe3a4;color:#20242b;font-weight:850;opacity:1}
+.method7f-board .heatcell.method8-root-label{color:#fff}
 .method7f-board .heatcell.method7f-wrong{background:#ff6b6b;color:#20242b;font-weight:850}
 .method7f-board .heatcell.method7f-answer{background:#8fe3a4;color:#20242b;font-weight:850}
 .method7f-target-label{display:inline-block;border:2px solid #60a5fa;border-radius:7px;padding:2px 7px}
@@ -231,7 +232,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.19.17 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.19.18 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -304,7 +305,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.19.17';
+const APP_VERSION='1.19.18';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const $=id=>document.getElementById(id);
 const methodEl=$('method'), settingsEl=$('settings'), promptEl=$('prompt'), answerEl=$('answer'), feedbackEl=$('feedback'), stepInfo=$('stepInfo'), tabbox=$('tabbox'), staffWrap=$('staffWrap'), svg=$('staff');
@@ -2489,20 +2490,32 @@ function method8VoicingForTask(x){
   return null;
 }
 function renderMethod8Fretboard(positions){
-  const selected=new Set((positions||[]).map(p=>`${p.s}-${p.f}`));
+  const selected=new Map((positions||[]).map(p=>[`${p.s}-${p.f}`,p]));
+  const rootPc=current?.type==='reverse8'&&current.chord?rootPC(current.chord.root):null;
+  const showRoot=!!(current?.type==='reverse8'&&current.method8RootHint);
   let z=`<div class="method7f-board-wrap"><div class="heatmap method7f-board" id="method8ChordBoard"><div class="heatcell heathead">kieli</div>`+
     Array.from({length:13},(_,f)=>`<div class="heatcell heathead${f===0?' fret-zero':''}">${f}</div>`).join('');
   for(let s=5;s>=0;s--){
     z+=`<div class="heatcell heathead">${stringNames[s]}</div>`;
     for(let f=0;f<=12;f++){
-      const active=selected.has(`${s}-${f}`);
-      z+=`<div class="heatcell${f===0?' fret-zero':''}${active?' method7f-start':''}"${active?' title="Sointusävel"':''}>${active?'●':''}</div>`;
+      const pos=selected.get(`${s}-${f}`),active=!!pos;
+      const isRoot=active&&rootPc!=null&&mod(pos.m,12)===rootPc;
+      const label=showRoot&&isRoot?'Root':'';
+      z+=`<div class="heatcell${f===0?' fret-zero':''}${active?' method7f-start':''}${showRoot&&isRoot?' method8-root-label':''}"${active?' title="Sointusävel"':''}>${label}</div>`;
     }
   }
   z+='</div></div>';
   tabbox.innerHTML=z;
   tabbox.classList.remove('hidden');
   requestAnimationFrame(()=>{const b=$('method8ChordBoard');if(b)renderFretboardNutBar(b)});
+}
+
+function showMethod8RootHint(){
+  if(!current||current.type!=='reverse8')return;
+  current.method8RootHint=true;
+  renderMethod8Fretboard(current.voicing);
+  const btn=$('method10HintBtn');
+  if(btn){btn.textContent='Root näytetty';btn.disabled=true;}
 }
 
 function pickReverseChordTask(){
@@ -2514,9 +2527,10 @@ function pickReverseChordTask(){
     }
     const v=method8VoicingForTask(x);
     if(!v){pickReverseChordTask();return;}
-    current={type:'reverse8',chord:x.ch,inv:v.inv,voicing:v.voicing,method8Index:null};
+    current={type:'reverse8',chord:x.ch,inv:v.inv,voicing:v.voicing,method8Index:null,method8RootHint:false};
     promptEl.innerHTML=`Mikä sointu tämä on?`;
     renderMethod8Fretboard(v.voicing);
+    $('method10HintBtn').textContent='Vihje: Root';$('method10HintBtn').disabled=false;$('method10HintBtn').classList.remove('hidden');
     answerEl.placeholder='Esim. Dm, A7, Cmaj7';
     $('listenBtn').classList.remove('hidden');
     return;
@@ -2538,9 +2552,10 @@ function pickReverseChordTask(){
   method8Drill.index=(idx+1)%3;
   const x=method8Drill.tasks[idx],v=method8VoicingForTask(x);
   if(!v){method8Drill=null;pickReverseChordTask();return;}
-  current={type:'reverse8',chord:x.ch,inv:v.inv,voicing:v.voicing,method8Index:idx};
+  current={type:'reverse8',chord:x.ch,inv:v.inv,voicing:v.voicing,method8Index:idx,method8RootHint:false};
   promptEl.innerHTML=`<b>${idx+1}/3</b> — Mikä sointu tämä on?${method8ProgressHTML()}`;
   renderMethod8Fretboard(v.voicing);
+  $('method10HintBtn').textContent='Vihje: Root';$('method10HintBtn').disabled=false;$('method10HintBtn').classList.remove('hidden');
   answerEl.placeholder='Esim. Dm, A7, Cmaj7';
   $('listenBtn').classList.remove('hidden');
 }
@@ -4074,7 +4089,7 @@ function showMethod10IntervalHints(){
   updateMethod10HintButton();
 }
 
-methodEl.value=data.settings.method||'1';methodEl.addEventListener('change',()=>{fretboardExam=null;method3Points=null;method8Drill=null;method9Drill=null;data.settings.method=methodEl.value;saveData();settingHTML();renderStats();if(['7','7F','7I','8','9','10'].includes(methodEl.value))pickTask();else showStartState()});$('methodHelpBtn').addEventListener('click',openMethodHelp);$('check').addEventListener('click',checkCurrent);$('next').addEventListener('click',pickTask);$('startExam').addEventListener('click',restartFretboardExam);$('reveal').addEventListener('click',revealCurrent);$('xBtn').addEventListener('click',markX);$('tabBtn').addEventListener('click',toggleTab);$('listenBtn').addEventListener('click',listenChord);$('method10HintBtn').addEventListener('click',()=>{if(methodEl.value==='7F')showMethod7FHint();else showMethod10IntervalHints()});answerEl.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();checkCurrent()}});$('saveFile').addEventListener('click',exportTrainingData);$('loadFile').addEventListener('click',chooseTrainingDataFile);$('loadFileInput').addEventListener('change',e=>{importTrainingData(e.target.files?.[0]);e.target.value=''});$('resetString').addEventListener('click',()=>{
+methodEl.value=data.settings.method||'1';methodEl.addEventListener('change',()=>{fretboardExam=null;method3Points=null;method8Drill=null;method9Drill=null;data.settings.method=methodEl.value;saveData();settingHTML();renderStats();if(['7','7F','7I','8','9','10'].includes(methodEl.value))pickTask();else showStartState()});$('methodHelpBtn').addEventListener('click',openMethodHelp);$('check').addEventListener('click',checkCurrent);$('next').addEventListener('click',pickTask);$('startExam').addEventListener('click',restartFretboardExam);$('reveal').addEventListener('click',revealCurrent);$('xBtn').addEventListener('click',markX);$('tabBtn').addEventListener('click',toggleTab);$('listenBtn').addEventListener('click',listenChord);$('method10HintBtn').addEventListener('click',()=>{if(methodEl.value==='7F')showMethod7FHint();else if(methodEl.value==='8')showMethod8RootHint();else showMethod10IntervalHints()});answerEl.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();checkCurrent()}});$('saveFile').addEventListener('click',exportTrainingData);$('loadFile').addEventListener('click',chooseTrainingDataFile);$('loadFileInput').addEventListener('change',e=>{importTrainingData(e.target.files?.[0]);e.target.value=''});$('resetString').addEventListener('click',()=>{
   if(!['1','2','3','5'].includes(methodEl.value))return;
 
   const choices={
