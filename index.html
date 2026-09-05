@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.19.14 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.19.15 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -231,7 +231,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.19.14 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.19.15 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -303,7 +303,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.19.14';
+const APP_VERSION='1.19.15';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const $=id=>document.getElementById(id);
 const methodEl=$('method'), settingsEl=$('settings'), promptEl=$('prompt'), answerEl=$('answer'), feedbackEl=$('feedback'), stepInfo=$('stepInfo'), tabbox=$('tabbox'), staffWrap=$('staffWrap'), svg=$('staff');
@@ -805,6 +805,9 @@ function methodName(v){return methodEl.querySelector(`option[value="${v}"]`)?.te
 function syncProgressPanelMode(){
  const panel=$('progressPanel');
  if(!panel)return;
+ const hidePanel=methodEl.value==='8';
+ panel.classList.toggle('hidden',hidePanel);
+ if(hidePanel)return;
  const alwaysOpen=['5','1','2','3','4','5Q','7F','7I','7'].includes(methodEl.value);
  panel.classList.toggle('always-open',alwaysOpen);
  if(alwaysOpen)panel.open=true;
@@ -814,7 +817,7 @@ function renderStats(){
  syncProgressPanelMode();
  const method=methodEl.value;
  const topScore=correctEl?.closest('.score');
- if(topScore)topScore.classList.toggle('hidden',['1','2','3','4','5Q','7F','7I','9'].includes(method));
+ if(topScore)topScore.classList.toggle('hidden',['1','2','3','4','5Q','7F','7I','9','7','8'].includes(method));
  const isMethod2=method==='2';
  const selectedString=isMethod2?Number(data.settings.singleString??3):null;
  const resetStringBtn=$('resetString');
@@ -2439,6 +2442,23 @@ function method8VoicingForTask(x){
   }
   return null;
 }
+function renderMethod8Fretboard(positions){
+  const selected=new Set((positions||[]).map(p=>`${p.s}-${p.f}`));
+  let z=`<div class="method7f-board-wrap"><div class="heatmap method7f-board" id="method8ChordBoard"><div class="heatcell heathead">kieli</div>`+
+    Array.from({length:13},(_,f)=>`<div class="heatcell heathead${f===0?' fret-zero':''}">${f}</div>`).join('');
+  for(let s=5;s>=0;s--){
+    z+=`<div class="heatcell heathead">${stringNames[s]}</div>`;
+    for(let f=0;f<=12;f++){
+      const active=selected.has(`${s}-${f}`);
+      z+=`<div class="heatcell${f===0?' fret-zero':''}${active?' method7f-start':''}"${active?' title="Sointusävel"':''}>${active?'●':''}</div>`;
+    }
+  }
+  z+='</div></div>';
+  tabbox.innerHTML=z;
+  tabbox.classList.remove('hidden');
+  requestAnimationFrame(()=>{const b=$('method8ChordBoard');if(b)renderFretboardNutBar(b)});
+}
+
 function pickReverseChordTask(){
   if((data.settings.method8Mode||'three')==='free'){
     const x=makeMethod8ChordIdentity();
@@ -2450,7 +2470,7 @@ function pickReverseChordTask(){
     if(!v){pickReverseChordTask();return;}
     current={type:'reverse8',chord:x.ch,inv:v.inv,voicing:v.voicing,method8Index:null};
     promptEl.innerHTML=`Mikä sointu tämä on?`;
-    renderTab(v.voicing);tabbox.classList.remove('hidden');
+    renderMethod8Fretboard(v.voicing);
     answerEl.placeholder='Esim. Dm, A7, Cmaj7';
     $('listenBtn').classList.remove('hidden');
     return;
@@ -2474,7 +2494,7 @@ function pickReverseChordTask(){
   if(!v){method8Drill=null;pickReverseChordTask();return;}
   current={type:'reverse8',chord:x.ch,inv:v.inv,voicing:v.voicing,method8Index:idx};
   promptEl.innerHTML=`<b>${idx+1}/3</b> — Mikä sointu tämä on?${method8ProgressHTML()}`;
-  renderTab(v.voicing);tabbox.classList.remove('hidden');
+  renderMethod8Fretboard(v.voicing);
   answerEl.placeholder='Esim. Dm, A7, Cmaj7';
   $('listenBtn').classList.remove('hidden');
 }
