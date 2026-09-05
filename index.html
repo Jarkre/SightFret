@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.19.9 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.19.10 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -231,7 +231,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.19.9 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.19.10 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -304,7 +304,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.19.9';
+const APP_VERSION='1.19.10';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const $=id=>document.getElementById(id);
 const methodEl=$('method'), settingsEl=$('settings'), promptEl=$('prompt'), answerEl=$('answer'), feedbackEl=$('feedback'), stepInfo=$('stepInfo'), tabbox=$('tabbox'), staffWrap=$('staffWrap'), svg=$('staff');
@@ -550,11 +550,12 @@ if(data.settings && Number(data.settings.method7Reps)===3){
   data.settings.method7Reps=4;
   saveData();
 }
-function defaultData(){return {version:3,settings:{method:'1',timeLimit:5,singleString:3,sameFret:6,quizCount:20,method7Category:'all',method7Type:'random',method7Mode:'three',method7Reps:4,method8Mode:'three',method8Category:'all',method8Type:'random',method8Reps:4,method9Mode:'three',method9Category:'all',method9Type:'random',method9Reps:4,method9ShowTab:true,method9ShowStaff:true,method7FGuitarAdaptation:false,method7FWithinOctave:false,method7FMute:false,method7IWithinOctave:false,method7IMute:false,method7IGuitarAdaptation:false,method10Category:'basic',method10Type:'random',accidentals:false,sevenths:false,octaves:false,inv0:true,inv1:false,inv2:false,inv3:false,inv4:false,chordMode:'both'},methods:{},fretboards:{'1':{},'2':{},'3':{},'4':{}},method5:{},method7FMastery:{},method9Mastery:{},method10Mastery:{}}}
+function defaultData(){return {version:3,settings:{method:'1',timeLimit:5,singleString:3,sameFret:6,quizCount:20,method7Category:'all',method7Type:'random',method7Mode:'three',method7Reps:4,method8Mode:'three',method8Category:'all',method8Type:'random',method8Reps:4,method9Mode:'three',method9Category:'all',method9Type:'random',method9Reps:4,method9ShowFretboard:true,method9ShowStaff:true,method9WithinOctave:true,method7FGuitarAdaptation:true,method7FWithinOctave:false,method7FMute:false,method7IWithinOctave:false,method7IMute:false,method7IGuitarAdaptation:true,method10Category:'basic',method10Type:'random',accidentals:false,sevenths:false,octaves:false,inv0:true,inv1:false,inv2:false,inv3:false,inv4:false,chordMode:'both'},methods:{},fretboards:{'1':{},'2':{},'3':{},'4':{}},method5:{},method7FMastery:{},method9Mastery:{},method10Mastery:{}}}
 function migrateData(raw){
   const d=defaultData();
   if(!raw||typeof raw!=='object')return d;
   d.settings={...d.settings,...(raw.settings||{})};
+  if(raw.settings&&raw.settings.method9ShowFretboard==null&&raw.settings.method9ShowTab!=null)d.settings.method9ShowFretboard=raw.settings.method9ShowTab!==false;
   // 5 s on uusi oletus. Vanha eksplisiittinen käyttäjävalinta säilytetään.
   if(raw.settings&&raw.settings.timeLimit!=null)d.settings.timeLimit=Number(raw.settings.timeLimit);
   if((raw.version||1)<2 && Number(d.settings.timeLimit)===2)d.settings.timeLimit=5;
@@ -813,7 +814,7 @@ function renderStats(){
  syncProgressPanelMode();
  const method=methodEl.value;
  const topScore=correctEl?.closest('.score');
- if(topScore)topScore.classList.toggle('hidden',['1','2','3','4','5Q','7F','7I'].includes(method));
+ if(topScore)topScore.classList.toggle('hidden',['1','2','3','4','5Q','7F','7I','9'].includes(method));
  const isMethod2=method==='2';
  const selectedString=isMethod2?Number(data.settings.singleString??3):null;
  const resetStringBtn=$('resetString');
@@ -867,13 +868,13 @@ function renderStats(){
      : `<br>X/hidas: <b>${m.x||0}</b>`;
  const stringLabel=isMethod2?` — ${stringNames[selectedString]}-kieli`:'';
  const progressStatsGrid=$('progressStatsGrid');
- if(progressStatsGrid)progressStatsGrid.classList.toggle('hidden',method==='5Q'||method==='7'||method==='7F'||method==='7I');
+ if(progressStatsGrid)progressStatsGrid.classList.toggle('hidden',method==='5Q'||method==='7'||method==='7F'||method==='7I'||method==='9');
  const progressSummaryTitle=$('progressSummaryTitle');
  if(progressSummaryTitle)progressSummaryTitle.textContent=method==='7'?'Tee sointu klikkaamalla':'Osaaminen ja seuranta';
  const progressResetActions=$('progressResetActions');
  if(progressResetActions)progressResetActions.classList.toggle('hidden',method==='7'||method==='5Q');
  const weakBlock=$('weakStats')?.parentElement;
- if(weakBlock)weakBlock.classList.toggle('hidden',method==='5'||method==='7F'||method==='7I');
+ if(weakBlock)weakBlock.classList.toggle('hidden',method==='5'||method==='7F'||method==='7I'||method==='9');
 
  if(method==='5'){
    $('summaryStats').innerHTML=`Menetelmä: <b>${methodName(method)}</b><br>Tunnistettu oikein: <b>${m.correct}</b><br>Tunnistettu väärin: <b>${m.wrong||0}</b><br>Käymättä: <b>${78-m.total}</b>`;
@@ -927,12 +928,12 @@ function renderStats(){
    }).join('<br>'):'Ei vielä tarpeeksi dataa.';
  }
  const heatTitle=$('heatmapTitle'),heatLegend=$('heatmapLegend');
- if(heatTitle)heatTitle.textContent=method==='10'?'Sointukategoriat':(method==='7F'||method==='7I')?'Intervallien osaaminen':'Otelauta 0–12';
+ if(heatTitle)heatTitle.textContent=method==='10'?'Sointukategoriat':(method==='7F'||method==='7I'||method==='9')?'Intervallien osaaminen':'Otelauta 0–12';
  if(heatLegend){
    heatLegend.classList.toggle('hidden',method==='5Q'||method==='7'||method==='5');
    heatLegend.innerHTML=method==='10'
      ? '<span>heikko</span><span class="heatlegend-bar"></span><span>automatisoitunut</span><span>· nopea oikea kasvattaa eniten · yli 30 s oikein ei muuta · väärä −1</span>'
-     : method==='7F'
+     : (method==='7F'||method==='9')
        ? '<span>heikko</span><span class="heatlegend-bar"></span><span>automatisoitunut</span>'
        : '<span>heikko</span><span class="heatlegend-bar"></span><span>automatisoitunut</span><span>· ruudussa mediaanivastausaika</span>';
  }
@@ -1000,10 +1001,10 @@ function renderFretboardNutBar(h){
 }
 function renderHeatmap(){
  const h=$('heatmap'),now=Date.now();
- if(methodEl.value==='7F'||methodEl.value==='7I'){
+ if(methodEl.value==='7F'||methodEl.value==='7I'||methodEl.value==='9'){
    h.className='chord-category-heatmap';
    h.innerHTML=METHOD9_INTERVALS.map(interval=>{
-     const level=method7FMasteryValue(interval.id);
+     const level=methodEl.value==='7F'?method7FMasteryValue(interval.id):method9MasteryValue(interval.id);
      return `<div class="chord-category-cell" style="background:${masteryColor(level/10)}" title="${interval.name}: ${level}/10"><b>${interval.name}</b></div>`;
    }).join('');
    return;
@@ -1187,14 +1188,21 @@ function method9QualityInterval(){
   return {family:fam,interval:METHOD9_INTERVALS.find(x=>x.id===id),quality};
 }
 
+function method9IntervalPool(){
+  return data.settings.method9WithinOctave===false ? METHOD7F_INTERVALS : METHOD9_INTERVALS;
+}
 function method9IntervalsForCategory(category){
-  if(category==='all')return METHOD9_INTERVALS;
-  return METHOD9_INTERVALS.filter(x=>x.category===category);
+  const pool=method9IntervalPool();
+  if(category==='all')return pool;
+  return pool.filter(x=>{
+    const base=METHOD9_INTERVALS.find(b=>b.id===(x.baseId||x.id));
+    return (x.category||base?.category)===category;
+  });
 }
 function method9SelectedInterval(){
   const category=data.settings.method9Category||'all';
   const pool=method9IntervalsForCategory(category);
-  if(!pool.length)return METHOD9_INTERVALS[0];
+  if(!pool.length)return method9IntervalPool()[0];
   const requested=data.settings.method9Type||'random';
   if(requested!=='random'){
     const found=pool.find(x=>x.id===requested);
@@ -1401,7 +1409,7 @@ function method9AnswerGood(v,interval){
     P8:['oktaavi','p8','puhdas oktaavi']
   };
   const list=aliases[interval.id]||[];
-  return list.some(a=>n===a.toLowerCase());
+  return n===normalizeIntervalAnswer(interval.name)||list.some(a=>n===a.toLowerCase());
 }
 
 function method7ChordSettings(){
@@ -1419,8 +1427,14 @@ function method7IIntervalPool(){return data.settings.method7IWithinOctave?METHOD
 function method7IPairForInterval(interval){const c=[],adapt=!!data.settings.method7IGuitarAdaptation;for(let s1=0;s1<6;s1++)for(let f1=0;f1<=12;f1++){const m1=tuning[s1]+f1;for(const dir of [-1,1]){const m2=m1+dir*interval.semitones;for(let s2=0;s2<6;s2++){const f2=m2-tuning[s2];if(!Number.isInteger(f2)||f2<0||f2>12)continue;if(adapt&&!method7FPlayablePair(s1,f1,s2,f2))continue;c.push([{s:s1,f:f1,m:m1,pc:mod(m1,12)},{s:s2,f:f2,m:m2,pc:mod(m2,12)}])}}}return c.length?c[randomInt(c.length)]:null}
 function renderMethod7IBoard(){const [a,b]=current.positions;let z=`<div class="method7f-board-wrap"><div class="small" style="margin-bottom:8px">Vihreä L = lähtöpositio · sininen K = kohdepositio</div><div class="heatmap method7f-board" id="method7IBoard"><div class="heatcell heathead">kieli</div>`+Array.from({length:13},(_,f)=>`<div class="heatcell heathead${f===0?' fret-zero':''}">${f}</div>`).join('');for(let s=5;s>=0;s--){z+=`<div class="heatcell heathead">${stringNames[s]}</div>`;for(let f=0;f<=12;f++){const A=s===a.s&&f===a.f,B=s===b.s&&f===b.f;z+=`<div class="heatcell${f===0?' fret-zero':''}${A?' method7f-start':B?' method7f-target':''}">${A?'L':B?'K':''}</div>`}}z+='</div></div>';tabbox.innerHTML=z;tabbox.classList.remove('hidden');renderFretboardNutBar($('method7IBoard'))}
 function renderMethod7IAnswerButtons(){let box=$('method9Answers');if(!box){box=document.createElement('div');box.id='method9Answers';box.className='method9-answer-grid';answerEl.parentElement.insertAdjacentElement('afterend',box)}box.innerHTML=method7IIntervalPool().map(x=>`<button type="button" data-i="${x.id}" style="background:${method9MasteryColor(x.baseId||x.id)}">${x.name}</button>`).join('');box.classList.remove('hidden');box.querySelectorAll('button[data-i]').forEach(b=>b.onclick=()=>{if(answered)return;const x=METHOD7F_INTERVALS.find(i=>i.id===b.dataset.i);answerEl.value=x.name;checkCurrent()})}
+
+function showMethod7IHint(){
+  if(!current||current.type!=='interval7I')return;
+  feedbackEl.innerHTML=`<span class="small">Vihje: <b>${current.interval.semitones} puolisävelaskelta</b></span>`;
+  feedbackEl.className='feedback method7-white';
+}
 function method7IDirectionLabel(a,b){return b.m>a.m?'ylöspäin':'alaspäin'}
-function pickMethod7ITask(){const pool=method7IIntervalPool();let interval,pair;for(let n=0;n<500&&!pair;n++){interval=pool[randomInt(pool.length)];pair=method7IPairForInterval(interval)}if(!pair){current=null;promptEl.textContent='Nykyisillä asetuksilla ei löytynyt soitettavaa intervallia.';return}current={type:'interval7I',interval,positions:pair};const [a,b]=pair;promptEl.innerHTML=`<b>Mikä intervalli ${method7IDirectionLabel(a,b)}?</b>`;renderMethod7IBoard();answerEl.value='';answerEl.disabled=true;answerEl.classList.add('hidden');$('check').classList.add('hidden');renderMethod7IAnswerButtons();$('listenBtn').textContent='Kuuntele intervalli';$('listenBtn').classList.toggle('hidden',!!data.settings.method7IMute);$('reveal').disabled=false}
+function pickMethod7ITask(){const pool=method7IIntervalPool();let interval,pair;for(let n=0;n<500&&!pair;n++){interval=pool[randomInt(pool.length)];pair=method7IPairForInterval(interval)}if(!pair){current=null;promptEl.textContent='Nykyisillä asetuksilla ei löytynyt soitettavaa intervallia.';return}current={type:'interval7I',interval,positions:pair};const [a,b]=pair;promptEl.innerHTML=`<b>Mikä intervalli ${method7IDirectionLabel(a,b)}?</b>`;renderMethod7IBoard();answerEl.value='';answerEl.disabled=true;answerEl.classList.add('hidden');$('check').classList.add('hidden');renderMethod7IAnswerButtons();$('listenBtn').textContent='Kuuntele intervalli';$('listenBtn').classList.toggle('hidden',!!data.settings.method7IMute);let hb=$('method7IHintBtn');if(!hb){hb=document.createElement('button');hb.type='button';hb.id='method7IHintBtn';hb.className='secondary';hb.textContent='Vihje';$('listenBtn').insertAdjacentElement('afterend',hb)}hb.classList.remove('hidden');hb.onclick=showMethod7IHint;$('reveal').disabled=false}
 
 function method8ChordSettings(){
   const category=data.settings.method8Category||'all',types=method8TypesForCategory(category);
@@ -1465,8 +1479,12 @@ function method9Settings(){
     }
     ${(mode==='three'||mode==='qualityThree')?`<div><div class="group-title">Toistoja / intervalli</div><input id="method9Reps" type="number" min="1" max="50" step="1" value="${data.settings.method9Reps||4}"><div class="small">${mode==='qualityThree'?'Kolme intervallia pysyy samoina ja myös niiden absoluuttiset säveltasot lukitaan harjoitusjakson ajaksi.':'Kolme intervallia pysyy samoina. Sijainti otelaudalla vaihtuu kierrokselta toiselle.'}</div></div>`:''}
     ${mode==='free'?`<div><div class="group-title">Harjoitustapa</div><div class="small">Yksi satunnainen intervalli kerrallaan valittujen filttereiden mukaisesti.</div></div>`:''}
+    <div><div class="group-title">Intervallit</div>
+      <label class="check"><input type="checkbox" id="method9WithinOctave"> Vain oktaavin sisällä</label>
+      <div class="small">Päällä: intervallit rajataan oktaaviin asti. Pois: mukana voivat olla myös yhdysintervallit kahteen oktaaviin asti.</div>
+    </div>
     <div><div class="group-title">Näyttö</div>
-      <label class="check"><input type="checkbox" id="method9ShowTab"> Näytä tabulatuuri</label>
+      <label class="check"><input type="checkbox" id="method9ShowFretboard"> Näytä otelauta</label>
       <label class="check"><input type="checkbox" id="method9ShowStaff"> Näytä nuotti</label>
       <div class="small">Jos molemmat ovat pois päältä, tunnista intervalli pelkän kuuntelun perusteella.</div>
     </div>`;
@@ -1495,11 +1513,11 @@ function method10Settings(){
 }
 function chordSettings(m){let inv=m==='9A'||m==='9B'||m==='10';return `<div><div class="group-title">Sointulaatu</div><select id="chordMode"><option value="both">Duuri + molli</option><option value="major">Vain duurit</option><option value="minor">Vain mollit</option></select>${m==='10'?'<label class="check"><input type="checkbox" id="sevenths"> Seiskasoinnut</label>':''}${['8B','10'].includes(m)?'<label class="check"><input type="checkbox" id="accidentals"> Ylennykset/alennukset</label>':''}${m==='10'?'<label class="check"><input type="checkbox" id="octaves"> Eri oktaavit/rekisterit</label>':''}</div>${inv?`<div><div class="group-title">Inversiot</div><label class="check"><input type="checkbox" id="inv0"> Root-asento</label><label class="check"><input type="checkbox" id="inv1"> 1. inversio</label><label class="check"><input type="checkbox" id="inv2"> 2. inversio</label></div>`:''}`}
 function wireSettings(){
-  for(const id of ['timeLimit','singleString','sameFret','quizCount','method7Mode','method7Category','method7Type','method7Reps','method8Mode','method8Category','method8Type','method8Reps','method9Mode','method9Category','method9Type','method9Reps','method9ShowTab','method9ShowStaff','method7FGuitarAdaptation','method7FWithinOctave','method7FMute','method7IWithinOctave','method7IMute','method7IGuitarAdaptation','method10Category','method10Type','chordMode','accidentals','sevenths','guitarAdaptation','inv0','inv1','inv2','inv3','inv4']){
+  for(const id of ['timeLimit','singleString','sameFret','quizCount','method7Mode','method7Category','method7Type','method7Reps','method8Mode','method8Category','method8Type','method8Reps','method9Mode','method9Category','method9Type','method9Reps','method9ShowFretboard','method9ShowStaff','method9WithinOctave','method7FGuitarAdaptation','method7FWithinOctave','method7FMute','method7IWithinOctave','method7IMute','method7IGuitarAdaptation','method10Category','method10Type','chordMode','accidentals','sevenths','guitarAdaptation','inv0','inv1','inv2','inv3','inv4']){
     const el=$(id);if(!el)continue;
     const val=data.settings[id];
     if(el.type==='checkbox'){
-      if(id==='method9ShowTab'||id==='method9ShowStaff')el.checked=(val!==false);
+      if(id==='method9ShowFretboard'||id==='method9ShowStaff'||id==='method9WithinOctave')el.checked=(val!==false);
       else el.checked=!!val;
     }else if(val!=null)el.value=String(val);
     el.addEventListener('change',()=>{
@@ -1518,13 +1536,12 @@ function wireSettings(){
 
       // Method 9 display toggles are live controls:
       // keep the current interval and only redraw TAB / notation.
-      if(id==='method9ShowTab'||id==='method9ShowStaff'){
+      if(id==='method9ShowFretboard'||id==='method9ShowStaff'){
         saveData();
         if(current&&(current.type==='interval9'||current.type==='interval9quality')){
-          renderTab(current.positions);
           renderMethod9IntervalVisual(current.positions);
           tabbox.classList.remove('hidden');
-          const audioOnly=data.settings.method9ShowTab===false&&data.settings.method9ShowStaff===false;
+          const audioOnly=data.settings.method9ShowFretboard===false&&data.settings.method9ShowStaff===false;
           if(current.type==='interval9quality'){
             const qprefix=Number.isInteger(current.method9Index)?`<b>${current.method9Index+1}/3 — Tämä on ${current.family.label.toLowerCase()}.</b>`:`<b>Tämä on ${current.family.label.toLowerCase()}.</b>`;
             promptEl.innerHTML=(current.family?.kind==='quartTritone'
@@ -1564,9 +1581,12 @@ function wireSettings(){
 
       if(id==='method7Category'){data.settings.method7Type='random';saveData();settingHTML();renderStats();showStartState();return;}
       if(id==='method8Category'){data.settings.method8Type='random';saveData();settingHTML();renderStats();showStartState();return;}
-      if(id==='method9Category'){data.settings.method9Type='random';saveData();settingHTML();renderStats();showStartState();return;}
+      if(id==='method9Category'){data.settings.method9Type='random';saveData();settingHTML();renderStats();pickTask();return;}
+      if(id==='method9WithinOctave'){data.settings.method9Type='random';saveData();settingHTML();renderStats();pickTask();return;}
       if(id==='method10Category'){data.settings.method10Type='random';saveData();settingHTML();renderStats();showStartState();return;}
-      if(id==='method7Mode'||id==='method8Mode'||id==='method9Mode'){saveData();settingHTML();renderStats();showStartState();return;}
+      if(id==='method7Mode'||id==='method8Mode'){saveData();settingHTML();renderStats();showStartState();return;}
+      if(id==='method9Mode'){saveData();settingHTML();renderStats();pickTask();return;}
+      if(id.startsWith('method9')){saveData();renderStats();pickTask();return;}
       saveData();renderStats();showStartState();
     });
   }
@@ -1740,7 +1760,8 @@ const METHOD_HELP_CONTENT={
     practice:'SightFret näyttää lähtösävelen vihreänä ja valitsee kielen, jolta pyydetty intervalli pitää löytää. Tehtävä kertoo myös, kulkeeko intervalli lähtösävelestä sävelkorkeudeltaan ylös- vai alaspäin. Ylöspäin tarkoittaa, että kohdesävelen taajuus on lähtösäveltä korkeampi, ja alaspäin sitä, että kohdesävelen taajuus on matalampi; otelaudan fyysinen suunta ei vaikuta tähän. Vastaa klikkaamalla valitulta kieleltä oikeaa positiota. Harjoitusta kannattaa tehdä kitara kädessä: etsi sama lähtö- ja kohdepositio myös fyysiseltä otelaudalta, soita ne ja kuuntele intervallia. Jokainen valinta, myös väärä, soitetaan ensin harmonisesti noin kaksi sekuntia ja sen jälkeen lähtösävel ja valittu sävel erikseen lyhyiden taukojen kanssa. Uuden position voi valita vasta kuuntelun päätyttyä. Vihje näyttää intervallin puolisävelaskelten määrän ja Näytä vastaus paljastaa oikean position. Harjoituksessa on intervalleja pienestä sekunnista kahteen oktaaviin. Kun Vain oktaavin sisällä on valittu, tehtävät rajataan pieneen sekuntiin–oktaaviin, oktaavi mukaan lukien. Yli oktaavin intervalli näytetään oikealla yhdysintervallin nimellään, mutta osaamisruuduissa se vahvistaa vastaavaa perusintervallia. Hiljennä äänet poistaa käytöstä sekä automaattisen intervallin kuuntelun että Kuuntele intervalli -painikkeen äänen. Guitar adaptation pois päältä sallii kaikki teoreettisesti oikeat tehtävät nauhoilla 0–12. Kun Guitar adaptation on päällä, tehtävät rajataan kahden sävelen otteisiin, jotka voidaan soittaa samanaikaisesti eri kieliltä normaalilla käden ulottuvuudella. Intervallien osaamisruudut liikkuvat oikein vastatessa kohti vihreää ja väärin vastatessa kohti punaista.',
     develops:'Harjoitus kehittää kykyä rakentaa intervalli aktiivisesti otelaudalle annetusta lähtösävelestä. Se yhdistää intervallin teoreettisen etäisyyden, suunnan ja kitaran kielten välisen geometrisen hahmottamisen käytännön sormilautakartaksi. Harjoitus kehittää otelaudan hahmottamista yksittäisten muistettujen positioiden sijaan toisiinsa liittyvien sävelten ja intervallien verkostona. Toistojen myötä tavoitteena on, että intervallien sijainnit eri kielillä automatisoituvat ja otelaudan mahdolliset reitit alkavat hahmottua suoraan lähtöpositiosta.'
   },
-  '7I':{title:'8 – Tunnista intervalli otelaudalta',practice:'SightFret näyttää otelaudalla lähtö- ja kohdeposition sekä kertoo, kuljetaanko lähtösävelestä kohdesäveleen sävelkorkeudessa ylöspäin vai alaspäin. Tunnista suunnallinen intervalli ja vastaa intervallipainikkeella. Suunta määräytyy absoluuttisesta sävelkorkeudesta, ei otelaudan visuaalisesta suunnasta. Harjoitusta kannattaa tehdä kitara kädessä ja soittaa samat kaksi positiota myös fyysiseltä otelaudalta. Vain oktaavin sisällä rajaa tehtävät oktaaviin asti. Hiljennä äänet poistaa kuuntelun. Guitar adaptation rajaa tehtävät käytännössä soitettaviin kahden sävelen otteisiin ja sallii avoimet kielet ilman nauhavälirajoitusta.',develops:'Harjoitus on menetelmän 7 peilikuva: siinä otelaudan kahdesta positiosta päätellään niiden välinen intervalli. Se vahvistaa kykyä lukea otelautaa toisiinsa liittyvien positioiden ja intervallien verkostona sekä automatisoi intervallisuhteiden tunnistamista eri kieliltä.'}
+  '7I':{title:'8 – Tunnista intervalli otelaudalta',practice:'SightFret näyttää otelaudalla lähtö- ja kohdeposition sekä kertoo, kuljetaanko lähtösävelestä kohdesäveleen sävelkorkeudessa ylöspäin vai alaspäin. Tunnista suunnallinen intervalli ja vastaa intervallipainikkeella. Suunta määräytyy absoluuttisesta sävelkorkeudesta, ei otelaudan visuaalisesta suunnasta. Harjoitusta kannattaa tehdä kitara kädessä ja soittaa samat kaksi positiota myös fyysiseltä otelaudalta. Vain oktaavin sisällä rajaa tehtävät oktaaviin asti. Hiljennä äänet poistaa kuuntelun. Guitar adaptation rajaa tehtävät käytännössä soitettaviin kahden sävelen otteisiin ja sallii avoimet kielet ilman nauhavälirajoitusta.',develops:'Harjoitus on menetelmän 7 peilikuva: siinä otelaudan kahdesta positiosta päätellään niiden välinen intervalli. Se vahvistaa kykyä lukea otelautaa toisiinsa liittyvien positioiden ja intervallien verkostona sekä automatisoi intervallisuhteiden tunnistamista eri kieliltä.'},
+  '9':{title:'9 – Tunnista intervalli nuoteista',practice:'Tunnista nuottiviivastolla esitetty intervalli. Näytä otelauta -valinta näyttää saman intervallin myös kitaran otelaudalla lähtö- ja kohdepositiona. Näytä nuotti -valinta näyttää tai piilottaa nuottiviivaston. Kun Vain oktaavin sisällä on pois päältä, mukana voi olla myös yhdysintervalleja kahteen oktaaviin asti. Jos sekä nuotti että otelauta piilotetaan, intervallin voi tunnistaa kuuntelemalla.',develops:'Harjoitus yhdistää nuottikuvan, intervallin nimen ja saman sävelsuhteen kitaran otelaudalla. Tavoitteena on, että nuoteista nähty intervalli alkaa hahmottua sekä teoreettisena etäisyytenä että konkreettisena otelautasuhteena.'}
 };
 function updateMethodHelpButton(){
   const b=$('methodHelpBtn');
@@ -1758,7 +1779,7 @@ function openMethodHelp(){
   w.document.close();
   w.focus();
 }
-function resetUI(){$('method9QualityHint')?.remove();$('method9GeneralHint')?.remove();answerEl.classList.remove('hidden');$('check').classList.toggle('hidden',['5','1','2','3','4','5Q','7F','7I'].includes(methodEl.value));if($('next'))$('next').textContent='Seuraava';answered=false;step=0;stepAnswers={};feedbackEl.textContent='';feedbackEl.className='feedback';tabbox.classList.add('hidden');tabbox.innerHTML='';staffWrap.classList.add('hidden');svg.innerHTML='';stepInfo.textContent='';answerEl.value='';answerEl.disabled=false;$('check').disabled=false;$('xBtn').classList.add('hidden');$('tabBtn').classList.add('hidden');$('tabBtn').textContent='Näytä tabulatuurina';$('listenBtn').classList.add('hidden');$('listenBtn').textContent='Kuuntele sointu';$('method10HintBtn').classList.add('hidden');$('method10HintBtn').disabled=false;$('method10HintBtn').textContent='Vihje: Root';$('reveal').disabled=false}
+function resetUI(){$('method9QualityHint')?.remove();$('method9GeneralHint')?.remove();$('method7IHintBtn')?.remove();answerEl.classList.remove('hidden');$('check').classList.toggle('hidden',['5','1','2','3','4','5Q','7F','7I'].includes(methodEl.value));if($('next'))$('next').textContent='Seuraava';answered=false;step=0;stepAnswers={};feedbackEl.textContent='';feedbackEl.className='feedback';tabbox.classList.add('hidden');tabbox.innerHTML='';staffWrap.classList.add('hidden');svg.innerHTML='';stepInfo.textContent='';answerEl.value='';answerEl.disabled=false;$('check').disabled=false;$('xBtn').classList.add('hidden');$('tabBtn').classList.add('hidden');$('tabBtn').textContent='Näytä tabulatuurina';$('listenBtn').classList.add('hidden');$('listenBtn').textContent='Kuuntele sointu';$('method10HintBtn').classList.add('hidden');$('method10HintBtn').disabled=false;$('method10HintBtn').textContent='Vihje: Root';$('reveal').disabled=false}
 function showStartState(){
   resetUI();current=null;startTime=0;
   renderHeatmap();
@@ -2427,7 +2448,7 @@ function pickReverseChordTask(){
 function inversionSelection(){const all=[0,1,2,3,4];const arr=all.filter(i=>data.settings['inv'+i]);return arr.length?arr:all}
 
 function method9DiatonicNumber(interval){
-  const map={m2:2,M2:2,m3:3,M3:3,P4:4,TT:4,P5:5,m6:6,M6:6,m7:7,M7:7,P8:8};
+  const map={m2:2,M2:2,m3:3,M3:3,P4:4,TT:4,P5:5,m6:6,M6:6,m7:7,M7:7,P8:8,m9:9,M9:9,m10:10,M10:10,P11:11,A11:11,P12:12,m13:13,M13:13,m14:14,M14:14,P15:15};
   return map[interval.id]||null;
 }
 function method9PairForInterval(interval){
@@ -2510,17 +2531,29 @@ function method9ProgressHTML(){
   return `<div class="small" style="margin-top:8px">Tehoharjoittelu: ${method9Drill.tasks.map((x,i)=>`<b>${i+1}/3</b> ${x.count}/${method9Drill.target}`).join(' &nbsp; · &nbsp; ')}</div>`;
 }
 
+function method9FretboardHTML(pair){
+  const [a,b]=pair;
+  let z=`<div class="method7f-board-wrap"><div class="small" style="margin-bottom:8px">Vihreä L = alempi sävel · sininen K = ylempi sävel</div><div class="heatmap method7f-board" id="method9Board"><div class="heatcell heathead">kieli</div>`+Array.from({length:13},(_,f)=>`<div class="heatcell heathead${f===0?' fret-zero':''}">${f}</div>`).join('');
+  for(let si=5;si>=0;si--){
+    z+=`<div class="heatcell heathead">${stringNames[si]}</div>`;
+    for(let f=0;f<=12;f++){
+      const A=si===a.s&&f===a.f,B=si===b.s&&f===b.f;
+      z+=`<div class="heatcell${f===0?' fret-zero':''}${A?' method7f-start':B?' method7f-target':''}">${A?'L':B?'K':''}</div>`;
+    }
+  }
+  return z+'</div></div>';
+}
 function renderMethod9IntervalVisual(pair){
-  const showTab=data.settings.method9ShowTab!==false;
+  const showFretboard=data.settings.method9ShowFretboard!==false;
   const showStaff=data.settings.method9ShowStaff!==false;
-  const tabHTML=tabbox.innerHTML;
 
-  if(!showTab&&!showStaff){
+  if(!showFretboard&&!showStaff){
     tabbox.innerHTML='<div class="small muted">Kuuntele intervalli ja tunnista se korvalla.</div>';
     return;
   }
 
-  tabbox.innerHTML=`<div class="method9-visual">${showTab?`<div class="method9-tab">${tabHTML}</div>`:''}${showStaff?`<div class="method9-staff"><svg id="method9Staff" viewBox="0 0 420 210" aria-label="Intervalli nuottiviivastolla"></svg></div>`:''}</div>`;
+  tabbox.innerHTML=`<div style="display:flex;flex-direction:column;gap:18px">${showStaff?`<div class="method9-staff"><svg id="method9Staff" viewBox="0 0 420 210" aria-label="Intervalli nuottiviivastolla"></svg></div>`:''}${showFretboard?method9FretboardHTML(pair):''}</div>`;
+  if(showFretboard)requestAnimationFrame(()=>{const b=$('method9Board');if(b)renderFretboardNutBar(b)});
 
   if(!showStaff)return;
   const s=$('method9Staff');
@@ -2533,60 +2566,36 @@ function renderMethod9IntervalVisual(pair){
     return el;
   };
 
-  // Treble staff.
   for(let i=0;i<5;i++){
     const y=150-i*22;
     add('line',{x1:36,y1:y,x2:392,y2:y,stroke:'CanvasText','stroke-width':2});
   }
   add('text',{x:48,y:144,'font-size':72,'font-family':'serif',fill:'CanvasText'},'𝄞');
 
-  // Guitar is conventionally written one octave above sounding pitch,
-  // matching the notation logic already used by Method 10.
   const notes=[...pair].sort((a,b)=>a.m-b.m).map((p,i)=>{
     const sp=p.sp||pcName(p.pc);
     const wm=p.m+12;
-
-    // Compact treble staff:
-    // bottom line = E4 at y=150, line spacing = 22 px,
-    // so each diatonic step moves 11 px.
     const diatonic=midiDiatonicIndex(wm,sp);
     const y=150-(diatonic-E4IDX)*11;
-
     return {...p,sp,wm,y,x:230+i*58};
   });
 
-  if(current&&(current.type==='interval9'||current.type==='interval9quality')){
-    current.method9StaffYs=notes.map(n=>n.y);
-  }
-
-  // Ensure extreme notes are never clipped above/below the compact staff.
-  // Keep the normal 0..210 range, but expand it when a note or ledger line
-  // extends beyond that range.
+  if(current&&(current.type==='interval9'||current.type==='interval9quality'))current.method9StaffYs=notes.map(n=>n.y);
   if(notes.length){
-    const minNoteY=Math.min(...notes.map(n=>n.y));
-    const maxNoteY=Math.max(...notes.map(n=>n.y));
-    const viewTop=Math.min(0,minNoteY-32);
-    const viewBottom=Math.max(210,maxNoteY+32);
+    const minNoteY=Math.min(...notes.map(n=>n.y)),maxNoteY=Math.max(...notes.map(n=>n.y));
+    const viewTop=Math.min(0,minNoteY-32),viewBottom=Math.max(210,maxNoteY+32);
     s.setAttribute('viewBox',`0 ${viewTop} 420 ${viewBottom-viewTop}`);
     if(current)current.method9StaffViewBox={x:0,y:viewTop,w:420,h:viewBottom-viewTop};
   }
 
   notes.forEach(n=>{
-    // Ledger lines.
-    if(n.y>150){
-      for(let ly=172;ly<=n.y+2;ly+=22)add('line',{x1:n.x-23,y1:ly,x2:n.x+23,y2:ly,stroke:'CanvasText','stroke-width':2});
-    }
-    if(n.y<62){
-      for(let ly=40;ly>=n.y-2;ly-=22)add('line',{x1:n.x-23,y1:ly,x2:n.x+23,y2:ly,stroke:'CanvasText','stroke-width':2});
-    }
-
+    if(n.y>150)for(let ly=172;ly<=n.y+2;ly+=22)add('line',{x1:n.x-23,y1:ly,x2:n.x+23,y2:ly,stroke:'CanvasText','stroke-width':2});
+    if(n.y<62)for(let ly=40;ly>=n.y-2;ly-=22)add('line',{x1:n.x-23,y1:ly,x2:n.x+23,y2:ly,stroke:'CanvasText','stroke-width':2});
     const acc=accidentalGlyph(n.sp);
     if(acc)add('text',{x:n.x-31,y:n.y+7,'font-size':22,'font-family':'serif',fill:'CanvasText'},acc);
     add('ellipse',{cx:n.x,cy:n.y,rx:11,ry:7,transform:`rotate(-18 ${n.x} ${n.y})`,fill:'CanvasText'});
   });
 }
-
-
 
 function method9HintAccidentalOffset(sp){
   if(!sp)return 0;
@@ -2847,7 +2856,7 @@ function renderMethod9AnswerButtons(){
   box.innerHTML=
     (free?`<div class="method9-mastery-legend"><span>heikko</span><span class="bar"></span><span>automatisoitunut</span></div>`:'')+
     pool.map(x=>{
-      const style=free?` style="background:${method9MasteryColor(x.id)}"`:'';
+      const style=free?` style="background:${method9MasteryColor(x.baseId||x.id)}"`:'';
       return `<button type="button" data-interval="${x.id}"${style}>${x.name}</button>`;
     }).join('')+
     `<button type="button" id="method9GeneralHint">Vihje 1</button>`+
@@ -2856,7 +2865,7 @@ function renderMethod9AnswerButtons(){
   box.classList.remove('hidden');
   box.querySelectorAll('button[data-interval]').forEach(btn=>btn.addEventListener('click',()=>{
     if(answered||!current||current.type!=='interval9')return;
-    const picked=METHOD9_INTERVALS.find(x=>x.id===btn.dataset.interval);
+    const picked=METHOD7F_INTERVALS.find(x=>x.id===btn.dataset.interval)||METHOD9_INTERVALS.find(x=>x.id===btn.dataset.interval);
     if(!picked)return;
     answerEl.value=picked.name;
     checkCurrent();
@@ -2880,9 +2889,8 @@ function showMethod9IntervalTask(interval,idx=null){
   const pair=method9PairForInterval(interval);
   if(!pair)return false;
   current={type:'interval9',interval,positions:pair,method9Index:idx};
-  const audioOnly=data.settings.method9ShowTab===false&&data.settings.method9ShowStaff===false;
+  const audioOnly=data.settings.method9ShowFretboard===false&&data.settings.method9ShowStaff===false;
   promptEl.innerHTML=`${idx!=null?`<b>${idx+1}/3</b> — `:''}${audioOnly?'Kuuntele ja tunnista intervalli':'Mikä intervalli?'}${method9ProgressHTML()}`;
-  renderTab(pair);
   renderMethod9IntervalVisual(pair);
   tabbox.classList.remove('hidden');
   answerEl.value='';
@@ -2918,12 +2926,11 @@ function showMethod9QualityTask(){
     positions:pair
   };
 
-  const audioOnly=data.settings.method9ShowTab===false&&data.settings.method9ShowStaff===false;
+  const audioOnly=data.settings.method9ShowFretboard===false&&data.settings.method9ShowStaff===false;
   promptEl.innerHTML=q.family.kind==='quartTritone'
     ? `<b>${method9QualityQuestion(q.family,audioOnly)}</b>`
     : `<b>Tämä on ${q.family.label.toLowerCase()}.</b> ${method9QualityQuestion(q.family,audioOnly)}`;
 
-  renderTab(pair);
   renderMethod9IntervalVisual(pair);
   tabbox.classList.remove('hidden');
 
@@ -2957,11 +2964,11 @@ function initMethod9QualityDrill(){
 }
 function showMethod9QualityDrillTask(task,idx){
   current={type:'interval9quality',interval:task.interval,family:task.family,quality:task.quality,positions:task.positions,method9Index:idx};
-  const audioOnly=data.settings.method9ShowTab===false&&data.settings.method9ShowStaff===false;
+  const audioOnly=data.settings.method9ShowFretboard===false&&data.settings.method9ShowStaff===false;
   promptEl.innerHTML=(task.family.kind==='quartTritone'
     ? `<b>${idx+1}/3 — ${method9QualityQuestion(task.family,audioOnly)}</b>`
     : `<b>${idx+1}/3 — Tämä on ${task.family.label.toLowerCase()}.</b> ${method9QualityQuestion(task.family,audioOnly)}`)+method9ProgressHTML();
-  renderTab(task.positions);renderMethod9IntervalVisual(task.positions);tabbox.classList.remove('hidden');
+  renderMethod9IntervalVisual(task.positions);tabbox.classList.remove('hidden');
   answerEl.value='';answerEl.disabled=true;answerEl.classList.add('hidden');$('check').classList.add('hidden');
   renderMethod9AnswerButtons();$('listenBtn').textContent='Kuuntele intervalli';$('listenBtn').classList.remove('hidden');positionMethod9HintButton();
   return true;
@@ -3437,8 +3444,9 @@ function checkCurrent(){if(answered||!current)return;const m=methodEl.value,v=an
    const free=(data.settings.method9Mode||'three')==='free';
 
    if(free){
-     const before=method9MasteryValue(current.interval.id);
-     setMethod9Mastery(current.interval.id,before+(good?1:-1));
+     const masteryId=current.interval.baseId||current.interval.id;
+     const before=method9MasteryValue(masteryId);
+     setMethod9Mastery(masteryId,before+(good?1:-1));
      answered=true;
 
      const [a,b]=current.positions;
@@ -3962,7 +3970,7 @@ function showMethod10IntervalHints(){
   updateMethod10HintButton();
 }
 
-methodEl.value=data.settings.method||'1';methodEl.addEventListener('change',()=>{fretboardExam=null;method3Points=null;method8Drill=null;method9Drill=null;data.settings.method=methodEl.value;saveData();settingHTML();renderStats();if(methodEl.value==='7F'||methodEl.value==='7I')pickTask();else showStartState()});$('methodHelpBtn').addEventListener('click',openMethodHelp);$('check').addEventListener('click',checkCurrent);$('next').addEventListener('click',pickTask);$('startExam').addEventListener('click',restartFretboardExam);$('reveal').addEventListener('click',revealCurrent);$('xBtn').addEventListener('click',markX);$('tabBtn').addEventListener('click',toggleTab);$('listenBtn').addEventListener('click',listenChord);$('method10HintBtn').addEventListener('click',()=>{if(methodEl.value==='7F')showMethod7FHint();else showMethod10IntervalHints()});answerEl.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();checkCurrent()}});$('saveFile').addEventListener('click',exportTrainingData);$('loadFile').addEventListener('click',chooseTrainingDataFile);$('loadFileInput').addEventListener('change',e=>{importTrainingData(e.target.files?.[0]);e.target.value=''});$('resetString').addEventListener('click',()=>{
+methodEl.value=data.settings.method||'1';methodEl.addEventListener('change',()=>{fretboardExam=null;method3Points=null;method8Drill=null;method9Drill=null;data.settings.method=methodEl.value;saveData();settingHTML();renderStats();if(methodEl.value==='7F'||methodEl.value==='7I'||methodEl.value==='9')pickTask();else showStartState()});$('methodHelpBtn').addEventListener('click',openMethodHelp);$('check').addEventListener('click',checkCurrent);$('next').addEventListener('click',pickTask);$('startExam').addEventListener('click',restartFretboardExam);$('reveal').addEventListener('click',revealCurrent);$('xBtn').addEventListener('click',markX);$('tabBtn').addEventListener('click',toggleTab);$('listenBtn').addEventListener('click',listenChord);$('method10HintBtn').addEventListener('click',()=>{if(methodEl.value==='7F')showMethod7FHint();else showMethod10IntervalHints()});answerEl.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();checkCurrent()}});$('saveFile').addEventListener('click',exportTrainingData);$('loadFile').addEventListener('click',chooseTrainingDataFile);$('loadFileInput').addEventListener('change',e=>{importTrainingData(e.target.files?.[0]);e.target.value=''});$('resetString').addEventListener('click',()=>{
   if(!['1','2','3','5'].includes(methodEl.value))return;
 
   const choices={
@@ -4063,7 +4071,7 @@ $('resetMethod').addEventListener('click',()=>{
   renderStats();
   showStartState();
 });$('resetAll').addEventListener('click',()=>{if(confirm('Nollataanko kaikki oppimistiedot?')){data=defaultData();method3Points=null;saveData();methodEl.value='1';settingHTML();renderStats();showStartState()}});
-settingHTML();renderStats();if(methodEl.value==='7F'||methodEl.value==='7I')pickTask();else showStartState();
+settingHTML();renderStats();if(methodEl.value==='7F'||methodEl.value==='7I'||methodEl.value==='9')pickTask();else showStartState();
 
 // Näppäimistöfokuksen hallinta.
 // - Kun tehtävä on aktiivinen, fokus kuuluu vastauskentälle.
