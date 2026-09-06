@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.19.22 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.19.23 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -232,7 +232,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.19.22 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.19.23 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -252,6 +252,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
         <option value="11">12 – Äänenkuljetus</option>
       </select>
     </label>
+    <button class="ghost" id="devInit">Kehitys alustus</button>
     <button class="ghost" id="resetAll">Nollaa kaikki oppimistiedot</button>
     <div class="score">Oikein: <span id="correct">0</span> / <span id="total">0</span> · <span id="avgTime">–</span></div>
   </div>
@@ -305,7 +306,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.19.22';
+const APP_VERSION='1.19.23';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const FIRST_RUN_HELP_KEY='sightfret_first_run_help_shown_v1';
 const isFirstSightFretRun=!localStorage.getItem(STORE_KEY) && !localStorage.getItem(FIRST_RUN_HELP_KEY);
@@ -4205,7 +4206,7 @@ $('resetMethod').addEventListener('click',()=>{
   saveData();
   renderStats();
   showStartState();
-});$('resetAll').addEventListener('click',()=>{if(confirm('Nollataanko kaikki oppimistiedot?')){data=defaultData();method3Points=null;saveData();methodEl.value='1';settingHTML();renderStats();showStartState()}});
+});$('devInit').addEventListener('click',()=>{methodEl.value='5';data.settings.method='5';saveData();fretboardExam=null;method3Points=null;method8Drill=null;method9Drill=null;settingHTML();renderStats();pickTask();updateMethodHelpButton();$('firstRunHelpHint')?.classList.remove('hidden');localStorage.removeItem(FIRST_RUN_HELP_KEY);});$('resetAll').addEventListener('click',()=>{if(confirm('Nollataanko kaikki oppimistiedot?')){data=defaultData();method3Points=null;saveData();methodEl.value='1';settingHTML();renderStats();showStartState()}});
 if(isFirstSightFretRun){
   methodEl.value='5';
   data.settings.method='5';
