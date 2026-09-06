@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.19.33 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.19.34 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -234,7 +234,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.19.33 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.19.34 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -308,7 +308,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.19.33';
+const APP_VERSION='1.19.34';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const FIRST_RUN_HELP_KEY='sightfret_first_run_help_shown_v1';
 const isFirstSightFretRun=!localStorage.getItem(STORE_KEY) && !localStorage.getItem(FIRST_RUN_HELP_KEY);
@@ -902,7 +902,7 @@ function renderStats(){
  const progressResetActions=$('progressResetActions');
  if(progressResetActions)progressResetActions.classList.toggle('hidden',method==='7'||method==='5Q');
  const weakBlock=$('weakStats')?.parentElement;
- if(weakBlock)weakBlock.classList.toggle('hidden',method==='2'||method==='5'||method==='7F'||method==='7I'||method==='9'||method==='8'||method==='10');
+ if(weakBlock)weakBlock.classList.toggle('hidden',method==='2'||method==='3'||method==='5'||method==='7F'||method==='7I'||method==='9'||method==='8'||method==='10');
 
  if(method==='5'){
    $('summaryStats').innerHTML=`Menetelmä: <b>${methodName(method)}</b><br>Tunnistettu oikein: <b>${m.correct}</b><br>Tunnistettu väärin: <b>${m.wrong||0}</b><br>Käymättä: <b>${78-m.total}</b>`;
@@ -1808,7 +1808,13 @@ const METHOD_HELP_CONTENT={
   },
   '1':{
     title:'3 – Otelautaharjoitus',
-    practice:'Harjoituksessa kysytään yksittäistä kielen ja nauhan osoittamaa kohtaa otelaudalla. Nimeä kyseisessä kohdassa oleva sävel mahdollisimman suoraan ilman nauhojen laskemista tai muuta pitkää päättelyketjua. Kysymykset tulevat kaikilta kieliltä nauhoilta 0–12. Voit käyttää asetuksista aikarajaa, kun haluat harjoitella nopeaa palauttamista muistista. Lämpökartta päivittyy harjoittelun mukana: oikein vastatessa position väri muuttuu vähitellen kohti vihreää ja väärin vastatessa takaisin kohti punaista. Mitä vihreämpi positio on, sitä vahvemmaksi osaaminen on kehittynyt; punaisemmat positiot kertovat kohdista, jotka tarvitsevat lisää harjoittelua. Ruudussa näkyvä aika kertoo kyseisen position mediaanivastausajan.',
+    practice:'Harjoituksessa kysytään yksittäistä kielen ja nauhan osoittamaa kohtaa koko otelaudalta.',
+    practiceSteps:[
+      'Paina Seuraava (tai nopeammin vain Enter-näppäintä). Katso, mikä positio on valittuna otelaudalla.',
+      'Nimeä kysytyssä positiossa oleva sävel mahdollisimman suoraan ilman referenssiä muusta otelautapositiosta. Vastaa aikarajan sisällä, jos aikaraja on asetettu.',
+      'Vastauksen jälkeen voit rauhassa käsitellä palautteen ja tarkastella lämpökarttaa ennen seuraavaa tehtävää.'
+    ],
+    practiceAfter:'Kysymykset tulevat kaikilta kieliltä nauhoilta 0–12. Lämpökartta näyttää, miten osaaminen kehittyy. Oikein vastatessa position väri muuttuu vähitellen kohti vihreää ja väärin vastatessa se liikkuu takaisin kohti punaista. Ruudussa näkyvä aika kertoo kyseisen position onnistuneiden itsenäisten vastausten mediaaniajan. Pikanäppäimet sävelnimen syöttämiseen: ↑ = # (ylennys), ↓ = ♭ (alennus). Enharmoniset vastineet hyväksytään, esimerkiksi G# ja Ab.',
     develops:'Harjoitus rakentaa koko otelaudan sävelkarttaa pitkäaikaiseen muistiin ja tähtää siihen, että sävelen nimi palautuu position nähdessä automaattisesti. Tämä tukee nuotinlukua, improvisointia, sointujen hahmottamista ja yleistä liikkumista otelaudalla.'
   },
   '2':{
@@ -1870,7 +1876,7 @@ function openMethodHelp(){
   w.document.close();
   w.focus();
 }
-function resetUI(){$('method9QualityHint')?.remove();$('method9GeneralHint')?.remove();$('method7IHintBtn')?.remove();hideMethod9AnswerButtons();answerEl.classList.remove('hidden');$('check').classList.toggle('hidden',['5','1','2','3','4','5Q','7F','7I'].includes(methodEl.value));if($('next')){$('next').textContent='Seuraava';$('next').classList.toggle('hidden',methodEl.value==='5');}answered=false;step=0;stepAnswers={};feedbackEl.textContent='';feedbackEl.className='feedback';tabbox.classList.add('hidden');tabbox.innerHTML='';staffWrap.classList.add('hidden');svg.innerHTML='';stepInfo.textContent='';answerEl.value='';answerEl.disabled=false;$('check').disabled=false;$('xBtn').classList.add('hidden');$('tabBtn').classList.add('hidden');$('tabBtn').textContent='Näytä tabulatuurina';$('listenBtn').classList.add('hidden');$('listenBtn').textContent='Kuuntele sointu';$('method7ChordHintBtn').classList.add('hidden');$('method10HintBtn').classList.add('hidden');$('method10HintBtn').disabled=false;$('method10HintBtn').textContent='Vihje: Root';$('reveal').disabled=false}
+function resetUI(){$('method9QualityHint')?.remove();$('method9GeneralHint')?.remove();$('method7IHintBtn')?.remove();hideMethod9AnswerButtons();answerEl.classList.remove('hidden');$('check').classList.toggle('hidden',['5','1','2','3','4','5Q','7F','7I'].includes(methodEl.value));if($('next')){$('next').textContent='Seuraava';$('next').classList.remove('hidden');}answered=false;step=0;stepAnswers={};feedbackEl.textContent='';feedbackEl.className='feedback';tabbox.classList.add('hidden');tabbox.innerHTML='';staffWrap.classList.add('hidden');svg.innerHTML='';stepInfo.textContent='';answerEl.value='';answerEl.disabled=false;$('check').disabled=false;$('xBtn').classList.add('hidden');$('tabBtn').classList.add('hidden');$('tabBtn').textContent='Näytä tabulatuurina';$('listenBtn').classList.add('hidden');$('listenBtn').textContent='Kuuntele sointu';$('method7ChordHintBtn').classList.add('hidden');$('method10HintBtn').classList.add('hidden');$('method10HintBtn').disabled=false;$('method10HintBtn').textContent='Vihje: Root';$('reveal').disabled=false}
 function showStartState(){
   resetUI();current=null;startTime=0;
   renderHeatmap();
@@ -2185,7 +2191,13 @@ function pickFretTask(m){let s,f;if(m==='1'){({s,f}=weightedFretPoint())}else if
     $('next').disabled=true;
     return;
   }
-  [s,f]=method3Points[randomInt(method3Points.length)].split('-').map(Number);
+  let pool=method3Points;
+  if(current?.type==='fret'&&method3Points.length>1){
+    const previous=fretKey(current.s,current.f);
+    const filtered=method3Points.filter(k=>k!==previous);
+    if(filtered.length)pool=filtered;
+  }
+  [s,f]=pool[randomInt(pool.length)].split('-').map(Number);
 }else if(m==='4'){f=Number(data.settings.sameFret??6);s=randomInt(6)}else if(m==='5'){
   const candidates=method5Candidates();
   if(!candidates.length){
@@ -2208,7 +2220,7 @@ function pickFretTask(m){let s,f;if(m==='1'){({s,f}=weightedFretPoint())}else if
 current={type:'fret',s,f,pc:noteAt(s,f)%12};
 promptEl.innerHTML=m==='5'?`Paikanna kitaralta <span class="big">${stringNames[s]}-kieli, ${f}. nauha</span>. Arvioi sävelkorkeus ensin mielessäsi, soita sävel ja nimeä se lopuksi kenttään.`:`Mikä sävel on <span class="big">${stringNames[s]}-kielen ${f}. nauhalla</span>?`;
 answerEl.placeholder='Esim. C#';
-$('xBtn').classList.toggle('hidden',m==='5'||m==='2');
+$('xBtn').classList.toggle('hidden',m==='5'||m==='2'||m==='3');
 if(['1','2','3','4'].includes(m))$('check').classList.add('hidden');
 if(m==='5'){
   $('check').classList.add('hidden');
@@ -3468,7 +3480,7 @@ recordResult({good,x,reveal,timeMs:method5Wrong?null:t,positions});
 answerEl.disabled=true;$('check').disabled=true;
 if(method5Wrong){
   feedbackEl.textContent='✗ Väärin — oikea vastaus: '+currentAnswerText();
-}else if(methodEl.value==='2'&&!good){
+}else if(['2','3'].includes(methodEl.value)&&!good){
   feedbackEl.textContent='Väärin — oikea vastaus: '+currentAnswerText()+' — '+fmtTime(t);
 }else{
   feedbackEl.textContent=(good?'✓ Oikein — '+currentAnswerText():'✗ Väärin — oikea vastaus: '+currentAnswerText())+' — '+fmtTime(t);
@@ -3698,6 +3710,9 @@ function revealCurrent(){
     return;
   }
   answered=true;
+  if(['2','1','3','4'].includes(methodEl.value)&&current.type==='fret'){
+    settleCurrentFretPosition(false);
+  }
   if(methodEl.value!=='7'&&methodEl.value!=='8'&&methodEl.value!=='9'){
     recordResult({good:false,reveal:true,timeMs:elapsed(),positions:methodEl.value==='10'?[]:(current.positions||current.voicing||[])});
   }
@@ -3736,6 +3751,7 @@ function revealCurrent(){
     feedbackEl.textContent='Vastaus: '+currentAnswerText();
   }
   feedbackEl.className='feedback';
+  if(['2','1','3','4'].includes(methodEl.value)&&current.type==='fret')renderHeatmap();
   answerEl.disabled=true;
   $('check').disabled=true;
   $('next').focus();
@@ -4137,7 +4153,7 @@ function showMethod10IntervalHints(){
   updateMethod10HintButton();
 }
 
-methodEl.value=data.settings.method||'1';methodEl.addEventListener('change',()=>{fretboardExam=null;method3Points=null;method8Drill=null;method9Drill=null;if(methodEl.value==='5'){method5SessionAnswerCount=0;method5AskedThisPass=new Set();}data.settings.method=methodEl.value;saveData();settingHTML();renderStats();if(['5','7','7F','7I','8','9','10'].includes(methodEl.value))pickTask();else showStartState()});$('methodHelpBtn').addEventListener('click',openMethodHelp);$('check').addEventListener('click',checkCurrent);$('next').addEventListener('click',pickTask);$('startExam').addEventListener('click',restartFretboardExam);$('reveal').addEventListener('click',revealCurrent);$('xBtn').addEventListener('click',markX);$('tabBtn').addEventListener('click',toggleTab);$('listenBtn').addEventListener('click',listenChord);$('method10HintBtn').addEventListener('click',()=>{if(methodEl.value==='7F')showMethod7FHint();else if(methodEl.value==='8')showMethod8RootHint();else showMethod10IntervalHints()});answerEl.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();checkCurrent()}});$('saveFile').addEventListener('click',exportTrainingData);$('loadFile').addEventListener('click',chooseTrainingDataFile);$('loadFileInput').addEventListener('change',e=>{importTrainingData(e.target.files?.[0]);e.target.value=''});$('resetString').addEventListener('click',()=>{
+methodEl.value=data.settings.method||'1';methodEl.addEventListener('change',()=>{fretboardExam=null;method3Points=null;method8Drill=null;method9Drill=null;if(methodEl.value==='5'){method5SessionAnswerCount=0;method5AskedThisPass=new Set();}data.settings.method=methodEl.value;saveData();settingHTML();renderStats();if(['5','7','7F','7I','8','9','10'].includes(methodEl.value))pickTask();else showStartState()});$('methodHelpBtn').addEventListener('click',openMethodHelp);$('check').addEventListener('click',checkCurrent);$('next').addEventListener('click',pickTask);$('startExam').addEventListener('click',restartFretboardExam);$('reveal').addEventListener('click',revealCurrent);$('xBtn').addEventListener('click',markX);$('tabBtn').addEventListener('click',toggleTab);$('listenBtn').addEventListener('click',listenChord);$('method10HintBtn').addEventListener('click',()=>{if(methodEl.value==='7F')showMethod7FHint();else if(methodEl.value==='8')showMethod8RootHint();else showMethod10IntervalHints()});answerEl.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();if(answered&&['5','1','2','3','4'].includes(methodEl.value))pickTask();else checkCurrent()}});$('saveFile').addEventListener('click',exportTrainingData);$('loadFile').addEventListener('click',chooseTrainingDataFile);$('loadFileInput').addEventListener('change',e=>{importTrainingData(e.target.files?.[0]);e.target.value=''});$('resetString').addEventListener('click',()=>{
   if(!['1','2','3','5'].includes(methodEl.value))return;
 
   const choices={
