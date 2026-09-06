@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.19.21 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.19.22 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -232,7 +232,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.19.21 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.19.22 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -262,7 +262,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </details>
 
   <section class="panel">
-    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><div id="methodTitle" class="group-title"></div><button class="secondary hidden" id="methodHelpBtn" type="button">Ohje</button></div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><div id="methodTitle" class="group-title"></div><button class="secondary hidden" id="methodHelpBtn" type="button">Ohje</button><span id="firstRunHelpHint" class="hidden" style="font-weight:700;white-space:nowrap">← Lue ohje</span></div>
     <div id="prompt"></div>
     <div id="staffWrap" class="staff-wrap hidden"><svg id="staff" viewBox="0 0 760 280" aria-label="Nuottiviivasto"></svg></div>
     <div id="tabbox" class="tabbox hidden"></div>
@@ -305,8 +305,10 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.19.21';
+const APP_VERSION='1.19.22';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
+const FIRST_RUN_HELP_KEY='sightfret_first_run_help_shown_v1';
+const isFirstSightFretRun=!localStorage.getItem(STORE_KEY) && !localStorage.getItem(FIRST_RUN_HELP_KEY);
 const $=id=>document.getElementById(id);
 const methodEl=$('method'), settingsEl=$('settings'), promptEl=$('prompt'), answerEl=$('answer'), feedbackEl=$('feedback'), stepInfo=$('stepInfo'), tabbox=$('tabbox'), staffWrap=$('staffWrap'), svg=$('staff');
 const correctEl=$('correct'), totalEl=$('total'), avgTimeEl=$('avgTime');
@@ -1780,9 +1782,17 @@ document.addEventListener('touchcancel',stopSeventhChordGuideDrag);
 const METHOD_HELP_CONTENT={
   '5':{
     title:'1 – Valmisteleva otelautaharjoitus',
-    practice:'Harjoituksessa yhdistetään fyysisen kitaran kohta sen sävelnimeen ja sävelkorkeuteen. Paikanna kysytty kielen ja nauhan osoittama kohta ensin kitaralta. Ennen kuin soitat sävelen, pysähdy hetkeksi ja yritä arvioida mielessäsi sen sävelkorkeutta. Soita sitten sävel ja vertaa kuulemaasi mielikuvaasi. Kun olet kuullut oikean sävelkorkeuden, voit halutessasi vahvistaa sitä laulamalla tai viheltämällä sävelen soiton jälkeen. Nimeä lopuksi sävel SightFretiin. Kuuntele-painikkeella (L) voit tarvittaessa kuulla kyseisen position sävelen.',
+    practice:'Harjoituksessa yhdistetään fyysisen kitaran otelaudan kohta sen sävelnimeen ja sävelkorkeuteen.',
+    practiceSteps:[
+      'Paikanna kysytty kielen ja nauhan osoittama kohta ensin kitaralta.',
+      'Ennen kuin soitat sävelen, pysähdy hetkeksi ja yritä arvioida mielessäsi sen sävelkorkeutta.',
+      'Soita sävel.',
+      'Kun olet kuullut oikean sävelkorkeuden, voit halutessasi vahvistaa sitä laulamalla tai viheltämällä sävelen soiton jälkeen.',
+      'Nimeä lopuksi sävel SightFretiin.'
+    ],
+    practiceAfter:'Kuuntele-painikkeella (L) voit tarvittaessa kuulla kyseisen position sävelen.',
     develops:'Harjoitus toimii valmistavana siltana fyysisen kitaran ja SightFretin otelautaharjoittelun välillä. Se yhdistää otelaudan visuaalisen ja motorisen hahmottamisen, sävelnimen sekä kuullun ja mielessä ennakoidun sävelkorkeuden. Näin otelaudan paikat eivät jää vain visuaalisiksi sijainneiksi, vaan ne yhdistyvät myös kitaralla tuotettuihin ääniin.',
-    next:'Tätä menetelmää ei ole tarkoitus harjoitella pitkään, jos fyysisen otelaudan ja sävelten välinen yhteys tuntuu jo luontevalta. Kun koet otelaudan olevan ainakin jollain tavalla hallussa, voit siirtää harjoittelun painopisteen menetelmiin 2–6. Jos otelauta on sinulle jo ennestään tuttu, voit halutessasi ohittaa tämän valmistelevan harjoituksen kokonaan.'
+    next:'Tätä menetelmää ei ole tarkoitus harjoitella pitkään, jos fyysisen otelaudan ja sävelten välinen yhteys tuntuu jo luontevalta. Hyvä käytännön merkki etenemiselle on, että yhden kokonaisen otelaudan läpikäynnin jälkeen otelaudalla näkyy enintään 5 punaista eli väärin vastattua kohtaa. Tällöin voit hyvin siirtää harjoittelun painopisteen menetelmiin 2–6. Jos koet otelaudan olevan jo muuten riittävän hyvin hallussa, sinun ei tarvitse saavuttaa tätä rajaa. Jos otelauta on sinulle ennestään tuttu, voit halutessasi ohittaa tämän valmistelevan harjoituksen kokonaan.'
   },
   '1':{
     title:'3 – Otelautaharjoitus',
@@ -1831,10 +1841,13 @@ function openMethodHelp(){
   const info=METHOD_HELP_CONTENT[methodEl.value];
   if(!info)return;
   const esc=x=>String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const steps=Array.isArray(info.practiceSteps)?`<ol>${info.practiceSteps.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>`:'';
+  const after=info.practiceAfter?`<p>${esc(info.practiceAfter)}</p>`:'';
   const w=window.open('','SightFretMethodHelp','width=760,height=680,resizable=yes,scrollbars=yes');
   if(!w)return;
+  $('firstRunHelpHint')?.classList.add('hidden');
   w.document.open();
-  w.document.write(`<!doctype html><html lang="fi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(info.title)} – Ohje</title><style>body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;max-width:760px;margin:0 auto;padding:28px;line-height:1.6;background:Canvas;color:CanvasText}h1{font-size:1.45rem;margin:0 0 1.2rem}h2{font-size:1.05rem;margin:1.5rem 0 .35rem}p{margin:.35rem 0}button{margin-top:1.6rem;padding:.65rem 1rem;font:inherit;border:1px solid ButtonBorder;border-radius:8px;background:ButtonFace;color:ButtonText;cursor:pointer}</style></head><body><h1>${esc(info.title)}</h1><h2>Mitä harjoitellaan ja miten?</h2><p>${esc(info.practice)}</p><h2>Mitä soiton tai musiikin teorian aluetta harjoitus kehittää?</h2><p>${esc(info.develops)}</p>${info.next?`<h2>Milloin siirtyä eteenpäin?</h2><p>${esc(info.next)}</p>`:''}<button type="button" onclick="window.close()">Sulje</button></body></html>`);
+  w.document.write(`<!doctype html><html lang="fi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(info.title)} – Ohje</title><style>body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;max-width:760px;margin:0 auto;padding:28px;line-height:1.6;background:Canvas;color:CanvasText}h1{font-size:1.45rem;margin:0 0 1.2rem}h2{font-size:1.05rem;margin:1.5rem 0 .35rem}p{margin:.35rem 0}ol{margin:.55rem 0 .55rem 1.5rem;padding:0}li{margin:.45rem 0}button{margin-top:1.6rem;padding:.65rem 1rem;font:inherit;border:1px solid ButtonBorder;border-radius:8px;background:ButtonFace;color:ButtonText;cursor:pointer}</style></head><body><h1>${esc(info.title)}</h1><h2>Mitä harjoitellaan ja miten?</h2><p>${esc(info.practice)}</p>${steps}${after}<h2>Mitä soiton tai musiikin teorian aluetta harjoitus kehittää?</h2><p>${esc(info.develops)}</p>${info.next?`<h2>Milloin siirtyä eteenpäin?</h2><p>${esc(info.next)}</p>`:''}<button type="button" onclick="window.close()">Sulje</button></body></html>`);
   w.document.close();
   w.focus();
 }
@@ -4193,7 +4206,17 @@ $('resetMethod').addEventListener('click',()=>{
   renderStats();
   showStartState();
 });$('resetAll').addEventListener('click',()=>{if(confirm('Nollataanko kaikki oppimistiedot?')){data=defaultData();method3Points=null;saveData();methodEl.value='1';settingHTML();renderStats();showStartState()}});
+if(isFirstSightFretRun){
+  methodEl.value='5';
+  data.settings.method='5';
+  saveData();
+}
 settingHTML();renderStats();if(['5','7','7F','7I','8','9','10'].includes(methodEl.value))pickTask();else showStartState();
+if(isFirstSightFretRun){
+  updateMethodHelpButton();
+  $('firstRunHelpHint')?.classList.remove('hidden');
+  localStorage.setItem(FIRST_RUN_HELP_KEY,'1');
+}
 
 // Näppäimistöfokuksen hallinta.
 // - Kun tehtävä on aktiivinen, fokus kuuluu vastauskentälle.
