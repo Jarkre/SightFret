@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.19.39 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.19.40 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -234,7 +234,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.19.39 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.19.40 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -308,7 +308,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.19.39';
+const APP_VERSION='1.19.40';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const FIRST_RUN_HELP_KEY='sightfret_first_run_help_shown_v1';
 const isFirstSightFretRun=!localStorage.getItem(STORE_KEY) && !localStorage.getItem(FIRST_RUN_HELP_KEY);
@@ -569,7 +569,7 @@ if(data.settings && Number(data.settings.method7Reps)===3){
   data.settings.method7Reps=4;
   saveData();
 }
-function defaultData(){return {version:3,settings:{method:'1',timeLimit:5,singleString:3,sameFret:6,quizCount:20,method7Category:'all',method7Type:'random',method7Mode:'three',method7Reps:4,method7Mute:false,method7GuitarAdaptation:true,method8Mode:'three',method8Category:'all',method8Type:'random',method8Reps:4,method9Mode:'three',method9Category:'all',method9Type:'random',method9Reps:4,method9ShowFretboard:true,method9ShowStaff:true,method9WithinOctave:true,method9Mute:false,method9GuitarAdaptation:true,method7FGuitarAdaptation:true,method7FWithinOctave:false,method7FMute:false,method7IWithinOctave:false,method7IMute:false,method7IGuitarAdaptation:true,method10Category:'basic',method10Type:'random',accidentals:false,sevenths:false,octaves:false,inv0:true,inv1:false,inv2:false,inv3:false,inv4:false,chordMode:'both'},methods:{},fretboards:{'1':{},'2':{},'3':{},'4':{}},method5:{},method7FMastery:{},method8Mastery:{},method9Mastery:{},method10Mastery:{}}}
+function defaultData(){return {version:3,settings:{method:'1',timeLimit:5,singleString:3,sameFret:6,quizCount:20,method7Category:'all',method7Type:'random',method7Mode:'three',method7Reps:4,method7Mute:false,method7GuitarAdaptation:true,method8Mode:'three',method8Category:'all',method8Type:'random',method8Reps:4,method9Mode:'three',method9Category:'all',method9Type:'random',method9Reps:4,method9ShowFretboard:true,method9ShowStaff:true,method9WithinOctave:true,method9Mute:false,method9GuitarAdaptation:true,method7FGuitarAdaptation:true,method7FWithinOctave:false,method7FMute:false,method7IWithinOctave:false,method7IMute:false,method7IGuitarAdaptation:true,method10Category:'basic',method10Type:'random',accidentals:false,sevenths:false,octaves:false,inv0:true,inv1:false,inv2:false,inv3:false,inv4:false,chordMode:'both'},methods:{},fretboards:{'1':{},'2':{},'3':{},'4':{}},method5:{},method3Streaks:{},method3Completed:{},method7FMastery:{},method8Mastery:{},method9Mastery:{},method10Mastery:{}}}
 function migrateData(raw){
   const d=defaultData();
   if(!raw||typeof raw!=='object')return d;
@@ -590,6 +590,8 @@ function migrateData(raw){
     for(const method of ['1','2','3','4'])d.fretboards[method]=JSON.parse(JSON.stringify(legacyFretboard));
   }
   d.method5=raw.method5&&typeof raw.method5==='object'?raw.method5:{};
+  d.method3Streaks=raw.method3Streaks&&typeof raw.method3Streaks==='object'?raw.method3Streaks:{};
+  d.method3Completed=raw.method3Completed&&typeof raw.method3Completed==='object'?raw.method3Completed:{};
   d.method7FMastery=raw.method7FMastery&&typeof raw.method7FMastery==='object'?raw.method7FMastery:{};
   d.method8Mastery=raw.method8Mastery&&typeof raw.method8Mastery==='object'?raw.method8Mastery:{};
   d.method9Mastery=raw.method9Mastery&&typeof raw.method9Mastery==='object'?raw.method9Mastery:{};
@@ -707,7 +709,23 @@ function recordResult({good=false,x=false,reveal=false,timeMs=null,positions=[]}
 
    fm.masteryScore=clamp(mastery);
  }
- if(methodEl.value==='3')refreshMethod3Points();
+ if(methodEl.value==='3'&&positions.length){
+   if(!data.method3Streaks)data.method3Streaks={};
+   if(!data.method3Completed)data.method3Completed={};
+   for(const p of positions){
+     const k=fretKey(p.s,p.f);
+     if(good&&!x&&!reveal){
+       const streak=(Number(data.method3Streaks[k])||0)+1;
+       if(streak>=5){
+         data.method3Completed[k]=true;
+         delete data.method3Streaks[k];
+       }else data.method3Streaks[k]=streak;
+     }else if(wrong){
+       data.method3Streaks[k]=0;
+     }
+   }
+   refreshMethod3Points();
+ }
  saveData();renderStats()
 }
 
@@ -932,6 +950,12 @@ function renderStats(){
 
  if(method==='5'||method==='10'){
    // Menetelmät 5 ja 10 käyttävät omia osaamisnäkymiään.
+ }else if(method==='3'){
+   const active=(method3Points||[]).map(k=>({k,v:fretboardForMethod()[k]})).filter(x=>x.v);
+   $('weakStats').innerHTML=active.length?active.map(({k,v})=>{
+     const [s,f]=k.split('-').map(Number),streak=Number(data.method3Streaks?.[k])||0;
+     return `${stringNames[s]}${f}: ${streak}/5 peräkkäin oikein · osaaminen ${Math.round((fretMastery(v)??0)*100)} %`;
+   }).join('<br>'):'Ei heikkoja alueita.';
  }else if(isFretAutomation){
    const limitMs=Number(data.settings.timeLimit||5)*1000||5000;
    const weak=entries.filter(([,v])=>{
@@ -1837,9 +1861,9 @@ const METHOD_HELP_CONTENT={
       'Paina Seuraava (tai nopeammin vain Enter-näppäintä). Katso, mikä kolmesta harjoiteltavasta positiosta on valittuna otelaudalla.',
       'Nimeä kysytyssä positiossa oleva sävel mahdollisimman suoraan ilman referenssiä muusta otelautapositiosta.',
       'Vastauksen jälkeen voit rauhassa käsitellä palautteen ja tarkastella lämpökarttaa ennen seuraavaa tehtävää.',
-      'Kun position osaaminen vahvistuu riittävästi, se poistuu harjoituksen kohteista ja tilalle voidaan ottaa seuraava heikko positio.'
+      'Kun samaan heikkoon positioon on vastattu 5 kertaa peräkkäin oikein, se poistuu tämän harjoituksen Heikot alueet -listalta ja tilalle voidaan ottaa seuraava heikko positio. Väärä vastaus nollaa vain kyseisen position onnistumissarjan.'
     ],
-    practiceAfter:'Lämpökartta päivittyy harjoittelun mukana. Oikein vastatessa position väri liikkuu vähitellen kohti vihreää ja väärin vastatessa takaisin kohti punaista. Vihreämpi positio tarkoittaa vahvempaa osaamista ja punaisempi enemmän harjoittelun tarvetta. Ruudussa näkyvä aika kertoo kyseisen position onnistuneiden itsenäisten vastausten mediaaniajan. Pikanäppäimet sävelnimen syöttämiseen: ↑ = # (ylennys), ↓ = ♭ (alennus). Enharmoniset vastineet hyväksytään, esimerkiksi G# ja Ab.',
+    practiceAfter:'Viiden peräkkäisen oikean sarja on menetelmän 4 oma harjoittelutila eikä muuta lämpökartan varsinaista osaamispisteytystä. Sarja tallennetaan, joten se säilyy myös sovelluksen sulkemisen jälkeen. Lämpökartta päivittyy harjoittelun mukana. Oikein vastatessa position väri liikkuu vähitellen kohti vihreää ja väärin vastatessa takaisin kohti punaista. Vihreämpi positio tarkoittaa vahvempaa osaamista ja punaisempi enemmän harjoittelun tarvetta. Ruudussa näkyvä aika kertoo kyseisen position onnistuneiden itsenäisten vastausten mediaaniajan. Pikanäppäimet sävelnimen syöttämiseen: ↑ = # (ylennys), ↓ = ♭ (alennus). Enharmoniset vastineet hyväksytään, esimerkiksi G# ja Ab.',
     develops:'Harjoitus kohdistaa toiston juuri niihin kohtiin, joiden palauttaminen muistista on vielä epävarmaa. Se tehostaa otelaudan automatisoitumista ja auttaa tasoittamaan yksittäisiä muistiaukkoja ilman, että jo vahvoja kohtia tarvitsee harjoitella yhtä paljon.'
   },
   '4':{
@@ -2040,8 +2064,10 @@ function getMethod3Candidates(){
   // täsmäharjoitteluun vain aidosti heikoksi havaitut positiot. Pelkkä vähäinen
   // havaintomäärä ei enää tee positiosta "heikkoa".
   const limitMs=Number(data.settings.timeLimit||5)*1000||5000;
+  const completed=data.method3Completed||{};
   return Object.entries(fretboardForMethod())
-    .filter(([,v])=>{
+    .filter(([k,v])=>{
+      if(completed[k])return false;
       if(!v||!v.total)return false;
       const score=fretMastery(v)??0;
       const med=median(v.times||[]);
@@ -2069,11 +2095,11 @@ function method3Available(){
 function refreshMethod3Points(){
   if(methodEl.value!=='3' || !method3Points)return;
 
-  // Poista ne lukituista pisteistä, jotka ovat jo saavuttaneet 90 % rajan.
-  method3Points=method3Points.filter(k=>{
-    const v=fretboardForMethod()[k];
-    return v && v.total>0 && (fretMastery(v)??0)<0.90;
-  });
+  // Aktiivinen heikko positio pysyy harjoituksessa, kunnes siihen on vastattu
+  // viisi kertaa peräkkäin oikein. Tämä on menetelmän 4 oma harjoittelutila
+  // eikä muuta varsinaista otelautaosaamisen pisteytystä.
+  const completed=data.method3Completed||{};
+  method3Points=method3Points.filter(k=>!completed[k]);
 
   // Täytä vapautuneet paikat seuraavilla heikoimmilla pisteillä.
   const used=new Set(method3Points);
@@ -4270,7 +4296,7 @@ $('resetMethod').addEventListener('click',()=>{
   if(['1','2','4'].includes(method))data.fretboards[method]={};
   // Menetelmä 3 käyttää menetelmän 1 otelautadataa, joten sen resetointi
   // ei saa pyyhkiä menetelmän 1 osaamishistoriaa.
-  if(method==='3')method3Points=null;
+  if(method==='3'){method3Points=null;data.method3Streaks={};data.method3Completed={};}
   if(method==='8')data.method8Mastery={};
   saveData();
   renderStats();
