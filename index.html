@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.19.42 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.19.43 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -234,7 +234,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.19.42 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.19.43 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -242,9 +242,9 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
       <select id="method">
         <option value="5">1 – Valmisteleva otelautaharjoitus</option>
         <option value="2">2 – Yhden kielen täsmäharjoitus</option>
-        <option value="1">3 – Otelautaharjoitus</option>
-        <option value="3">4 – Kolmen heikon otelautakohdan harjoitus</option>
-        <option value="4">5 – Saman nauhan harjoitus eri kielillä</option>
+        <option value="4">3 – Saman nauhan harjoitus eri kielillä</option>
+        <option value="1">4 – Otelautaharjoitus</option>
+        <option value="3">5 – Kolmen heikon otelautakohdan harjoitus</option>
         <option value="5Q">6 – Otelauta pistokoe</option>
         <option value="7F">7 – Löydä intervalli otelaudalta</option>
         <option value="9">8 – Tunnista intervalli</option>
@@ -308,7 +308,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.19.42';
+const APP_VERSION='1.19.43';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const FIRST_RUN_HELP_KEY='sightfret_first_run_help_shown_v1';
 const isFirstSightFretRun=!localStorage.getItem(STORE_KEY) && !localStorage.getItem(FIRST_RUN_HELP_KEY);
@@ -569,7 +569,7 @@ if(data.settings && Number(data.settings.method7Reps)===3){
   data.settings.method7Reps=4;
   saveData();
 }
-function defaultData(){return {version:3,settings:{method:'1',timeLimit:5,singleString:3,sameFret:6,quizCount:20,method7Category:'all',method7Type:'random',method7Mode:'three',method7Reps:4,method7Mute:false,method7GuitarAdaptation:true,method8Mode:'three',method8Category:'all',method8Type:'random',method8Reps:4,method9Mode:'three',method9Category:'all',method9Type:'random',method9Reps:4,method9ShowFretboard:true,method9ShowStaff:true,method9WithinOctave:true,method9Mute:false,method9GuitarAdaptation:true,method7FGuitarAdaptation:true,method7FWithinOctave:false,method7FMute:false,method7IWithinOctave:false,method7IMute:false,method7IGuitarAdaptation:true,method10Category:'basic',method10Type:'random',accidentals:false,sevenths:false,octaves:false,inv0:true,inv1:false,inv2:false,inv3:false,inv4:false,chordMode:'both'},methods:{},fretboards:{'1':{},'2':{},'3':{},'4':{}},method5:{},method3Streaks:{},method3Completed:{},method3RecentResults:{},method7FMastery:{},method8Mastery:{},method9Mastery:{},method10Mastery:{}}}
+function defaultData(){return {version:3,settings:{method:'1',timeLimit:5,singleString:3,sameFret:6,quizCount:20,method7Category:'all',method7Type:'random',method7Mode:'three',method7Reps:4,method7Mute:false,method7GuitarAdaptation:true,method8Mode:'three',method8Category:'all',method8Type:'random',method8Reps:4,method9Mode:'three',method9Category:'all',method9Type:'random',method9Reps:4,method9ShowFretboard:true,method9ShowStaff:true,method9WithinOctave:true,method9Mute:false,method9GuitarAdaptation:true,method7FGuitarAdaptation:true,method7FWithinOctave:false,method7FMute:false,method7IWithinOctave:false,method7IMute:false,method7IGuitarAdaptation:true,method10Category:'basic',method10Type:'random',accidentals:false,sevenths:false,octaves:false,inv0:true,inv1:false,inv2:false,inv3:false,inv4:false,chordMode:'both'},methods:{},fretboards:{'1':{},'2':{},'3':{},'4':{}},method5:{},method3Streaks:{},method3Completed:{},method3RecentResults:{},weakConsecutive:{},method7FMastery:{},method8Mastery:{},method9Mastery:{},method10Mastery:{}}}
 function migrateData(raw){
   const d=defaultData();
   if(!raw||typeof raw!=='object')return d;
@@ -593,6 +593,7 @@ function migrateData(raw){
   d.method3Streaks=raw.method3Streaks&&typeof raw.method3Streaks==='object'?raw.method3Streaks:{};
   d.method3Completed=raw.method3Completed&&typeof raw.method3Completed==='object'?raw.method3Completed:{};
   d.method3RecentResults=raw.method3RecentResults&&typeof raw.method3RecentResults==='object'?raw.method3RecentResults:{};
+  d.weakConsecutive=raw.weakConsecutive&&typeof raw.weakConsecutive==='object'?raw.weakConsecutive:{};
   d.method7FMastery=raw.method7FMastery&&typeof raw.method7FMastery==='object'?raw.method7FMastery:{};
   d.method8Mastery=raw.method8Mastery&&typeof raw.method8Mastery==='object'?raw.method8Mastery:{};
   d.method9Mastery=raw.method9Mastery&&typeof raw.method9Mastery==='object'?raw.method9Mastery:{};
@@ -676,7 +677,7 @@ function recordResult({good=false,x=false,reveal=false,timeMs=null,positions=[]}
    }
    fm.lastSeen=now;
 
-   // Näkyvä menetelmä 3 (sisäinen ID 1) syöttää menetelmän 4 tehotreenin.
+   // Näkyvä menetelmä 4 (sisäinen ID 1) syöttää menetelmän 5 tehotreenin.
    // Positio kelpuutetaan heikoksi vasta, kun viimeisestä viidestä vastauksesta
    // vähintään kaksi on väärin. Tämä historia on erillinen varsinaisesta osaamispisteestä.
    if(methodEl.value==='1'&&!reveal){
@@ -686,6 +687,22 @@ function recordResult({good=false,x=false,reveal=false,timeMs=null,positions=[]}
      hist.push(wrong?'W':'O');
      data.method3RecentResults[k]=hist.slice(-5);
      if(data.method3Completed?.[k] && hist.filter(r=>r==='W').length>=2){
+       delete data.method3Completed[k];
+       if(!data.method3Streaks)data.method3Streaks={};
+       data.method3Streaks[k]=0;
+     }
+   }
+
+   // Näkyvät menetelmät 2 ja 3 (sisäiset ID:t 2 ja 4) voivat myös
+   // lähettää position menetelmän 5 tehotreeniin. Kriteeri on kaksi
+   // väärää peräkkäistä kyseisen position omilla yrityskerroilla.
+   if((methodEl.value==='2'||methodEl.value==='4')&&!reveal){
+     if(!data.weakConsecutive)data.weakConsecutive={};
+     const k=fretKey(p.s,p.f);
+     const source=methodEl.value==='2'?'m2':'m3';
+     if(!data.weakConsecutive[k]||typeof data.weakConsecutive[k]!=='object')data.weakConsecutive[k]={};
+     data.weakConsecutive[k][source]=wrong?(Number(data.weakConsecutive[k][source])||0)+1:0;
+     if(data.weakConsecutive[k][source]>=2 && data.method3Completed?.[k]){
        delete data.method3Completed[k];
        if(!data.method3Streaks)data.method3Streaks={};
        data.method3Streaks[k]=0;
@@ -740,6 +757,8 @@ function recordResult({good=false,x=false,reveal=false,timeMs=null,positions=[]}
          // puhtaalta pöydältä. Uudelleen listalle pääsy vaatii siis kaksi uutta väärää.
          if(!data.method3RecentResults)data.method3RecentResults={};
          data.method3RecentResults[k]=[];
+         if(!data.weakConsecutive)data.weakConsecutive={};
+         data.weakConsecutive[k]={m2:0,m3:0};
        }else data.method3Streaks[k]=streak;
      }else if(wrong){
        data.method3Streaks[k]=0;
@@ -972,8 +991,8 @@ function renderStats(){
  if(method==='5'||method==='10'){
    // Menetelmät 5 ja 10 käyttävät omia osaamisnäkymiään.
  }else if(method==='3'){
-   // Menetelmä 4:n Heikot alueet pitää muodostaa heti myös ennen ensimmäisen
-   // tehtävän käynnistämistä. Näin menetelmässä 3 kertynyt 2/5-virhehistoria
+   // Menetelmä 5:n Heikot alueet pitää muodostaa heti myös ennen ensimmäisen
+   // tehtävän käynnistämistä. Näin menetelmissä 2–4 kertynyt virhehistoria
    // näkyy heti, kun käyttäjä siirtyy tehotreeniin.
    if(!method3Points)prepareMethod3Session();
    const active=(method3Points||[]).map(k=>({k,v:fretboardForMethod()[k]})).filter(x=>x.v);
@@ -1204,7 +1223,7 @@ function renderHeatmap(){
  renderFretboardNutBar(h);
 }
 function settingHTML(){const m=methodEl.value;let html='';if(['1','4'].includes(m))html+=`<div><div class="group-title">Automaatiotesti</div><label>Aikaraja <select id="timeLimit"><option value="0">Ei aikarajaa</option><option value="10">10 s</option><option value="5">5 s</option><option value="3">3 s</option><option value="2">2 s</option><option value="1.5">1,5 s</option></select></label></div>`;
- if(m==='2')html+=`<div><div class="group-title">Automaatiotesti</div><label>Aikaraja <select id="timeLimit"><option value="0">Ei aikarajaa</option><option value="10">10 s</option><option value="5">5 s</option><option value="3">3 s</option><option value="2">2 s</option><option value="1.5">1,5 s</option></select></label></div><div><div class="group-title" style="visibility:hidden" aria-hidden="true">Automaatiotesti</div><label>Kieli <select id="singleString">${[5,4,3,2,1,0].map(i=>`<option value="${i}">${stringNames[i]}</option>`).join('')}</select></label></div>`;if(m==='3')html+=`<div><div class="group-title">Heikot pisteet</div><span class="small">Valitaan automaattisesti menetelmän 3 otelautaosaamisdatasta. Menetelmässä 4 tehdyt vastaukset päivittävät samaa dataa.</span></div>`;
+ if(m==='2')html+=`<div><div class="group-title">Automaatiotesti</div><label>Aikaraja <select id="timeLimit"><option value="0">Ei aikarajaa</option><option value="10">10 s</option><option value="5">5 s</option><option value="3">3 s</option><option value="2">2 s</option><option value="1.5">1,5 s</option></select></label></div><div><div class="group-title" style="visibility:hidden" aria-hidden="true">Automaatiotesti</div><label>Kieli <select id="singleString">${[5,4,3,2,1,0].map(i=>`<option value="${i}">${stringNames[i]}</option>`).join('')}</select></label></div>`;if(m==='3')html+=`<div><div class="group-title">Heikot pisteet</div><span class="small">Valitaan automaattisesti menetelmissä 2–4 havaituista toistuvista virhekohdista. Menetelmä 5 toimii niiden kohdennettuna tehotreeninä.</span></div>`;
  if(m==='4')html+=`<div><div class="group-title">Nauha</div><select id="sameFret">${Array.from({length:13},(_,i)=>`<option>${i}</option>`).join('')}</select></div>`;
  if(['5'].includes(m))html+=`<div><div class="group-title">Alue</div><span class="small">Nauhat 0 - 12</span></div>`;
  if(m==='5Q')html+=`<div><div class="group-title">Pistokoe</div><label>Kysymysten määrä <input id="quizCount" type="number" min="20" max="78" step="1" value="20" style="width:90px"></label><div class="small" style="margin-top:6px">20–78 satunnaista eri otelautapositiota. Samaa positiota ei kysytä kahdesti saman pistokokeen aikana. Aikaraja 5 s / kysymys. Vihreä = oikein aikarajassa, punainen = väärin tai liian hitaasti. Pistokokeen tulokset säilyvät vain käynnissä olevan pistokokeen ajan.</div></div>`;
@@ -1857,7 +1876,7 @@ const METHOD_HELP_CONTENT={
     next:'Tätä menetelmää ei ole tarkoitus harjoitella pitkään, jos fyysisen otelaudan ja sävelten välinen yhteys tuntuu jo luontevalta. Hyvä käytännön merkki etenemiselle on, että yhden kokonaisen otelaudan läpikäynnin jälkeen otelaudalla näkyy enintään 5 punaista eli väärin vastattua kohtaa. Tällöin voit hyvin siirtää harjoittelun painopisteen menetelmiin 2–6. Jos koet otelaudan olevan jo muuten riittävän hyvin hallussa, sinun ei tarvitse saavuttaa tätä rajaa. Jos otelauta on sinulle ennestään tuttu, voit halutessasi ohittaa tämän valmistelevan harjoituksen kokonaan.'
   },
   '1':{
-    title:'3 – Otelautaharjoitus',
+    title:'4 – Otelautaharjoitus',
     practice:'Harjoituksessa kysytään yksittäistä kielen ja nauhan osoittamaa kohtaa koko otelaudalta.',
     practiceSteps:[
       'Paina Seuraava (tai nopeammin vain Enter-näppäintä). Katso, mikä positio on valittuna otelaudalla.',
@@ -1880,19 +1899,19 @@ const METHOD_HELP_CONTENT={
     develops:'Yhden kielen rajaaminen vähentää tehtävän kognitiivista kuormaa ja auttaa rakentamaan tarkkaa sävelkarttaa kieli kerrallaan. Taito tukee erityisesti melodista liikkumista pitkin kaulaa sekä sävelten löytämistä eri rekistereistä.'
   },
   '3':{
-    title:'4 – Kolmen heikon otelautakohdan harjoitus',
-    practice:'SightFret valitsee enintään kolme positiota, joissa on havaittu toistuvaa epävarmuutta menetelmässä 3. Positio lisätään Heikot alueet -listalle, jos siihen tulee vähintään kaksi väärää vastausta viiden viimeisimmän yrityksen aikana. Tässä harjoituksessa harjoittelet näitä positioita kohdistetusti. Harjoituksessa ei ole aikarajaa.',
+    title:'5 – Kolmen heikon otelautakohdan harjoitus',
+    practice:'SightFret valitsee enintään kolme positiota, joissa on havaittu toistuvia virheitä menetelmissä 2–4. Menetelmässä 2 tai 3 positio lisätään Heikot alueet -listalle kahdesta peräkkäisestä väärästä vastauksesta kyseisen position omilla yrityskerroilla. Menetelmässä 4 kriteeri on vähintään kaksi väärää vastausta position viiden viimeisimmän yrityksen aikana. Tässä harjoituksessa harjoittelet näitä positioita kohdistetusti. Harjoituksessa ei ole aikarajaa.',
     practiceSteps:[
       'Paina Seuraava (tai nopeammin vain Enter-näppäintä). Katso, mikä kolmesta harjoiteltavasta positiosta on valittuna otelaudalla.',
       'Nimeä kysytyssä positiossa oleva sävel mahdollisimman suoraan ilman referenssiä muusta otelautapositiosta.',
       'Vastauksen jälkeen voit rauhassa käsitellä palautteen ja tarkastella lämpökarttaa ennen seuraavaa tehtävää.',
       'Kun samaan heikkoon positioon on vastattu 5 kertaa peräkkäin oikein, se poistuu tämän harjoituksen Heikot alueet -listalta ja tilalle voidaan ottaa seuraava heikko positio. Väärä vastaus nollaa vain kyseisen position onnistumissarjan.'
     ],
-    practiceAfter:'Viiden peräkkäisen oikean sarja on menetelmän 4 oma harjoittelutila eikä muuta lämpökartan varsinaista osaamispisteytystä. Sarja tallennetaan, joten se säilyy myös sovelluksen sulkemisen jälkeen. Lämpökartta päivittyy harjoittelun mukana. Oikein vastatessa position väri liikkuu vähitellen kohti vihreää ja väärin vastatessa takaisin kohti punaista. Vihreämpi positio tarkoittaa vahvempaa osaamista ja punaisempi enemmän harjoittelun tarvetta. Ruudussa näkyvä aika kertoo kyseisen position onnistuneiden itsenäisten vastausten mediaaniajan. Pikanäppäimet sävelnimen syöttämiseen: ↑ = # (ylennys), ↓ = ♭ (alennus). Enharmoniset vastineet hyväksytään, esimerkiksi G# ja Ab.',
+    practiceAfter:'Viiden peräkkäisen oikean sarja on menetelmän 5 oma harjoittelutila eikä muuta lämpökartan varsinaista osaamispisteytystä. Sarja tallennetaan, joten se säilyy myös sovelluksen sulkemisen jälkeen. Lämpökartta päivittyy harjoittelun mukana. Oikein vastatessa position väri liikkuu vähitellen kohti vihreää ja väärin vastatessa takaisin kohti punaista. Vihreämpi positio tarkoittaa vahvempaa osaamista ja punaisempi enemmän harjoittelun tarvetta. Ruudussa näkyvä aika kertoo kyseisen position onnistuneiden itsenäisten vastausten mediaaniajan. Pikanäppäimet sävelnimen syöttämiseen: ↑ = # (ylennys), ↓ = ♭ (alennus). Enharmoniset vastineet hyväksytään, esimerkiksi G# ja Ab.',
     develops:'Harjoitus kohdistaa toiston juuri niihin kohtiin, joiden palauttaminen muistista on vielä epävarmaa. Se tehostaa otelaudan automatisoitumista ja auttaa tasoittamaan yksittäisiä muistiaukkoja ilman, että jo vahvoja kohtia tarvitsee harjoitella yhtä paljon.'
   },
   '4':{
-    title:'5 – Saman nauhan harjoitus eri kielillä',
+    title:'3 – Saman nauhan harjoitus eri kielillä',
     practice:'Harjoituksessa kysytään valitun nauhan säveltä yksittäiseltä kieleltä. Nimeä sävel. Tavoitteena on automatisoida nauhan sävelten tunnistaminen pystysuuntaisena kokonaisuutena kuuden kielen yli. Aikarajaa voi käyttää, kun haluat harjoitella sävelten nopeaa palauttamista muistista. Lämpökartta päivittyy harjoittelun mukana: oikein vastatessa position väri liikkuu vähitellen kohti vihreää ja väärin tai liian hitaasti vastatessa takaisin kohti punaista. Vihreämpi positio tarkoittaa vahvempaa osaamista ja punaisempi enemmän harjoittelun tarvetta. Ruudussa näkyvä aika kertoo kyseisen position onnistuneiden itsenäisten vastausten mediaaniajan.',
     develops:'Harjoitus kehittää otelaudan vertikaalista hahmottamista eli kykyä nähdä saman nauhan sävelet eri kielillä. Se täydentää aiempien harjoitusten kielensuuntaista hahmottamista ja auttaa muodostamaan otelaudasta yhtenäisen kaksiulotteisen sävelkartan. Taito tukee sointujen, intervallien ja lähellä sijaitsevien sävelvaihtoehtojen löytämistä eri kieliltä.'
   },
@@ -2085,17 +2104,21 @@ function finishFretboardExamAnswer(good,t,slow){
 
 
 function getMethod3Candidates(){
-  // Näkyvä menetelmä 4 on tehotreeni näkyvässä menetelmässä 3 havaittuihin
+  // Näkyvä menetelmä 5 on tehotreeni näkyvissä menetelmissä 2–4 havaittuihin
   // ongelmakohtiin. Yksi satunnainen virhe ei vielä riitä: position pitää saada
-  // vähintään kaksi väärää vastausta viiden viimeisimmän menetelmä 3 -yrityksen aikana.
+  // vähintään kaksi väärää vastausta viiden viimeisimmän menetelmä 4 -yrityksen aikana.
   const completed=data.method3Completed||{};
   const recent=data.method3RecentResults||{};
+  const consecutive=data.weakConsecutive||{};
   return Object.entries(fretboardForMethod())
     .filter(([k,v])=>{
       if(completed[k])return false;
-      if(!v||!v.total)return false;
       const hist=Array.isArray(recent[k])?recent[k].slice(-5):[];
-      return hist.filter(r=>r==='W').length>=2;
+      const fromWholeBoard=hist.filter(r=>r==='W').length>=2;
+      const c=consecutive[k]&&typeof consecutive[k]==='object'?consecutive[k]:{};
+      const fromSingleString=(Number(c.m2)||0)>=2;
+      const fromSameFret=(Number(c.m3)||0)>=2;
+      return fromWholeBoard||fromSingleString||fromSameFret;
     })
     .map(([k,v])=>({k,score:fretMastery(v)??0}))
     .sort((a,b)=>a.score-b.score);
@@ -2117,7 +2140,7 @@ function refreshMethod3Points(){
   if(methodEl.value!=='3' || !method3Points)return;
 
   // Aktiivinen heikko positio pysyy harjoituksessa, kunnes siihen on vastattu
-  // viisi kertaa peräkkäin oikein. Tämä on menetelmän 4 oma harjoittelutila
+  // viisi kertaa peräkkäin oikein. Tämä on menetelmän 5 oma harjoittelutila
   // eikä muuta varsinaista otelautaosaamisen pisteytystä.
   const completed=data.method3Completed||{};
   method3Points=method3Points.filter(k=>!completed[k]);
