@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.19.40 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.19.41 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -234,7 +234,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.19.40 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.19.41 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -308,7 +308,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.19.40';
+const APP_VERSION='1.19.41';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const FIRST_RUN_HELP_KEY='sightfret_first_run_help_shown_v1';
 const isFirstSightFretRun=!localStorage.getItem(STORE_KEY) && !localStorage.getItem(FIRST_RUN_HELP_KEY);
@@ -569,7 +569,7 @@ if(data.settings && Number(data.settings.method7Reps)===3){
   data.settings.method7Reps=4;
   saveData();
 }
-function defaultData(){return {version:3,settings:{method:'1',timeLimit:5,singleString:3,sameFret:6,quizCount:20,method7Category:'all',method7Type:'random',method7Mode:'three',method7Reps:4,method7Mute:false,method7GuitarAdaptation:true,method8Mode:'three',method8Category:'all',method8Type:'random',method8Reps:4,method9Mode:'three',method9Category:'all',method9Type:'random',method9Reps:4,method9ShowFretboard:true,method9ShowStaff:true,method9WithinOctave:true,method9Mute:false,method9GuitarAdaptation:true,method7FGuitarAdaptation:true,method7FWithinOctave:false,method7FMute:false,method7IWithinOctave:false,method7IMute:false,method7IGuitarAdaptation:true,method10Category:'basic',method10Type:'random',accidentals:false,sevenths:false,octaves:false,inv0:true,inv1:false,inv2:false,inv3:false,inv4:false,chordMode:'both'},methods:{},fretboards:{'1':{},'2':{},'3':{},'4':{}},method5:{},method3Streaks:{},method3Completed:{},method7FMastery:{},method8Mastery:{},method9Mastery:{},method10Mastery:{}}}
+function defaultData(){return {version:3,settings:{method:'1',timeLimit:5,singleString:3,sameFret:6,quizCount:20,method7Category:'all',method7Type:'random',method7Mode:'three',method7Reps:4,method7Mute:false,method7GuitarAdaptation:true,method8Mode:'three',method8Category:'all',method8Type:'random',method8Reps:4,method9Mode:'three',method9Category:'all',method9Type:'random',method9Reps:4,method9ShowFretboard:true,method9ShowStaff:true,method9WithinOctave:true,method9Mute:false,method9GuitarAdaptation:true,method7FGuitarAdaptation:true,method7FWithinOctave:false,method7FMute:false,method7IWithinOctave:false,method7IMute:false,method7IGuitarAdaptation:true,method10Category:'basic',method10Type:'random',accidentals:false,sevenths:false,octaves:false,inv0:true,inv1:false,inv2:false,inv3:false,inv4:false,chordMode:'both'},methods:{},fretboards:{'1':{},'2':{},'3':{},'4':{}},method5:{},method3Streaks:{},method3Completed:{},method3RecentResults:{},method7FMastery:{},method8Mastery:{},method9Mastery:{},method10Mastery:{}}}
 function migrateData(raw){
   const d=defaultData();
   if(!raw||typeof raw!=='object')return d;
@@ -592,6 +592,7 @@ function migrateData(raw){
   d.method5=raw.method5&&typeof raw.method5==='object'?raw.method5:{};
   d.method3Streaks=raw.method3Streaks&&typeof raw.method3Streaks==='object'?raw.method3Streaks:{};
   d.method3Completed=raw.method3Completed&&typeof raw.method3Completed==='object'?raw.method3Completed:{};
+  d.method3RecentResults=raw.method3RecentResults&&typeof raw.method3RecentResults==='object'?raw.method3RecentResults:{};
   d.method7FMastery=raw.method7FMastery&&typeof raw.method7FMastery==='object'?raw.method7FMastery:{};
   d.method8Mastery=raw.method8Mastery&&typeof raw.method8Mastery==='object'?raw.method8Mastery:{};
   d.method9Mastery=raw.method9Mastery&&typeof raw.method9Mastery==='object'?raw.method9Mastery:{};
@@ -675,6 +676,22 @@ function recordResult({good=false,x=false,reveal=false,timeMs=null,positions=[]}
    }
    fm.lastSeen=now;
 
+   // Näkyvä menetelmä 3 (sisäinen ID 1) syöttää menetelmän 4 tehotreenin.
+   // Positio kelpuutetaan heikoksi vasta, kun viimeisestä viidestä vastauksesta
+   // vähintään kaksi on väärin. Tämä historia on erillinen varsinaisesta osaamispisteestä.
+   if(methodEl.value==='1'&&!reveal){
+     if(!data.method3RecentResults)data.method3RecentResults={};
+     const k=fretKey(p.s,p.f);
+     const hist=Array.isArray(data.method3RecentResults[k])?data.method3RecentResults[k].slice(-4):[];
+     hist.push(wrong?'W':'O');
+     data.method3RecentResults[k]=hist.slice(-5);
+     if(data.method3Completed?.[k] && hist.filter(r=>r==='W').length>=2){
+       delete data.method3Completed[k];
+       if(!data.method3Streaks)data.method3Streaks={};
+       data.method3Streaks[k]=0;
+     }
+   }
+
    if(good&&!x&&!wrong){
      let gain;
      if(methodEl.value==='3'){
@@ -719,6 +736,10 @@ function recordResult({good=false,x=false,reveal=false,timeMs=null,positions=[]}
        if(streak>=5){
          data.method3Completed[k]=true;
          delete data.method3Streaks[k];
+         // Kun tehotreeni on valmis, aloita tämän position menetelmä 3 -havaintoikkuna
+         // puhtaalta pöydältä. Uudelleen listalle pääsy vaatii siis kaksi uutta väärää.
+         if(!data.method3RecentResults)data.method3RecentResults={};
+         data.method3RecentResults[k]=[];
        }else data.method3Streaks[k]=streak;
      }else if(wrong){
        data.method3Streaks[k]=0;
@@ -1856,7 +1877,7 @@ const METHOD_HELP_CONTENT={
   },
   '3':{
     title:'4 – Kolmen heikon otelautakohdan harjoitus',
-    practice:'SightFret valitsee osaamisdatasta enintään kolme tällä hetkellä heikointa positiota, joissa on havaittu väärä tai liian hidas vastaus. Tässä harjoituksessa harjoittelet näitä heikkoja positioita kohdistetusti. Harjoituksessa ei ole aikarajaa.',
+    practice:'SightFret valitsee enintään kolme positiota, joissa on havaittu toistuvaa epävarmuutta menetelmässä 3. Positio lisätään Heikot alueet -listalle, jos siihen tulee vähintään kaksi väärää vastausta viiden viimeisimmän yrityksen aikana. Tässä harjoituksessa harjoittelet näitä positioita kohdistetusti. Harjoituksessa ei ole aikarajaa.',
     practiceSteps:[
       'Paina Seuraava (tai nopeammin vain Enter-näppäintä). Katso, mikä kolmesta harjoiteltavasta positiosta on valittuna otelaudalla.',
       'Nimeä kysytyssä positiossa oleva sävel mahdollisimman suoraan ilman referenssiä muusta otelautapositiosta.',
@@ -2060,21 +2081,17 @@ function finishFretboardExamAnswer(good,t,slow){
 
 
 function getMethod3Candidates(){
-  // Menetelmä 4 käyttää menetelmän 3 yhteistä otelautadataa, mutta ottaa
-  // täsmäharjoitteluun vain aidosti heikoksi havaitut positiot. Pelkkä vähäinen
-  // havaintomäärä ei enää tee positiosta "heikkoa".
-  const limitMs=Number(data.settings.timeLimit||5)*1000||5000;
+  // Näkyvä menetelmä 4 on tehotreeni näkyvässä menetelmässä 3 havaittuihin
+  // ongelmakohtiin. Yksi satunnainen virhe ei vielä riitä: position pitää saada
+  // vähintään kaksi väärää vastausta viiden viimeisimmän menetelmä 3 -yrityksen aikana.
   const completed=data.method3Completed||{};
+  const recent=data.method3RecentResults||{};
   return Object.entries(fretboardForMethod())
     .filter(([k,v])=>{
       if(completed[k])return false;
       if(!v||!v.total)return false;
-      const score=fretMastery(v)??0;
-      const med=median(v.times||[]);
-      const hasWrong=(v.wrong||0)>0;
-      const hasSlow=(v.x||0)>0;
-      const repeatedSlow=v.total>=3&&med!=null&&med>limitMs;
-      return score<0.90&&(hasWrong||hasSlow||repeatedSlow);
+      const hist=Array.isArray(recent[k])?recent[k].slice(-5):[];
+      return hist.filter(r=>r==='W').length>=2;
     })
     .map(([k,v])=>({k,score:fretMastery(v)??0}))
     .sort((a,b)=>a.score-b.score);
@@ -4294,6 +4311,7 @@ $('resetMethod').addEventListener('click',()=>{
   if(!confirm(`Nollataanko valitun menetelmän (${methodName(method)}) osaamisdata?`))return;
   delete data.methods[method];
   if(['1','2','4'].includes(method))data.fretboards[method]={};
+  if(method==='1'){data.method3RecentResults={};data.method3Streaks={};data.method3Completed={};method3Points=null;}
   // Menetelmä 3 käyttää menetelmän 1 otelautadataa, joten sen resetointi
   // ei saa pyyhkiä menetelmän 1 osaamishistoriaa.
   if(method==='3'){method3Points=null;data.method3Streaks={};data.method3Completed={};}
