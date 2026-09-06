@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.19.28 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.19.29 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -234,7 +234,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.19.28 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.19.29 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -308,7 +308,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.19.28';
+const APP_VERSION='1.19.29';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const FIRST_RUN_HELP_KEY='sightfret_first_run_help_shown_v1';
 const isFirstSightFretRun=!localStorage.getItem(STORE_KEY) && !localStorage.getItem(FIRST_RUN_HELP_KEY);
@@ -1808,7 +1808,14 @@ const METHOD_HELP_CONTENT={
   },
   '2':{
     title:'2 – Yhden kielen täsmäharjoitus',
-    practice:'Harjoituksessa kysytään yksittäistä kielen ja nauhan osoittamaa kohtaa yksittäisellä kielellä. Pidä huomio vain tämän yhden kielen 0–12-nauhoissa ja pyri vähitellen vastaamaan ilman laskemista. Vaihda kieltä, kun haluat kohdistaa harjoittelun seuraavaan alueeseen. Lämpökartta näyttää, miten osaaminen kehittyy: oikein vastatessa position väri muuttuu vähitellen kohti vihreää, ja väärin vastatessa se liikkuu takaisin kohti punaista. Näin kartasta näkee nopeasti, mitkä kohdat ovat jo automatisoitumassa ja mitkä tarvitsevat lisää harjoittelua.',
+    practice:'Harjoituksessa kysytään yksittäistä kielen ja nauhan osoittamaa kohtaa yksittäisellä kielellä.',
+    practiceSteps:[
+      'Pidä huomio vain tämän yhden kielen 0–12-nauhoissa ja pyri vähitellen vastaamaan ilman referenssiä muusta otelautapositiosta.',
+      'Nimeä kysytyssä positiossa oleva sävel.',
+      'Vastauksen jälkeen voit rauhassa käsitellä palautteen ja katsoa lämpökarttaa. Paina Seuraava, kun olet valmis uuteen kysymykseen.',
+      'Vaihda kieltä, kun haluat kohdistaa harjoittelun seuraavaan alueeseen.'
+    ],
+    practiceAfter:'Lämpökartta näyttää, miten osaaminen kehittyy. Oikein vastatessa position väri muuttuu vähitellen kohti vihreää, ja väärin vastatessa se liikkuu takaisin kohti punaista. Näin kartasta näkee nopeasti, mitkä kohdat ovat jo automatisoitumassa ja mitkä tarvitsevat lisää harjoittelua.',
     develops:'Yhden kielen rajaaminen vähentää tehtävän kognitiivista kuormaa ja auttaa rakentamaan tarkkaa sävelkarttaa kieli kerrallaan. Taito tukee erityisesti melodista liikkumista pitkin kaulaa sekä sävelten löytämistä eri rekistereistä.'
   },
   '3':{
@@ -1858,7 +1865,7 @@ function openMethodHelp(){
   w.document.close();
   w.focus();
 }
-function resetUI(){$('method9QualityHint')?.remove();$('method9GeneralHint')?.remove();$('method7IHintBtn')?.remove();hideMethod9AnswerButtons();answerEl.classList.remove('hidden');$('check').classList.toggle('hidden',['5','1','2','3','4','5Q','7F','7I'].includes(methodEl.value));if($('next'))$('next').textContent='Seuraava';answered=false;step=0;stepAnswers={};feedbackEl.textContent='';feedbackEl.className='feedback';tabbox.classList.add('hidden');tabbox.innerHTML='';staffWrap.classList.add('hidden');svg.innerHTML='';stepInfo.textContent='';answerEl.value='';answerEl.disabled=false;$('check').disabled=false;$('xBtn').classList.add('hidden');$('tabBtn').classList.add('hidden');$('tabBtn').textContent='Näytä tabulatuurina';$('listenBtn').classList.add('hidden');$('listenBtn').textContent='Kuuntele sointu';$('method7ChordHintBtn').classList.add('hidden');$('method10HintBtn').classList.add('hidden');$('method10HintBtn').disabled=false;$('method10HintBtn').textContent='Vihje: Root';$('reveal').disabled=false}
+function resetUI(){$('method9QualityHint')?.remove();$('method9GeneralHint')?.remove();$('method7IHintBtn')?.remove();hideMethod9AnswerButtons();answerEl.classList.remove('hidden');$('check').classList.toggle('hidden',['5','1','2','3','4','5Q','7F','7I'].includes(methodEl.value));if($('next')){$('next').textContent='Seuraava';$('next').classList.toggle('hidden',methodEl.value==='5');}answered=false;step=0;stepAnswers={};feedbackEl.textContent='';feedbackEl.className='feedback';tabbox.classList.add('hidden');tabbox.innerHTML='';staffWrap.classList.add('hidden');svg.innerHTML='';stepInfo.textContent='';answerEl.value='';answerEl.disabled=false;$('check').disabled=false;$('xBtn').classList.add('hidden');$('tabBtn').classList.add('hidden');$('tabBtn').textContent='Näytä tabulatuurina';$('listenBtn').classList.add('hidden');$('listenBtn').textContent='Kuuntele sointu';$('method7ChordHintBtn').classList.add('hidden');$('method10HintBtn').classList.add('hidden');$('method10HintBtn').disabled=false;$('method10HintBtn').textContent='Vihje: Root';$('reveal').disabled=false}
 function showStartState(){
   resetUI();current=null;startTime=0;
   renderHeatmap();
