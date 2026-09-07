@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.19.44 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.19.45 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -234,7 +234,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.19.44 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.19.45 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -309,7 +309,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.19.44';
+const APP_VERSION='1.19.45';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const FIRST_RUN_HELP_KEY='sightfret_first_run_help_shown_v1';
 const isFirstSightFretRun=!localStorage.getItem(STORE_KEY) && !localStorage.getItem(FIRST_RUN_HELP_KEY);
@@ -917,7 +917,7 @@ function renderStats(){
  const resetMethod10AllBtn=$('resetMethod10All');
  if(resetMethod10AllBtn)resetMethod10AllBtn.classList.toggle('hidden',method!=='10');
  const resetMethodBtn=$('resetMethod');
- if(resetMethodBtn)resetMethodBtn.classList.toggle('hidden',method==='3'||method==='5Q'||method==='9'||method==='7I'||method==='7F'||method==='10');
+ if(resetMethodBtn)resetMethodBtn.classList.toggle('hidden',method==='5'||method==='3'||method==='5Q'||method==='9'||method==='7I'||method==='7F'||method==='10');
 
  // Menetelmässä 2 yhteenveto seuraa vain valittua kieltä.
  // Muiden kielten oppimisdata säilyy silti normaalisti otelautakartassa.
