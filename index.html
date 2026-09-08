@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.19.49 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.19.50 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -234,7 +234,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.19.49 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.19.50 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -309,7 +309,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.19.49';
+const APP_VERSION='1.19.50';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const FIRST_RUN_HELP_KEY='sightfret_first_run_help_shown_v1';
 const isFirstSightFretRun=!localStorage.getItem(STORE_KEY) && !localStorage.getItem(FIRST_RUN_HELP_KEY);
@@ -1902,15 +1902,16 @@ document.addEventListener('touchcancel',stopSeventhChordGuideDrag);
 const METHOD_HELP_CONTENT={
   '5':{
     title:'1 – Valmisteleva otelautaharjoitus',
-    practice:'Harjoituksessa yhdistetään fyysisen kitaran otelaudan kohta sen sävelnimeen ja sävelkorkeuteen.',
+    practice:'Tee tämä harjoitus kitaran kanssa. Tavoitteena on yhdistää otelaudan positio, sävelnimi ja soittamasi sävel toisiinsa.',
     practiceSteps:[
       'Paikanna kysytty kielen ja nauhan osoittama kohta ensin kitaralta.',
       'Soita sävel.',
-      'Nimeä lopuksi sävel SightFretiin. Pyri tunnistamaan sävel suoraan kysytystä positiosta ilman, että käytät muiden kielten tai positioiden säveliä referenssinä.'
+      'Nimeä sävel kenttään. Pyri tunnistamaan sävel suoraan kysytystä positiosta ilman, että käytät muiden kielten tai positioiden säveliä referenssinä.',
+      'Etene seuraavaan kysyttyyn positioon.'
     ],
-    practiceAfter:'Kuuntele-painikkeella (L) voit tarvittaessa kuulla kyseisen position sävelen. Pikanäppäimet sävelnimen syöttämiseen: ↑ = # (ylennys), ↓ = ♭ (alennus). Enharmoniset vastineet hyväksytään, esimerkiksi G# ja Ab.',
+    practiceAfter:['Kuuntele-painikkeella (L) voit tarvittaessa kuulla kyseisen position sävelen.','Pikanäppäimet sävelnimen syöttämiseen: ↑ = # (ylennys), ↓ = ♭ (alennus).','Enharmoniset vastineet hyväksytään, esimerkiksi G# ja Ab.'],
     develops:'Harjoitus toimii valmistavana siltana fyysisen kitaran ja SightFretin otelautaharjoittelun välillä. Se yhdistää otelaudan visuaalisen ja motorisen hahmottamisen, sävelnimen sekä kuullun sävelkorkeuden. Näin otelaudan paikat eivät jää vain visuaalisiksi sijainneiksi, vaan ne yhdistyvät myös kitaralla tuotettuihin ääniin.',
-    next:'Tätä menetelmää ei ole tarkoitus harjoitella pitkään, jos fyysisen otelaudan ja sävelten välinen yhteys tuntuu jo luontevalta. Hyvä käytännön merkki etenemiselle on, että yhden kokonaisen otelaudan läpikäynnin jälkeen otelaudalla näkyy enintään 5 punaista eli väärin vastattua kohtaa. Tällöin voit hyvin siirtää harjoittelun painopisteen menetelmiin 2–6. Jos koet otelaudan olevan jo muuten riittävän hyvin hallussa, sinun ei tarvitse saavuttaa tätä rajaa. Jos otelauta on sinulle ennestään tuttu, voit halutessasi ohittaa tämän valmistelevan harjoituksen kokonaan.'
+    next:['Tätä menetelmää ei ole tarkoitus harjoitella pitkään, jos fyysisen otelaudan ja sävelten välinen yhteys tuntuu jo luontevalta. Hyvä käytännön merkki etenemiselle on, että yhden kokonaisen otelaudan läpikäynnin jälkeen otelaudalla näkyy enintään 5 punaista eli väärin vastattua kohtaa. Tällöin voit hyvin siirtää harjoittelun painopisteen menetelmiin 2–6.','Jos koet otelaudan olevan jo muuten riittävän hyvin hallussa, sinun ei tarvitse saavuttaa tätä rajaa. Jos otelauta on sinulle ennestään tuttu, voit halutessasi ohittaa tämän valmistelevan harjoituksen kokonaan.']
   },
   '1':{
     title:'4 – Otelautaharjoitus',
@@ -1920,7 +1921,7 @@ const METHOD_HELP_CONTENT={
       'Nimeä kysytyssä positiossa oleva sävel mahdollisimman suoraan ilman referenssiä muusta otelautapositiosta. Vastaa aikarajan sisällä, jos aikaraja on asetettu.',
       'Vastauksen jälkeen voit rauhassa käsitellä palautteen ja tarkastella lämpökarttaa ennen seuraavaa tehtävää.'
     ],
-    practiceAfter:'Kysymykset tulevat kaikilta kieliltä nauhoilta 0–12. Lämpökartta näyttää, miten osaaminen kehittyy. Oikein vastatessa position väri muuttuu vähitellen kohti vihreää ja väärin vastatessa se liikkuu takaisin kohti punaista. Ruudussa näkyvä aika kertoo kyseisen position onnistuneiden itsenäisten vastausten mediaaniajan. Pikanäppäimet sävelnimen syöttämiseen: ↑ = # (ylennys), ↓ = ♭ (alennus). Enharmoniset vastineet hyväksytään, esimerkiksi G# ja Ab.',
+    practiceAfter:['Kysymykset tulevat kaikilta kieliltä nauhoilta 0–12. Lämpökartta näyttää, miten osaaminen kehittyy. Oikein vastatessa position väri muuttuu vähitellen kohti vihreää ja väärin vastatessa se liikkuu takaisin kohti punaista. Ruudussa näkyvä aika kertoo kyseisen position onnistuneiden itsenäisten vastausten mediaaniajan.','Pikanäppäimet sävelnimen syöttämiseen: ↑ = # (ylennys), ↓ = ♭ (alennus).','Enharmoniset vastineet hyväksytään, esimerkiksi G# ja Ab.'],
     develops:'Harjoitus rakentaa koko otelaudan sävelkarttaa pitkäaikaiseen muistiin ja tähtää siihen, että sävelen nimi palautuu position nähdessä automaattisesti. Tämä tukee nuotinlukua, improvisointia, sointujen hahmottamista ja yleistä liikkumista otelaudalla.'
   },
   '2':{
@@ -1932,7 +1933,7 @@ const METHOD_HELP_CONTENT={
       'Vastauksen jälkeen voit rauhassa käsitellä palautteen ja katsoa lämpökarttaa.',
       'Vaihda kieltä, kun haluat kohdistaa harjoittelun seuraavaan alueeseen.'
     ],
-    practiceAfter:'Lämpökartta näyttää, miten osaaminen kehittyy. Oikein vastatessa position väri muuttuu vähitellen kohti vihreää, ja väärin vastatessa se liikkuu takaisin kohti punaista. Näin kartasta näkee nopeasti, mitkä kohdat ovat jo automatisoitumassa ja mitkä tarvitsevat lisää harjoittelua. Pikanäppäimet sävelnimen syöttämiseen: ↑ = # (ylennys), ↓ = ♭ (alennus). Enharmoniset vastineet hyväksytään, esimerkiksi G# ja Ab.',
+    practiceAfter:['Lämpökartta näyttää, miten osaaminen kehittyy. Oikein vastatessa position väri muuttuu vähitellen kohti vihreää, ja väärin vastatessa se liikkuu takaisin kohti punaista. Näin kartasta näkee nopeasti, mitkä kohdat ovat jo automatisoitumassa ja mitkä tarvitsevat lisää harjoittelua.','Pikanäppäimet sävelnimen syöttämiseen: ↑ = # (ylennys), ↓ = ♭ (alennus).','Enharmoniset vastineet hyväksytään, esimerkiksi G# ja Ab.'],
     develops:'Yhden kielen rajaaminen vähentää tehtävän kognitiivista kuormaa ja auttaa rakentamaan tarkkaa sävelkarttaa kieli kerrallaan. Taito tukee erityisesti melodista liikkumista pitkin kaulaa sekä sävelten löytämistä eri rekistereistä.'
   },
   '3':{
@@ -1944,7 +1945,7 @@ const METHOD_HELP_CONTENT={
       'Vastauksen jälkeen voit rauhassa käsitellä palautteen ja tarkastella lämpökarttaa ennen seuraavaa tehtävää.',
       'Kun samaan heikkoon positioon on vastattu 5 kertaa peräkkäin oikein, se poistuu tämän harjoituksen Heikot alueet -listalta ja tilalle voidaan ottaa seuraava heikko positio. Väärä vastaus nollaa vain kyseisen position onnistumissarjan.'
     ],
-    practiceAfter:'Viiden peräkkäisen oikean sarja on menetelmän 5 oma harjoittelutila eikä muuta lämpökartan varsinaista osaamispisteytystä. Sarja tallennetaan, joten se säilyy myös sovelluksen sulkemisen jälkeen. Lämpökartta päivittyy harjoittelun mukana. Oikein vastatessa position väri liikkuu vähitellen kohti vihreää ja väärin vastatessa takaisin kohti punaista. Vihreämpi positio tarkoittaa vahvempaa osaamista ja punaisempi enemmän harjoittelun tarvetta. Ruudussa näkyvä aika kertoo kyseisen position onnistuneiden itsenäisten vastausten mediaaniajan. Pikanäppäimet sävelnimen syöttämiseen: ↑ = # (ylennys), ↓ = ♭ (alennus). Enharmoniset vastineet hyväksytään, esimerkiksi G# ja Ab.',
+    practiceAfter:['Viiden peräkkäisen oikean sarja on menetelmän 5 oma harjoittelutila eikä muuta lämpökartan varsinaista osaamispisteytystä. Sarja tallennetaan, joten se säilyy myös sovelluksen sulkemisen jälkeen. Lämpökartta päivittyy harjoittelun mukana. Oikein vastatessa position väri liikkuu vähitellen kohti vihreää ja väärin vastatessa takaisin kohti punaista. Vihreämpi positio tarkoittaa vahvempaa osaamista ja punaisempi enemmän harjoittelun tarvetta. Ruudussa näkyvä aika kertoo kyseisen position onnistuneiden itsenäisten vastausten mediaaniajan.','Pikanäppäimet sävelnimen syöttämiseen: ↑ = # (ylennys), ↓ = ♭ (alennus).','Enharmoniset vastineet hyväksytään, esimerkiksi G# ja Ab.'],
     develops:'Harjoitus kohdistaa toiston juuri niihin kohtiin, joiden palauttaminen muistista on vielä epävarmaa. Se tehostaa otelaudan automatisoitumista ja auttaa tasoittamaan yksittäisiä muistiaukkoja ilman, että jo vahvoja kohtia tarvitsee harjoitella yhtä paljon.'
   },
   '4':{
@@ -1956,7 +1957,7 @@ const METHOD_HELP_CONTENT={
       'Nimeä kysytyssä positiossa oleva sävel mahdollisimman suoraan. Vastaa aikarajan sisällä, jos aikaraja on asetettu.',
       'Vastauksen jälkeen voit rauhassa käsitellä palautteen ja tarkastella lämpökarttaa ennen seuraavaa tehtävää.'
     ],
-    practiceAfter:'Lämpökartta päivittyy harjoittelun mukana. Oikein vastatessa position väri liikkuu vähitellen kohti vihreää ja väärin tai liian hitaasti vastatessa takaisin kohti punaista. Ruudussa näkyvä aika kertoo kyseisen position onnistuneiden itsenäisten vastausten mediaaniajan. Pikanäppäimet sävelnimen syöttämiseen: ↑ = # (ylennys), ↓ = ♭ (alennus). Enharmoniset vastineet hyväksytään, esimerkiksi G# ja Ab.',
+    practiceAfter:['Lämpökartta päivittyy harjoittelun mukana. Oikein vastatessa position väri liikkuu vähitellen kohti vihreää ja väärin tai liian hitaasti vastatessa takaisin kohti punaista. Ruudussa näkyvä aika kertoo kyseisen position onnistuneiden itsenäisten vastausten mediaaniajan.','Pikanäppäimet sävelnimen syöttämiseen: ↑ = # (ylennys), ↓ = ♭ (alennus).','Enharmoniset vastineet hyväksytään, esimerkiksi G# ja Ab.'],
     develops:'Harjoitus kehittää otelaudan vertikaalista hahmottamista eli kykyä nähdä saman nauhan sävelet eri kielillä. Se täydentää aiempien harjoitusten kielensuuntaista hahmottamista ja auttaa muodostamaan otelaudasta yhtenäisen kaksiulotteisen sävelkartan. Taito tukee sointujen, intervallien ja lähellä sijaitsevien sävelvaihtoehtojen löytämistä eri kieliltä.'
   },
   '5Q':{
@@ -1987,12 +1988,12 @@ function openMethodHelp(){
   if(!info)return;
   const esc=x=>String(x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const steps=Array.isArray(info.practiceSteps)?`<ol>${info.practiceSteps.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>`:'';
-  const after=info.practiceAfter?`<p>${esc(info.practiceAfter)}</p>`:'';
+  const after=Array.isArray(info.practiceAfter)?info.practiceAfter.map(x=>`<p>${esc(x)}</p>`).join(''):(info.practiceAfter?`<p>${esc(info.practiceAfter)}</p>`:'');
   const w=window.open('','SightFretMethodHelp','width=760,height=680,resizable=yes,scrollbars=yes');
   if(!w)return;
   $('firstRunHelpHint')?.classList.add('hidden');
   w.document.open();
-  w.document.write(`<!doctype html><html lang="fi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(info.title)} – Ohje</title><style>body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;max-width:760px;margin:0 auto;padding:28px;line-height:1.6;background:Canvas;color:CanvasText}h1{font-size:1.45rem;margin:0 0 1.2rem}h2{font-size:1.05rem;margin:1.5rem 0 .35rem}p{margin:.35rem 0}ol{margin:.55rem 0 .55rem 1.5rem;padding:0}li{margin:.45rem 0}button{margin-top:1.6rem;padding:.65rem 1rem;font:inherit;border:1px solid ButtonBorder;border-radius:8px;background:ButtonFace;color:ButtonText;cursor:pointer}</style></head><body><h1>${esc(info.title)}</h1><h2>Mitä harjoitellaan ja miten?</h2><p>${esc(info.practice)}</p>${steps}${after}<h2>Mitä soiton tai musiikin teorian aluetta harjoitus kehittää?</h2><p>${esc(info.develops)}</p>${info.next?`<h2>Milloin siirtyä eteenpäin?</h2><p>${esc(info.next)}</p>`:''}<button type="button" onclick="window.close()">Sulje</button></body></html>`);
+  w.document.write(`<!doctype html><html lang="fi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(info.title)} – Ohje</title><style>body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;max-width:760px;margin:0 auto;padding:28px;line-height:1.6;background:Canvas;color:CanvasText}h1{font-size:1.45rem;margin:0 0 1.2rem}h2{font-size:1.05rem;margin:1.5rem 0 .35rem}p{margin:.35rem 0}ol{margin:.55rem 0 .55rem 1.5rem;padding:0}li{margin:.45rem 0}button{margin-top:1.6rem;padding:.65rem 1rem;font:inherit;border:1px solid ButtonBorder;border-radius:8px;background:ButtonFace;color:ButtonText;cursor:pointer}</style></head><body><h1>${esc(info.title)}</h1><h2>Mitä harjoitellaan ja miten?</h2><p>${esc(info.practice)}</p>${steps}${after}<h2>Mitä soiton tai musiikin teorian aluetta harjoitus kehittää?</h2><p>${esc(info.develops)}</p>${info.next?`<h2>Milloin siirtyä eteenpäin?</h2>${(Array.isArray(info.next)?info.next:[info.next]).map(x=>`<p>${esc(x)}</p>`).join('')}`:''}<button type="button" onclick="window.close()">Sulje</button></body></html>`);
   w.document.close();
   w.focus();
 }
@@ -2345,7 +2346,7 @@ function pickFretTask(m){let s,f;if(m==='1'){({s,f}=weightedFretPoint())}else if
   s=p.s;f=p.f;
 }else{s=randomInt(6);f=randomInt(13)}
 current={type:'fret',s,f,pc:noteAt(s,f)%12};
-promptEl.innerHTML=m==='5'?`Paikanna kitaralta <span class="big">${stringNames[s]}-kieli, ${f}. nauha</span>. Soita sävel ja nimeä se lopuksi kenttään.`:`Mikä sävel on <span class="big">${stringNames[s]}-kielen ${f}. nauhalla</span>?`;
+promptEl.innerHTML=m==='5'?`Paikanna kitaralta <span class="big">${stringNames[s]}-kieli, ${f}. nauha</span>. Soita sävel ja nimeä se kenttään.`:`Mikä sävel on <span class="big">${stringNames[s]}-kielen ${f}. nauhalla</span>?`;
 answerEl.placeholder='Esim. C#';
 $('xBtn').classList.toggle('hidden',m==='5'||m==='1'||m==='2'||m==='3'||m==='4');
 if(['1','2','3','4'].includes(m))$('check').classList.add('hidden');
