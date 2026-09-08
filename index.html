@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.19.58 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.19.59 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -234,7 +234,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.19.58 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.19.59 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -309,7 +309,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.19.58';
+const APP_VERSION='1.19.59';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const FIRST_RUN_HELP_KEY='sightfret_first_run_help_shown_v1';
 const isFirstSightFretRun=!localStorage.getItem(STORE_KEY) && !localStorage.getItem(FIRST_RUN_HELP_KEY);
@@ -516,6 +516,11 @@ const METHOD8_CHORD_CATEGORIES=[
   {id:'sixths',label:'Kuutossoinnut',types:[
     {id:'six',label:'Kuutossointu',example:'C6'},
     {id:'m6',label:'Mollikuutonen',example:'Cm6'}
+  ]},
+  {id:'ninths',label:'9-soinnut',types:[
+    {id:'dom9',label:'Dominanttinooni',example:'C9'},
+    {id:'maj9',label:'Duurinooni (maj9)',example:'Cmaj9'},
+    {id:'m9',label:'Mollinooni',example:'Cm9'}
   ]},
   {id:'sus',label:'Sus-soinnut',types:[
     {id:'sus2',label:'Sus2',example:'Csus2'},
@@ -1996,6 +2001,18 @@ const METHOD_HELP_CONTENT={
       'Näytä otelauta -valinta näyttää intervallin kitaran otelaudalla lähtö- ja kohdepositiona.\nNäytä nuotti -valinta näyttää tai piilottaa nuottiviivaston. Jos sekä nuotti että otelauta piilotetaan, intervallin voi tunnistaa kuuntelemalla.'
     ],
     develops:'Harjoitus yhdistää nuottikuvan, intervallin nimen ja saman sävelsuhteen kitaran otelaudalla. Tavoitteena on, että nähty intervalli alkaa hahmottua sekä teoreettisena etäisyytenä että konkreettisena otelautasuhteena.'
+  },
+  '8':{
+    title:'10 – Tunnista sointu otteesta',
+    practice:'SightFret näyttää sointuotteen otelaudalla. Tunnista sointu, kirjoita soinnun nimi kenttään ja tarkista vastauksesi.',
+    practiceAfter:['Vihje näyttää soinnun pohjasävelen (root).'],
+    develops:'Harjoitus kehittää kykyä päätellä sointu suoraan otelaudalla näkyvistä sävelistä. Tavoitteena on, että sointu alkaa hahmottua valmiin otteen muodon sijaan sen sävelrakenteen ja intervallisuhteiden perusteella.'
+  },
+  '10':{
+    title:'11 – Tunnista sointu nuoteista',
+    practice:'SightFret näyttää soinnun nuottiviivastolla. Tunnista sointu, kirjoita soinnun nimi kenttään ja tarkista vastauksesi.',
+    practiceAfter:['Vihjeet auttavat soinnun tunnistamisessa vaiheittain.'],
+    develops:'Harjoitus kehittää kykyä tunnistaa soinnun rakenne suoraan nuottikuvasta. Tavoitteena on, että sointu alkaa hahmottua yksittäisten nuottien sijaan kokonaisuutena, jonka sävelrakenne ja intervallisuhteet voidaan tunnistaa.'
   }
 };
 function updateMethodHelpButton(){
