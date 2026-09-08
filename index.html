@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.19.57 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.19.58 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -234,7 +234,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.19.57 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.19.58 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -248,7 +248,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
         <option value="5Q">6 – Otelauta pistokoe</option>
         <option value="7F">7 – Löydä intervalli otelaudalta</option>
         <option value="9">8 – Tunnista intervalli</option>
-        <option value="7">9 – Löydä soinnun nauhat kieliltä</option>
+        <option value="7">9 – Löydä sointu otelaudalta</option>
         <option value="8">10 – Tunnista sointu otteesta</option>
         <option value="10">11 – Tunnista sointu nuoteista</option>
         <option value="11">12 – Äänenkuljetus</option>
@@ -309,7 +309,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.19.57';
+const APP_VERSION='1.19.58';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const FIRST_RUN_HELP_KEY='sightfret_first_run_help_shown_v1';
 const isFirstSightFretRun=!localStorage.getItem(STORE_KEY) && !localStorage.getItem(FIRST_RUN_HELP_KEY);
@@ -1967,11 +1967,10 @@ const METHOD_HELP_CONTENT={
     develops:'Pistokoe mittaa, kuinka varmasti ja nopeasti otelaudan sävelnimet palautuvat muistista aikapaineessa. Se toimii yleisen otelautaosaamisen testinä ja auttaa havaitsemaan yksittäiset positiot, joissa muistaminen vielä takeltelee.'
   },
   '7':{
-    title:'9 – Löydä soinnun nauhat kieliltä',
-    practice:'SightFret antaa soinnun ja kielet, joilta sointu rakennetaan. Valitse jokaiselta annetulta kieleltä yksi nauha klikkaamalla otelautaa tai kirjoittamalla nauhanumerot. Kun olet valinnut nauhan jokaiselta annetulta kieleltä, tarkista vastauksesi.',
+    title:'9 – Löydä sointu otelaudalta',
+    practice:'SightFret antaa soinnun ja kielet, joilta sointu rakennetaan. Valitse jokaiselta annetulta kieleltä yksi nauha klikkaamalla otelautaa. Kun olet valinnut nauhan jokaiselta annetulta kieleltä, tarkista vastauksesi.',
     practiceAfter:[
-      'Guitar adaptation on oletuksena päällä ja rajaa tehtävät tavallisesti soitettaviin sointuotteisiin. Avoimia kieliä voi olla aina mukana.',
-      'Kun Guitar adaptation poistetaan, voit tutkia myös teoriassa oikeita mutta tavallisella yhdellä otteella epäkäytännöllisiä hajotuksia. Vihje näyttää soinnun sävelten intervallit root-säveleen verrattuna paljastamatta oikeita nauhapaikkoja.'
+      'Vihje näyttää soinnun sävelten intervallit root-säveleen verrattuna paljastamatta oikeita nauhapaikkoja.'
     ],
     develops:'Harjoitus kehittää soinnun sävelrakenteen aktiivista löytämistä otelaudalta valituilta kieliltä. Tavoitteena ei ole vain muistaa valmiita sointuotteita, vaan oppia rakentamaan sointuja sävel- ja intervallitiedon perusteella eri puolille otelautaa.'
   },
