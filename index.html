@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.19.54 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.19.55 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -234,7 +234,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.19.54 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.19.55 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -309,7 +309,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.19.54';
+const APP_VERSION='1.19.55';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const FIRST_RUN_HELP_KEY='sightfret_first_run_help_shown_v1';
 const isFirstSightFretRun=!localStorage.getItem(STORE_KEY) && !localStorage.getItem(FIRST_RUN_HELP_KEY);
@@ -1978,12 +1978,22 @@ const METHOD_HELP_CONTENT={
       'Vastaa klikkaamalla valitulta kieleltä oikeaa positiota. Harjoitusta kannattaa tehdä kitara kädessä: etsi sama lähtö- ja kohdepositio myös fyysiseltä otelaudalta, soita ne ja kuuntele intervallia.',
       'Vihje näyttää intervallin puolisävelaskelten määrän ja Näytä vastaus paljastaa oikean position.',
       'Harjoituksessa on intervalleja pienestä sekunnista kahteen oktaaviin. Kun Vain oktaavin sisällä on valittu, tehtävät rajataan pieneen sekuntiin–oktaaviin, oktaavi mukaan lukien. Yli oktaavin intervalli näytetään oikealla yhdysintervallin nimellään, mutta osaamisruuduissa se vahvistaa vastaavaa perusintervallia.',
-      'Guitar adaptation pois päältä sallii kaikki teoreettisesti oikeat tehtävät nauhoilla 0–12. Kun Guitar adaptation on päällä, tehtävät rajataan kahden sävelen otteisiin, jotka voidaan soittaa samanaikaisesti eri kieliltä normaalilla käden ulottuvuudella. Intervallien osaamisruudut liikkuvat oikein vastatessa kohti vihreää ja väärin vastatessa kohti punaista.'
+      'Guitar adaptation pois päältä sallii kaikki teoreettisesti oikeat tehtävät. Kun Guitar adaptation on päällä, tehtävät rajataan kahden sävelen otteisiin, jotka voidaan soittaa samanaikaisesti eri kieliltä normaalilla käden ulottuvuudella. Intervallien osaamisruudut liikkuvat oikein vastatessa kohti vihreää ja väärin vastatessa kohti punaista.'
     ],
     develops:'Harjoitus kehittää kykyä rakentaa intervalli aktiivisesti otelaudalle annetusta lähtösävelestä. Se yhdistää intervallin teoreettisen etäisyyden, suunnan ja kitaran kielten välisen geometrisen hahmottamisen käytännön sormilautakartaksi. Harjoitus kehittää otelaudan hahmottamista yksittäisten muistettujen positioiden sijaan toisiinsa liittyvien sävelten ja intervallien verkostona. Toistojen myötä tavoitteena on, että intervallien sijainnit eri kielillä automatisoituvat ja otelaudan mahdolliset reitit alkavat hahmottua suoraan lähtöpositiosta.'
   },
   '7I':{title:'8 – Tunnista intervalli otelaudalta',practice:'SightFret näyttää otelaudalla lähtö- ja kohdeposition sekä kertoo, kuljetaanko lähtösävelestä kohdesäveleen sävelkorkeudessa ylöspäin vai alaspäin. Tunnista suunnallinen intervalli ja vastaa intervallipainikkeella. Suunta määräytyy absoluuttisesta sävelkorkeudesta, ei otelaudan visuaalisesta suunnasta. Harjoitusta kannattaa tehdä kitara kädessä ja soittaa samat kaksi positiota myös fyysiseltä otelaudalta. Vain oktaavin sisällä rajaa tehtävät oktaaviin asti. Hiljennä äänet poistaa kuuntelun. Guitar adaptation rajaa tehtävät käytännössä soitettaviin kahden sävelen otteisiin ja sallii avoimet kielet ilman nauhavälirajoitusta.',develops:'Harjoitus on menetelmän 7 peilikuva: siinä otelaudan kahdesta positiosta päätellään niiden välinen intervalli. Se vahvistaa kykyä lukea otelautaa toisiinsa liittyvien positioiden ja intervallien verkostona sekä automatisoi intervallisuhteiden tunnistamista eri kieliltä.'},
-  '9':{title:'8 – Tunnista intervalli',practice:'Tunnista nuottiviivastolla ja/tai otelaudalla esitetty intervalli. Vain oktaavin sisällä rajaa tehtävät oktaaviin asti; pois päältä mukana voi olla myös yhdysintervalleja kahteen oktaaviin asti. Hiljennä äänet poistaa intervallin kuuntelun. Guitar adaptation rajaa otelautapositiot kitaralla käytännössä soitettavaan intervalliverkostoon: sävelet ovat eri kielillä ja kahden painetun sävelen nauhaväli on enintään neljä nauhaa, mutta avoimet kielet sallitaan ilman nauhavälirajoitusta. Kun Guitar adaptation poistetaan, mukana ovat myös teoriassa mahdolliset mutta tavallisessa soitossa epäkäytännölliset positiot. Näytä otelauta -valinta näyttää intervallin kitaran otelaudalla lähtö- ja kohdepositiona. Näytä nuotti -valinta näyttää tai piilottaa nuottiviivaston. Jos sekä nuotti että otelauta piilotetaan, intervallin voi tunnistaa kuuntelemalla.',develops:'Harjoitus yhdistää nuottikuvan, intervallin nimen ja saman sävelsuhteen kitaran otelaudalla. Tavoitteena on, että nähty intervalli alkaa hahmottua sekä teoreettisena etäisyytenä että konkreettisena otelautasuhteena.'}
+  '9':{
+    title:'8 – Tunnista intervalli',
+    practice:'Tunnista nuottiviivastolla ja/tai otelaudalla esitetty intervalli.',
+    practiceAfter:[
+      '"Vain oktaavin sisällä", rajaa tehtävät oktaaviin asti. Pois päältä, mukana voi olla myös yhdysintervalleja kahteen oktaaviin asti.',
+      'Guitar adaptation rajaa otelautapositiot kitaralla käytännössä soitettavaan intervalliverkostoon. Sävelet ovat tällöin eri kielillä ja kahden painetun sävelen nauhaväli on enintään neljä nauhaa. Avoimet kielet sallitaan ilman nauhavälirajoitusta.',
+      'Kun Guitar adaptation poistetaan, mukana ovat myös teoriassa mahdolliset mutta tavallisessa soitossa epäkäytännölliset positiot.',
+      'Näytä otelauta -valinta näyttää intervallin kitaran otelaudalla lähtö- ja kohdepositiona.\nNäytä nuotti -valinta näyttää tai piilottaa nuottiviivaston. Jos sekä nuotti että otelauta piilotetaan, intervallin voi tunnistaa kuuntelemalla.'
+    ],
+    develops:'Harjoitus yhdistää nuottikuvan, intervallin nimen ja saman sävelsuhteen kitaran otelaudalla. Tavoitteena on, että nähty intervalli alkaa hahmottua sekä teoreettisena etäisyytenä että konkreettisena otelautasuhteena.'
+  }
 };
 function updateMethodHelpButton(){
   const b=$('methodHelpBtn');
