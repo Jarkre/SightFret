@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.19.50 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.19.51 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -234,7 +234,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.19.50 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.19.51 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -309,7 +309,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.19.50';
+const APP_VERSION='1.19.51';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const FIRST_RUN_HELP_KEY='sightfret_first_run_help_shown_v1';
 const isFirstSightFretRun=!localStorage.getItem(STORE_KEY) && !localStorage.getItem(FIRST_RUN_HELP_KEY);
@@ -1921,14 +1921,15 @@ const METHOD_HELP_CONTENT={
       'Nimeä kysytyssä positiossa oleva sävel mahdollisimman suoraan ilman referenssiä muusta otelautapositiosta. Vastaa aikarajan sisällä, jos aikaraja on asetettu.',
       'Vastauksen jälkeen voit rauhassa käsitellä palautteen ja tarkastella lämpökarttaa ennen seuraavaa tehtävää.'
     ],
-    practiceAfter:['Kysymykset tulevat kaikilta kieliltä nauhoilta 0–12. Lämpökartta näyttää, miten osaaminen kehittyy. Oikein vastatessa position väri muuttuu vähitellen kohti vihreää ja väärin vastatessa se liikkuu takaisin kohti punaista. Ruudussa näkyvä aika kertoo kyseisen position onnistuneiden itsenäisten vastausten mediaaniajan.','Pikanäppäimet sävelnimen syöttämiseen: ↑ = # (ylennys), ↓ = ♭ (alennus).','Enharmoniset vastineet hyväksytään, esimerkiksi G# ja Ab.'],
+    practiceAfter:['Kysymykset tulevat mistä tahansa otelaudan positiosta. Lämpökartta näyttää, miten osaaminen kehittyy. Oikein vastatessa position väri muuttuu vähitellen kohti vihreää ja väärin vastatessa se liikkuu takaisin kohti punaista. Ruudussa näkyvä aika kertoo kyseisen position onnistuneiden itsenäisten vastausten mediaaniajan.','Pikanäppäimet sävelnimen syöttämiseen: ↑ = # (ylennys), ↓ = ♭ (alennus).','Enharmoniset vastineet hyväksytään, esimerkiksi G# ja Ab.'],
     develops:'Harjoitus rakentaa koko otelaudan sävelkarttaa pitkäaikaiseen muistiin ja tähtää siihen, että sävelen nimi palautuu position nähdessä automaattisesti. Tämä tukee nuotinlukua, improvisointia, sointujen hahmottamista ja yleistä liikkumista otelaudalla.'
   },
   '2':{
     title:'2 – Yhden kielen täsmäharjoitus',
     practice:'Harjoituksessa kysytään yksittäistä kielen ja nauhan osoittamaa kohtaa yksittäisellä kielellä.',
     practiceSteps:[
-      'Pidä huomio vain tämän yhden kielen 0–12-nauhoissa ja pyri vähitellen vastaamaan ilman referenssiä muusta otelautapositiosta.',
+      'Valitse harjoiteltava kieli ja haluamasi aikaraja.',
+      'Pidä huomio vain tämän yhden kielen nauhoissa ja pyri vähitellen vastaamaan ilman referenssiä muusta otelautapositiosta.',
       'Paina Seuraava (tai nopeammin vain Enter-näppäintä). Katso, mikä positio on valittuna otelaudalla. Nimeä kysytyssä positiossa oleva sävel aikarajan sisällä, jos aikaraja on asetettu.',
       'Vastauksen jälkeen voit rauhassa käsitellä palautteen ja katsoa lämpökarttaa.',
       'Vaihda kieltä, kun haluat kohdistaa harjoittelun seuraavaan alueeseen.'
@@ -3657,7 +3658,7 @@ function checkCurrent(){if(answered||!current)return;const m=methodEl.value,v=an
     answered=true;
     flashCurrentFretAnswer(false,'hidas');
     recordResult({good:false,x:true,timeMs:t,positions:[{s:current.s,f:current.f}]});
-    feedbackEl.textContent=m==='2'?'Vastaus oikein mutta liian hidas':`✗ En tiedä / Olen liian hidas — ${pcName(current.pc)} — ${fmtTime(t)}`;
+    feedbackEl.textContent='Vastaus oikein mutta liian hidas';
     feedbackEl.className='feedback warn';
     answerEl.disabled=true;$('check').disabled=true;$('next').focus()
   }else finish(good,{positions:[{s:current.s,f:current.f}]});
