@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.20.1 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.20.2 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -234,7 +234,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.20.1 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.20.2 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -311,7 +311,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.20.1';
+const APP_VERSION='1.20.2';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const FIRST_RUN_HELP_KEY='sightfret_first_run_help_shown_v1';
 const isFirstSightFretRun=!localStorage.getItem(STORE_KEY) && !localStorage.getItem(FIRST_RUN_HELP_KEY);
@@ -972,6 +972,8 @@ function renderStats(){
  const stringLabel=isMethod2?` — ${stringNames[selectedString]}-kieli`:'';
  const progressStatsGrid=$('progressStatsGrid');
  if(progressStatsGrid)progressStatsGrid.classList.toggle('hidden',method==='5'||method==='5Q'||method==='7Q'||method==='9Q'||method==='7'||method==='7F'||method==='7I'||method==='9'||method==='8'||method==='10');
+ const progressPanel=$('progressPanel');
+ if(progressPanel)progressPanel.classList.toggle('hidden',['5Q','7Q','9Q'].includes(method));
  const progressSummaryTitle=$('progressSummaryTitle');
  if(progressSummaryTitle)progressSummaryTitle.textContent=method==='7'?'Tee sointu klikkaamalla':'Osaaminen ja seuranta';
  const progressResetActions=$('progressResetActions');
@@ -1296,7 +1298,7 @@ const METHOD9_INTERVALS=[
 ];
 
 function intervalExamCountOptions(value){
-  return [20,30,40,50].map(n=>`<option value="${n}"${Number(value)===n?' selected':''}>${n}</option>`).join('');
+  return [20,30,40].map(n=>`<option value="${n}"${Number(value)===n?' selected':''}>${n}</option>`).join('');
 }
 function intervalFindExamSettings(){
   return `<div><div class="group-title">Kysymysten määrä</div><select id="intervalFindExamCount">${intervalExamCountOptions(data.settings.intervalFindExamCount||20)}</select></div>
@@ -1331,7 +1333,6 @@ function method7FSettings(){
     </div>
     <div><div class="group-title">Kitarasovitus</div>
       <label class="check"><input type="checkbox" id="method7FGuitarAdaptation"> Guitar adaptation</label>
-      <div class="small">Päällä: tehtävät rajataan kitaralla käytännössä soitettaviin kahden sävelen otteisiin eri kielillä; kahden painetun sävelen nauhaväli on enintään neljä nauhaa. Avoimet kielet sallitaan ilman nauhavälirajoitusta. Pois: mukana ovat myös teoreettisesti oikeat mutta tavallisessa soitossa epäkäytännölliset positiot.</div>
     </div>
     <div><div class="group-title">Intervallikategoria</div><select id="method7FCategory">${categories.replace(`value="${category}"`,`value="${category}" selected`)}</select></div>
     <div><div class="group-title">Intervalli</div><select id="method7FType">${types.replace(`value="${data.settings.method7FType||'random'}"`,`value="${data.settings.method7FType||'random'}" selected`)}</select></div>
@@ -2085,14 +2086,14 @@ const METHOD_HELP_CONTENT={
   '7Q':{
     title:'8 – Löydä intervalli pistokoe',
     practice:'Pistokoe mittaa, kuinka nopeasti löydät annetun intervallin lähtösävelestä valitulta kohdekieleltä. Jokaisessa tehtävässä on yksi vastausyritys. Vihjeitä tai Näytä vastaus -toimintoa ei käytetä kokeen aikana.',
-    practiceAfter:['Valitse 20, 30, 40 tai 50 kysymystä. Oletusaikaraja on 10 sekuntia / kysymys. Vain oktaavin sisällä rajaa kokeen perusintervalleihin. Guitar adaptation rajaa tehtävät käytännössä soitettaviin kieli- ja nauhayhdistelmiin.'],
-    develops:'Pistokoe mittaa suunnallisten intervallien aktiivisen rakentamisen automatisoitumista otelaudalla. Täydellinen, aikarajassa tehty koe palkitaan ilotulituksella.'
+    practiceAfter:['Valitse 20, 30 tai 40 kysymystä. Oletusaikaraja on 10 sekuntia / kysymys. Vain oktaavin sisällä rajaa kokeen perusintervalleihin. Guitar adaptation rajaa tehtävät käytännössä soitettaviin kieli- ja nauhayhdistelmiin.'],
+    develops:'Pistokoe mittaa suunnallisten intervallien aktiivisen rakentamisen automatisoitumista otelaudalla.'
   },
   '9Q':{
     title:'10 – Tunnista intervalli pistokoe',
     practice:'Pistokoe mittaa, kuinka nopeasti tunnistat kahden sävelen muodostaman intervallin. Valitse vastaus intervallipainikkeista. Jokaisessa tehtävässä on yksi vastausyritys.',
-    practiceAfter:['Valitse 20, 30, 40 tai 50 kysymystä. Oletusaikaraja on 10 sekuntia / kysymys. Voit valita esitetäänkö tehtävä otelaudalla, nuottiviivastolla vai molemmilla.'],
-    develops:'Pistokoe mittaa harmonisen intervallisuhteen tunnistamisen automatisoitumista. Täydellinen, aikarajassa tehty koe palkitaan ilotulituksella.'
+    practiceAfter:['Valitse 20, 30 tai 40 kysymystä. Oletusaikaraja on 10 sekuntia / kysymys. Voit valita esitetäänkö tehtävä otelaudalla, nuottiviivastolla vai molemmilla.'],
+    develops:'Pistokoe mittaa harmonisen intervallisuhteen tunnistamisen automatisoitumista.'
   },
   '7I':{title:'8 – Tunnista intervalli otelaudalta',practice:'SightFret näyttää otelaudalla lähtö- ja kohdeposition sekä kertoo, kuljetaanko lähtösävelestä kohdesäveleen sävelkorkeudessa ylöspäin vai alaspäin. Tunnista suunnallinen intervalli ja vastaa intervallipainikkeella. Suunta määräytyy absoluuttisesta sävelkorkeudesta, ei otelaudan visuaalisesta suunnasta. Harjoitusta kannattaa tehdä kitara kädessä ja soittaa samat kaksi positiota myös fyysiseltä otelaudalta. Vain oktaavin sisällä rajaa tehtävät oktaaviin asti. Hiljennä äänet poistaa kuuntelun. Guitar adaptation rajaa tehtävät käytännössä soitettaviin kahden sävelen otteisiin ja sallii avoimet kielet ilman nauhavälirajoitusta.',develops:'Harjoitus on menetelmän 7 peilikuva: siinä otelaudan kahdesta positiosta päätellään niiden välinen intervalli. Se vahvistaa kykyä lukea otelautaa toisiinsa liittyvien positioiden ja intervallien verkostona sekä automatisoi intervallisuhteiden tunnistamista eri kieliltä.'},
   '9':{
@@ -2293,7 +2294,7 @@ function finishFretboardExamAnswer(good,t,slow){
 
 let intervalFindExam=null,intervalIdentifyExam=null;
 function intervalExamCount(v){
-  const n=Number(v)||20;return [20,30,40,50].includes(n)?n:20;
+  const n=Number(v)||20;return [20,30,40].includes(n)?n:20;
 }
 function intervalExamTime(v){return Math.max(3,Math.min(60,Number(v)||10));}
 function shuffleInPlace(a){for(let i=a.length-1;i>0;i--){const j=randomInt(i+1);[a[i],a[j]]=[a[j],a[i]]}return a;}
