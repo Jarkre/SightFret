@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.19.59 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.19.61 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -234,7 +234,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.19.59 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.19.61 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -309,7 +309,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.19.59';
+const APP_VERSION='1.19.61';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const FIRST_RUN_HELP_KEY='sightfret_first_run_help_shown_v1';
 const isFirstSightFretRun=!localStorage.getItem(STORE_KEY) && !localStorage.getItem(FIRST_RUN_HELP_KEY);
@@ -575,7 +575,7 @@ if(data.settings && Number(data.settings.method7Reps)===3){
   data.settings.method7Reps=4;
   saveData();
 }
-function defaultData(){return {version:3,settings:{method:'1',timeLimit:5,singleString:3,sameFret:6,quizCount:20,method7Category:'all',method7Type:'random',method7Mode:'three',method7Reps:4,method7Mute:false,method7GuitarAdaptation:true,method8Mode:'three',method8Category:'all',method8Type:'random',method8Reps:4,method9Mode:'three',method9Category:'all',method9Type:'random',method9Reps:4,method9ShowFretboard:true,method9ShowStaff:true,method9WithinOctave:true,method9Mute:false,method9GuitarAdaptation:true,method7FGuitarAdaptation:true,method7FWithinOctave:false,method7FMute:false,method7IWithinOctave:false,method7IMute:false,method7IGuitarAdaptation:true,method10Category:'basic',method10Type:'random',accidentals:false,sevenths:false,octaves:false,inv0:true,inv1:false,inv2:false,inv3:false,inv4:false,chordMode:'both'},methods:{},fretboards:{'1':{},'2':{},'3':{},'4':{}},method5:{},method3Streaks:{},method3Completed:{},method3RecentResults:{},weakConsecutive:{},method7FMastery:{},method8Mastery:{},method9Mastery:{},method10Mastery:{}}}
+function defaultData(){return {version:3,settings:{method:'1',timeLimit:5,singleString:3,sameFret:6,quizCount:20,method7Category:'all',method7Type:'random',method7Mode:'three',method7Reps:4,method7Mute:false,method7GuitarAdaptation:true,method8Mode:'three',method8Category:'all',method8Type:'random',method8Reps:4,method9Mode:'three',method9Category:'all',method9Type:'random',method9Reps:4,method9ShowFretboard:true,method9ShowStaff:true,method9WithinOctave:true,method9Mute:false,method9GuitarAdaptation:true,method7FGuitarAdaptation:true,method7FWithinOctave:false,method7FCategory:'all',method7FType:'random',method7FStartString:'random',method7FTargetString:'random',method7FMute:false,method7IWithinOctave:false,method7IMute:false,method7IGuitarAdaptation:true,method10Category:'basic',method10Type:'random',accidentals:false,sevenths:false,octaves:false,inv0:true,inv1:false,inv2:false,inv3:false,inv4:false,chordMode:'both'},methods:{},fretboards:{'1':{},'2':{},'3':{},'4':{}},method5:{},method3Streaks:{},method3Completed:{},method3RecentResults:{},weakConsecutive:{},method7FMastery:{},method8Mastery:{},method9Mastery:{},method10Mastery:{}}}
 function migrateData(raw){
   const d=defaultData();
   if(!raw||typeof raw!=='object')return d;
@@ -1271,7 +1271,7 @@ function settingHTML(){const m=methodEl.value;let html='';if(m==='1')html+=`<div
 
  if(['5'].includes(m))html+=`<div><div class="group-title">Alue</div><span class="small">Nauhat 0 - 12</span></div>`;
  if(m==='5Q')html+=`<div><div class="group-title">Pistokoe</div><label>Kysymysten määrä <input id="quizCount" type="number" min="20" max="78" step="1" value="20" style="width:90px"></label><div class="small" style="margin-top:6px">20–78 satunnaista eri otelautapositiota. Samaa positiota ei kysytä kahdesti saman pistokokeen aikana. Aikaraja 5 s / kysymys. Vihreä = oikein aikarajassa, punainen = väärin tai liian hitaasti. Pistokokeen tulokset säilyvät vain käynnissä olevan pistokokeen ajan.</div></div>`;
- if(m==='7')html+=method7ChordSettings();if(m==='8')html+=method8ChordSettings();if(m==='7F')html+=`<div><div class="group-title">Intervallit</div><label class="check"><input type="checkbox" id="method7FWithinOctave"> Vain oktaavin sisällä</label><div class="small">Päällä: tehtävissä käytetään intervalleja pienestä sekunnista oktaaviin (oktaavi mukaan lukien). Pois: mukana ovat myös yhdysintervallit kahteen oktaaviin asti.</div></div><div><div class="group-title">Äänet</div><label class="check"><input type="checkbox" id="method7FMute"> Hiljennä äänet</label></div><div><div class="group-title">Kitarasovitus</div><label class="check"><input type="checkbox" id="method7FGuitarAdaptation"> Guitar adaptation</label><div class="small">Pois: myös teoreettisesti oikeat mutta yhdellä otteella epäkäytännölliset tehtävät sallitaan. Päällä: lähtö- ja kohdesävel ovat eri kielillä ja kahden frettisävelen nauhaväli on enintään neljä nauhaa.</div></div>`;if(m==='7I')html+=`<div><div class="group-title">Intervallit</div><label class="check"><input type="checkbox" id="method7IWithinOctave"> Vain oktaavin sisällä</label></div><div><div class="group-title">Äänet</div><label class="check"><input type="checkbox" id="method7IMute"> Hiljennä äänet</label></div><div><div class="group-title">Kitarasovitus</div><label class="check"><input type="checkbox" id="method7IGuitarAdaptation"> Guitar adaptation</label><div class="small">Avoimet kielet sallitaan ilman nauhavälirajoitusta. Kahden painetun sävelen nauhaväli on enintään neljä nauhaa.</div></div>`;if(m==='9')html+=method9Settings();if(m==='10')html+=method10Settings();
+ if(m==='7')html+=method7ChordSettings();if(m==='8')html+=method8ChordSettings();if(m==='7F')html+=method7FSettings();if(m==='7I')html+=`<div><div class="group-title">Intervallit</div><label class="check"><input type="checkbox" id="method7IWithinOctave"> Vain oktaavin sisällä</label></div><div><div class="group-title">Äänet</div><label class="check"><input type="checkbox" id="method7IMute"> Hiljennä äänet</label></div><div><div class="group-title">Kitarasovitus</div><label class="check"><input type="checkbox" id="method7IGuitarAdaptation"> Guitar adaptation</label><div class="small">Avoimet kielet sallitaan ilman nauhavälirajoitusta. Kahden painetun sävelen nauhaväli on enintään neljä nauhaa.</div></div>`;if(m==='9')html+=method9Settings();if(m==='10')html+=method10Settings();
  if(m==='11')html+=`<div><div class="group-title">Prototyyppi: guide tones 3 + 7</div><span class="small">Valitse seuraavan soinnun 3- ja 7-sävelille se otelautaratkaisu, jossa kokonaisliike on pienin. Tarkoitus on automatisoida läheisen voicingin löytäminen — ei opetella progressioita ulkoa.</span></div>`;
  settingsEl.innerHTML=html;wireSettings()}
 
@@ -1290,6 +1290,32 @@ const METHOD9_INTERVALS=[
   {id:'M7',name:'Suuri septimi',short:'M7',semitones:11,category:'sevenths'},
   {id:'P8',name:'Oktaavi',short:'P8',semitones:12,category:'octave'}
 ];
+
+function method7FSettings(){
+  const category=data.settings.method7FCategory||'all';
+  const pool=method7FIntervalsForCategory(category);
+  const categories=[`<option value="all">Kaikki</option>`,...METHOD9_INTERVAL_CATEGORIES.map(c=>`<option value="${c.id}">${c.label}</option>`)].join('');
+  const randomLabel=category==='all'?'Satunnainen kaikista':'Satunnainen kategoriasta';
+  const types=[`<option value="random">${randomLabel}</option>`,...pool.map(x=>`<option value="${x.id}">${x.name} — ${x.short}</option>`)].join('');
+  const stringOptions=[`<option value="random">Satunnainen</option>`,...stringNames.map((n,i)=>`<option value="${i}">${n}</option>`)].join('');
+  const selectedStart=String(data.settings.method7FStartString??'random');
+  const selectedTarget=String(data.settings.method7FTargetString??'random');
+  return `<div><div class="group-title">Intervallit</div>
+      <label class="check"><input type="checkbox" id="method7FWithinOctave"> Vain oktaavin sisällä</label>
+      <div class="small">Päällä: intervallit rajataan oktaaviin asti. Pois: mukana voivat olla myös yhdysintervallit kahteen oktaaviin asti.</div>
+    </div>
+    <div><div class="group-title">Äänet</div>
+      <label class="check"><input type="checkbox" id="method7FMute"> Hiljennä äänet</label>
+    </div>
+    <div><div class="group-title">Kitarasovitus</div>
+      <label class="check"><input type="checkbox" id="method7FGuitarAdaptation"> Guitar adaptation</label>
+      <div class="small">Päällä: tehtävät rajataan kitaralla käytännössä soitettaviin kahden sävelen otteisiin eri kielillä; kahden painetun sävelen nauhaväli on enintään neljä nauhaa. Avoimet kielet sallitaan ilman nauhavälirajoitusta. Pois: mukana ovat myös teoreettisesti oikeat mutta tavallisessa soitossa epäkäytännölliset positiot.</div>
+    </div>
+    <div><div class="group-title">Intervallikategoria</div><select id="method7FCategory">${categories.replace(`value="${category}"`,`value="${category}" selected`)}</select></div>
+    <div><div class="group-title">Intervalli</div><select id="method7FType">${types.replace(`value="${data.settings.method7FType||'random'}"`,`value="${data.settings.method7FType||'random'}" selected`)}</select></div>
+    <div><div class="group-title">Lähtökieli</div><select id="method7FStartString">${stringOptions.replace(`value="${selectedStart}"`,`value="${selectedStart}" selected`)}</select></div>
+    <div><div class="group-title">Kohdekieli</div><select id="method7FTargetString">${stringOptions.replace(`value="${selectedTarget}"`,`value="${selectedTarget}" selected`)}</select></div>`;
+}
 
 // Menetelmä 7F käyttää myös yhdysintervalleja. baseId määrää, mitä 12 perusintervallin osaamisruutua päivitetään.
 const METHOD7F_INTERVALS=[
@@ -1315,6 +1341,29 @@ const METHOD9_INTERVAL_CATEGORIES=[
   {id:'sevenths',label:'Septimit'},
   {id:'octave',label:'Oktaavi'}
 ];
+
+function method7FIntervalPool(){
+  return data.settings.method7FWithinOctave?METHOD7F_INTERVALS.filter(x=>x.semitones<=12):METHOD7F_INTERVALS;
+}
+function method7FIntervalsForCategory(category){
+  const pool=method7FIntervalPool();
+  if(category==='all')return pool;
+  return pool.filter(x=>{
+    const base=METHOD9_INTERVALS.find(b=>b.id===(x.baseId||x.id));
+    return (x.category||base?.category)===category;
+  });
+}
+function method7FSelectedInterval(){
+  const category=data.settings.method7FCategory||'all';
+  const pool=method7FIntervalsForCategory(category);
+  if(!pool.length)return method7FIntervalPool()[0];
+  const requested=data.settings.method7FType||'random';
+  if(requested!=='random'){
+    const found=pool.find(x=>x.id===requested);
+    if(found)return found;
+  }
+  return pool[randomInt(pool.length)];
+}
 
 const METHOD9_QUALITY_FAMILIES=[
   {id:'seconds',label:'Sekunti',minor:'m2',major:'M2',kind:'minorMajor'},
@@ -1407,38 +1456,54 @@ function method7FPlayablePair(startS,startF,targetS,targetF){
   if(startF>0&&targetF>0&&Math.abs(startF-targetF)>4)return false;
   return true;
 }
-function makeMethod7FTask(){
+function method7FStringSelection(value){
+  if(value==='random'||value==null)return [0,1,2,3,4,5];
+  const n=Number(value);
+  return Number.isInteger(n)&&n>=0&&n<6?[n]:[0,1,2,3,4,5];
+}
+function method7FTasksForInterval(interval){
   const guitarAdaptation=!!data.settings.method7FGuitarAdaptation;
-  const intervalPool=data.settings.method7FWithinOctave?METHOD7F_INTERVALS.filter(x=>x.semitones<=12):METHOD7F_INTERVALS;
-  for(let guard=0;guard<1200;guard++){
-    const interval=intervalPool[randomInt(intervalPool.length)];
-    const startS=randomInt(6),startF=randomInt(13),startMidi=tuning[startS]+startF;
-    const requestedDirection=Math.random()<.5?-1:1;
-    const targetMidi=startMidi+requestedDirection*interval.semitones;
-    const candidates=[];
-    for(let targetS=0;targetS<6;targetS++){
-      const targetF=targetMidi-tuning[targetS];
-      if(!Number.isInteger(targetF)||targetF<0||targetF>12)continue;
-      // Defensive invariant: the visible target position must reproduce the exact
-      // absolute target pitch (not merely the same pitch class), and its direction
-      // must match the direction requested for this task.
-      const candidateMidi=tuning[targetS]+targetF;
-      if(candidateMidi!==targetMidi)continue;
-      if(method7FDirection(startMidi,candidateMidi)!==requestedDirection)continue;
-      if(guitarAdaptation&&!method7FPlayablePair(startS,startF,targetS,targetF))continue;
-      candidates.push({s:targetS,f:targetF});
+  const startStrings=method7FStringSelection(data.settings.method7FStartString);
+  const targetStrings=method7FStringSelection(data.settings.method7FTargetString);
+  const tasks=[];
+  for(const startS of startStrings){
+    for(let startF=0;startF<=12;startF++){
+      const startMidi=tuning[startS]+startF;
+      for(const requestedDirection of [-1,1]){
+        const targetMidi=startMidi+requestedDirection*interval.semitones;
+        for(const targetS of targetStrings){
+          const targetF=targetMidi-tuning[targetS];
+          if(!Number.isInteger(targetF)||targetF<0||targetF>12)continue;
+          const candidateMidi=tuning[targetS]+targetF;
+          if(candidateMidi!==targetMidi)continue;
+          if(method7FDirection(startMidi,candidateMidi)!==requestedDirection)continue;
+          if(guitarAdaptation&&!method7FPlayablePair(startS,startF,targetS,targetF))continue;
+          tasks.push({startS,startF,startMidi,targetS,targetF,targetMidi});
+        }
+      }
     }
-    if(!candidates.length)continue;
-    const target=candidates[randomInt(candidates.length)];
-    return {
-      type:'intervalFind7F',interval,direction:method7FDirection(startMidi,targetMidi),
-      start:{s:startS,f:startF,m:startMidi,pc:mod(startMidi,12)},
-      target:{s:target.s,f:target.f,m:targetMidi,pc:mod(targetMidi,12)},
-      positions:[{s:startS,f:startF,m:startMidi,pc:mod(startMidi,12)},{s:target.s,f:target.f,m:targetMidi,pc:mod(targetMidi,12)}],
-      revealed:false,hintShown:false,lastPick:null
-    };
   }
-  return null;
+  return tasks;
+}
+function makeMethod7FTask(){
+  const pool=method7FIntervalsForCategory(data.settings.method7FCategory||'all');
+  const requested=data.settings.method7FType||'random';
+  const intervals=requested==='random'?pool:[method7FSelectedInterval()];
+  const possible=[];
+  for(const interval of intervals){
+    const tasks=method7FTasksForInterval(interval);
+    if(tasks.length)possible.push({interval,tasks});
+  }
+  if(!possible.length)return null;
+  const chosen=possible[randomInt(possible.length)];
+  const t=chosen.tasks[randomInt(chosen.tasks.length)];
+  return {
+    type:'intervalFind7F',interval:chosen.interval,direction:method7FDirection(t.startMidi,t.targetMidi),
+    start:{s:t.startS,f:t.startF,m:t.startMidi,pc:mod(t.startMidi,12)},
+    target:{s:t.targetS,f:t.targetF,m:t.targetMidi,pc:mod(t.targetMidi,12)},
+    positions:[{s:t.startS,f:t.startF,m:t.startMidi,pc:mod(t.startMidi,12)},{s:t.targetS,f:t.targetF,m:t.targetMidi,pc:mod(t.targetMidi,12)}],
+    revealed:false,hintShown:false,lastPick:null
+  };
 }
 function renderMethod7FFretboard(){
   if(!current||current.type!=='intervalFind7F')return;
@@ -1470,7 +1535,8 @@ function renderMethod7FFretboard(){
 function pickMethod7FTask(){
   current=makeMethod7FTask();
   if(!current){
-    promptEl.textContent='Tehtävää ei saatu muodostettua. Paina Seuraava ja yritä uudelleen.';
+    const stringsRestricted=(data.settings.method7FStartString||'random')!=='random'||(data.settings.method7FTargetString||'random')!=='random';
+    promptEl.textContent=stringsRestricted?'Ei mahdollista valituilla kielillä.':'Tehtävää ei saatu muodostettua. Paina Seuraava ja yritä uudelleen.';
     answerEl.disabled=true;$('reveal').disabled=true;return;
   }
   const direction=method7FDirectionLabel(current.start.m,current.target.m);
@@ -1631,17 +1697,17 @@ function method9Settings(){
       <label class="check"><input type="checkbox" id="method9GuitarAdaptation"> Guitar adaptation</label>
       <div class="small">Päällä: tehtävät rajataan kitaralla käytännössä soitettaviin kahden sävelen otteisiin eri kielillä; kahden painetun sävelen nauhaväli on enintään neljä nauhaa. Avoimet kielet sallitaan ilman nauhavälirajoitusta. Pois: mukana ovat myös teoreettisesti oikeat mutta tavallisessa soitossa epäkäytännölliset positiot.</div>
     </div>
+    <div><div class="group-title">${qualityMode?'Intervalliperhe':'Intervallikategoria'}</div><select id="method9Category">${categories.replace(`value="${category}"`,`value="${category}" selected`)}</select></div>
+    ${qualityMode
+      ? `<div><div class="group-title">Laatutreeni</div><div class="small">Pieni vai suuri?<br>Puhdas kvartti vai tritonus?</div></div>`
+      : `<div><div class="group-title">Intervalli</div><select id="method9Type">${types.replace(`value="${data.settings.method9Type||'random'}"`,`value="${data.settings.method9Type||'random'}" selected`)}</select></div>`
+    }
     <div><div class="group-title">Harjoitustapa</div><select id="method9Mode">
       <option value="three"${mode==='three'?' selected':''}>3 intervallin tehoharjoittelu</option>
       <option value="quality"${mode==='quality'?' selected':''}>Intervallin laatu</option>
       <option value="qualityThree"${mode==='qualityThree'?' selected':''}>Intervallin laatu — tehotreeni</option>
       <option value="free"${mode==='free'?' selected':''}>Vapaa harjoittelu</option>
     </select></div>
-    <div><div class="group-title">${qualityMode?'Intervalliperhe':'Intervallikategoria'}</div><select id="method9Category">${categories.replace(`value="${category}"`,`value="${category}" selected`)}</select></div>
-    ${qualityMode
-      ? `<div><div class="group-title">Laatutreeni</div><div class="small">Pieni vai suuri?<br>Puhdas kvartti vai tritonus?</div></div>`
-      : `<div><div class="group-title">Intervalli</div><select id="method9Type">${types.replace(`value="${data.settings.method9Type||'random'}"`,`value="${data.settings.method9Type||'random'}" selected`)}</select></div>`
-    }
     ${(mode==='three'||mode==='qualityThree')?`<div><div class="group-title">Toistoja / intervalli</div><input id="method9Reps" type="number" min="1" max="50" step="1" value="${data.settings.method9Reps||4}"><div class="small">${mode==='qualityThree'?'Kolme intervallia pysyy samoina ja myös niiden absoluuttiset säveltasot lukitaan harjoitusjakson ajaksi.':'Kolme intervallia pysyy samoina. Sijainti otelaudalla vaihtuu kierrokselta toiselle.'}</div></div>`:''}
     ${mode==='free'?`<div><div class="group-title">Harjoitustapa</div><div class="small">Yksi satunnainen intervalli kerrallaan valittujen filttereiden mukaisesti.</div></div>`:''}
     <div><div class="group-title">Näyttö</div>
@@ -1674,7 +1740,7 @@ function method10Settings(){
 }
 function chordSettings(m){let inv=m==='9A'||m==='9B'||m==='10';return `<div><div class="group-title">Sointulaatu</div><select id="chordMode"><option value="both">Duuri + molli</option><option value="major">Vain duurit</option><option value="minor">Vain mollit</option></select>${m==='10'?'<label class="check"><input type="checkbox" id="sevenths"> Seiskasoinnut</label>':''}${['8B','10'].includes(m)?'<label class="check"><input type="checkbox" id="accidentals"> Ylennykset/alennukset</label>':''}${m==='10'?'<label class="check"><input type="checkbox" id="octaves"> Eri oktaavit/rekisterit</label>':''}</div>${inv?`<div><div class="group-title">Inversiot</div><label class="check"><input type="checkbox" id="inv0"> Root-asento</label><label class="check"><input type="checkbox" id="inv1"> 1. inversio</label><label class="check"><input type="checkbox" id="inv2"> 2. inversio</label></div>`:''}`}
 function wireSettings(){
-  for(const id of ['timeLimit','singleString','sameFret','quizCount','method7Mode','method7Category','method7Type','method7Reps','method7Mute','method7GuitarAdaptation','method8Mode','method8Category','method8Type','method8Reps','method9Mode','method9Category','method9Type','method9Reps','method9ShowFretboard','method9ShowStaff','method9WithinOctave','method9Mute','method9GuitarAdaptation','method7FGuitarAdaptation','method7FWithinOctave','method7FMute','method7IWithinOctave','method7IMute','method7IGuitarAdaptation','method10Category','method10Type','chordMode','accidentals','sevenths','guitarAdaptation','inv0','inv1','inv2','inv3','inv4']){
+  for(const id of ['timeLimit','singleString','sameFret','quizCount','method7Mode','method7Category','method7Type','method7Reps','method7Mute','method7GuitarAdaptation','method8Mode','method8Category','method8Type','method8Reps','method9Mode','method9Category','method9Type','method9Reps','method9ShowFretboard','method9ShowStaff','method9WithinOctave','method9Mute','method9GuitarAdaptation','method7FGuitarAdaptation','method7FWithinOctave','method7FCategory','method7FType','method7FStartString','method7FTargetString','method7FMute','method7IWithinOctave','method7IMute','method7IGuitarAdaptation','method10Category','method10Type','chordMode','accidentals','sevenths','guitarAdaptation','inv0','inv1','inv2','inv3','inv4']){
     const el=$(id);if(!el)continue;
     const val=data.settings[id];
     if(el.type==='checkbox'){
@@ -1758,6 +1824,10 @@ function wireSettings(){
 
       if(id==='method7GuitarAdaptation'){method7Drill=null;saveData();settingHTML();renderStats();pickTask();return;}
       if(id==='method7Category'){data.settings.method7Type='random';saveData();settingHTML();renderStats();pickTask();return;}
+      if(id==='method7FCategory'){data.settings.method7FType='random';saveData();settingHTML();renderStats();pickTask();return;}
+      if(id==='method7FWithinOctave'){saveData();settingHTML();renderStats();pickTask();return;}
+      if(id==='method7FType'){saveData();renderStats();pickTask();return;}
+      if(id==='method7FStartString'||id==='method7FTargetString'){saveData();renderStats();pickTask();return;}
       if(id==='method8Category'){data.settings.method8Type='random';saveData();settingHTML();renderStats();showStartState();return;}
       if(id==='method9Category'){data.settings.method9Type='random';saveData();settingHTML();renderStats();pickTask();return;}
       if(id==='method9WithinOctave'){data.settings.method9Type='random';saveData();settingHTML();renderStats();pickTask();return;}
@@ -1983,7 +2053,7 @@ const METHOD_HELP_CONTENT={
     title:'7 – Löydä intervalli otelaudalta',
     practice:'SightFret näyttää lähtösävelen vihreänä ja valitsee kielen, jolta pyydetty intervalli pitää löytää. Tehtävä kertoo myös, kulkeeko intervalli lähtösävelestä sävelkorkeudeltaan ylös- vai alaspäin. Ylöspäin tarkoittaa, että kohdesävelen taajuus on lähtösäveltä korkeampi, ja alaspäin sitä, että kohdesävelen taajuus on matalampi.',
     practiceAfter:[
-      'Vastaa klikkaamalla valitulta kieleltä oikeaa positiota. Harjoitusta kannattaa tehdä kitara kädessä: etsi sama lähtö- ja kohdepositio myös fyysiseltä otelaudalta, soita ne ja kuuntele intervallia.',
+      'Vastaa klikkaamalla valitulta kieleltä oikeaa positiota. Harjoitusta kannattaa tehdä kitara kädessä: etsi sama lähtö- ja kohdepositio myös fyysiseltä otelaudalta. Soita aina ensin lähtösävel ja sen jälkeen kohdesävel. Esimerkiksi suuri terssi F:stä alaspäin soitetaan F → D♭. Näin intervallin suunta kuuluu samassa järjestyksessä kuin tehtävässä: lähtösävelestä kohdesäveleen.',
       'Vihje näyttää intervallin puolisävelaskelten määrän ja Näytä vastaus paljastaa oikean position.',
       'Harjoituksessa on intervalleja pienestä sekunnista kahteen oktaaviin. Kun Vain oktaavin sisällä on valittu, tehtävät rajataan pieneen sekuntiin–oktaaviin, oktaavi mukaan lukien. Yli oktaavin intervalli näytetään oikealla yhdysintervallin nimellään, mutta osaamisruuduissa se vahvistaa vastaavaa perusintervallia.',
       'Guitar adaptation pois päältä sallii kaikki teoreettisesti oikeat tehtävät. Kun Guitar adaptation on päällä, tehtävät rajataan kahden sävelen otteisiin, jotka voidaan soittaa samanaikaisesti eri kieliltä normaalilla käden ulottuvuudella. Intervallien osaamisruudut liikkuvat oikein vastatessa kohti vihreää ja väärin vastatessa kohti punaista.'
