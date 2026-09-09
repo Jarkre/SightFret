@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.20.5 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.20.6 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -234,7 +234,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.20.5 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.20.6 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -311,7 +311,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.20.5';
+const APP_VERSION='1.20.6';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const FIRST_RUN_HELP_KEY='sightfret_first_run_help_shown_v1';
 const isFirstSightFretRun=!localStorage.getItem(STORE_KEY) && !localStorage.getItem(FIRST_RUN_HELP_KEY);
@@ -1562,7 +1562,8 @@ function drawIntervalExamStaff(svgId,pair){
 function renderMethod7FFretboard(){
   if(!current||!['intervalFind7F','intervalFind7Q'].includes(current.type))return;
   const start=current.start,target=current.target;
-  let html=`${current.type==='intervalFind7Q'?`<div class="method9-staff" style="margin-bottom:18px"><svg id="intervalFindExamStaff" viewBox="0 0 420 210" aria-label="Intervalli nuottiviivastolla"></svg></div>`:''}<div class="method7f-board-wrap"><div class="small" style="margin-bottom:8px">Lähtösävel: <b>${method7FMidiName(start.m)}</b> · valittu kieli: <b>${stringNames[target.s]}</b></div><div class="heatmap method7f-board" id="method7FBoard">`;
+  const staffId=current.type==='intervalFind7Q'?'intervalFindExamStaff':'method7FStaff';
+  let html=`<div class="method9-staff" style="margin-bottom:18px"><svg id="${staffId}" viewBox="0 0 420 210" aria-label="Intervalli nuottiviivastolla"></svg></div><div class="method7f-board-wrap"><div class="small" style="margin-bottom:8px">Lähtösävel: <b>${method7FMidiName(start.m)}</b> · valittu kieli: <b>${stringNames[target.s]}</b></div><div class="heatmap method7f-board" id="method7FBoard">`;
   html+='<div class="heatcell heathead">kieli</div>'+Array.from({length:13},(_,f)=>`<div class="heatcell heathead${f===0?' fret-zero':''}">${f}</div>`).join('');
   for(let s=5;s>=0;s--){
     const targetString=s===target.s;
@@ -1585,7 +1586,7 @@ function renderMethod7FFretboard(){
   html+='</div>';
   stepInfo.innerHTML=html;
   const board=$('method7FBoard');if(board)renderFretboardNutBar(board);
-  if(current.type==='intervalFind7Q')drawIntervalExamStaff('intervalFindExamStaff',[start,target]);
+  drawIntervalExamStaff(staffId,[start,target]);
 }
 function pickMethod7FTask(){
   current=makeMethod7FTask();
@@ -1764,10 +1765,7 @@ function method9Settings(){
     </select></div>
     ${(mode==='three'||mode==='qualityThree')?`<div><div class="group-title">Toistoja / intervalli</div><input id="method9Reps" type="number" min="1" max="50" step="1" value="${data.settings.method9Reps||4}"><div class="small">${mode==='qualityThree'?'Kolme intervallia pysyy samoina ja myös niiden absoluuttiset säveltasot lukitaan harjoitusjakson ajaksi.':'Kolme intervallia pysyy samoina. Sijainti otelaudalla vaihtuu kierrokselta toiselle.'}</div></div>`:''}
     ${mode==='free'?`<div><div class="group-title">Harjoitustapa</div><div class="small">Yksi satunnainen intervalli kerrallaan valittujen filttereiden mukaisesti.</div></div>`:''}
-    <div><div class="group-title">Näyttö</div>
-      <label class="check"><input type="checkbox" id="method9ShowFretboard"> Näytä otelauta</label>
-      <label class="check"><input type="checkbox" id="method9ShowStaff"> Näytä nuotti</label>
-    </div>`;
+`;
 }
 function stringSetting(){return `<div><div class="group-title">Kieli</div><select id="singleString">${stringNames.map((n,i)=>`<option value="${i}">${n}</option>`).join('')}</select></div>`}
 function method10Settings(){
@@ -2124,18 +2122,17 @@ const METHOD_HELP_CONTENT={
   '9Q':{
     title:'10 – Tunnista intervalli pistokoe',
     practice:'Pistokoe mittaa, kuinka nopeasti tunnistat kahden sävelen muodostaman intervallin. Valitse vastaus intervallipainikkeista. Jokaisessa tehtävässä on yksi vastausyritys.',
-    practiceAfter:['Valitse 20, 30 tai 40 kysymystä. Oletusaikaraja on 10 sekuntia / kysymys. Voit valita esitetäänkö tehtävä otelaudalla, nuottiviivastolla vai molemmilla.'],
+    practiceAfter:['Valitse 20, 30 tai 40 kysymystä. Oletusaikaraja on 10 sekuntia / kysymys. Tehtävä esitetään sekä nuottiviivastolla että otelaudalla.'],
     develops:'Pistokoe mittaa harmonisen intervallisuhteen tunnistamisen automatisoitumista.'
   },
   '7I':{title:'8 – Tunnista intervalli otelaudalta',practice:'SightFret näyttää otelaudalla lähtö- ja kohdeposition sekä kertoo, kuljetaanko lähtösävelestä kohdesäveleen sävelkorkeudessa ylöspäin vai alaspäin. Tunnista suunnallinen intervalli ja vastaa intervallipainikkeella. Suunta määräytyy absoluuttisesta sävelkorkeudesta, ei otelaudan visuaalisesta suunnasta. Harjoitusta kannattaa tehdä kitara kädessä ja soittaa samat kaksi positiota myös fyysiseltä otelaudalta. Vain oktaavin sisällä rajaa tehtävät oktaaviin asti. Hiljennä äänet poistaa kuuntelun. Guitar adaptation rajaa tehtävät käytännössä soitettaviin kahden sävelen otteisiin ja sallii avoimet kielet ilman nauhavälirajoitusta.',develops:'Harjoitus on menetelmän 7 peilikuva: siinä otelaudan kahdesta positiosta päätellään niiden välinen intervalli. Se vahvistaa kykyä lukea otelautaa toisiinsa liittyvien positioiden ja intervallien verkostona sekä automatisoi intervallisuhteiden tunnistamista eri kieliltä.'},
   '9':{
     title:'9 – Tunnista intervalli',
-    practice:'Tunnista nuottiviivastolla ja/tai otelaudalla esitetty intervalli.',
+    practice:'Tunnista nuottiviivastolla ja otelaudalla esitetty intervalli.',
     practiceAfter:[
       '"Vain oktaavin sisällä", rajaa tehtävät oktaaviin asti. Pois päältä, mukana voi olla myös yhdysintervalleja kahteen oktaaviin asti.',
       'Guitar adaptation rajaa otelautapositiot kitaralla käytännössä soitettavaan intervalliverkostoon. Sävelet ovat tällöin eri kielillä ja kahden painetun sävelen nauhaväli on enintään neljä nauhaa. Avoimet kielet sallitaan ilman nauhavälirajoitusta.',
       'Kun Guitar adaptation poistetaan, mukana ovat myös teoriassa mahdolliset mutta tavallisessa soitossa epäkäytännölliset positiot.',
-      'Näytä otelauta -valinta näyttää intervallin kitaran otelaudalla lähtö- ja kohdepositiona.\nNäytä nuotti -valinta näyttää tai piilottaa nuottiviivaston. Jos sekä nuotti että otelauta piilotetaan, intervallin voi tunnistaa kuuntelemalla.'
     ],
     develops:'Harjoitus yhdistää nuottikuvan, intervallin nimen ja saman sävelsuhteen kitaran otelaudalla. Tavoitteena on, että nähty intervalli alkaa hahmottua sekä teoreettisena etäisyytenä että konkreettisena otelautasuhteena.'
   },
@@ -3142,18 +3139,9 @@ function method9FretboardHTML(pair){
   return z+'</div></div>';
 }
 function renderMethod9IntervalVisual(pair){
-  const showFretboard=data.settings.method9ShowFretboard!==false;
-  const showStaff=data.settings.method9ShowStaff!==false;
-
-  if(!showFretboard&&!showStaff){
-    tabbox.innerHTML='<div class="small muted">Kuuntele intervalli ja tunnista se korvalla.</div>';
-    return;
-  }
-
-  tabbox.innerHTML=`<div style="display:flex;flex-direction:column;gap:18px">${showStaff?`<div class="method9-staff"><svg id="method9Staff" viewBox="0 0 420 210" aria-label="Intervalli nuottiviivastolla"></svg></div>`:''}${showFretboard?method9FretboardHTML(pair):''}</div>`;
-  if(showFretboard)requestAnimationFrame(()=>{const b=$('method9Board');if(b)renderFretboardNutBar(b)});
-
-  if(!showStaff)return;
+  // Menetelmä 9: nuottiviivasto ja otelauta ovat pysyvä yhteinen näkymä.
+  tabbox.innerHTML=`<div style="display:flex;flex-direction:column;gap:18px"><div class="method9-staff"><svg id="method9Staff" viewBox="0 0 420 210" aria-label="Intervalli nuottiviivastolla"></svg></div>${method9FretboardHTML(pair)}</div>`;
+  requestAnimationFrame(()=>{const b=$('method9Board');if(b)renderFretboardNutBar(b)});
   const s=$('method9Staff');
   if(!s)return;
   const add=(tag,attrs,text='')=>{
