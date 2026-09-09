@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.20.6 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.20.7 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -190,6 +190,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 #progressPanel.always-open > summary{cursor:default;list-style:none}
 #progressPanel.always-open > summary::-webkit-details-marker{display:none}
 #progressPanel.always-open > summary::marker{content:""}
+#progressPanel.exam-board-only > summary{display:none}
 @keyframes firstRunHelpBlink{0%,100%{opacity:1}50%{opacity:.18}}
 #firstRunHelpHint:not(.hidden){animation:firstRunHelpBlink 1.15s ease-in-out infinite}
 </style>
@@ -234,7 +235,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.20.6 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.20.7 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -311,7 +312,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.20.6';
+const APP_VERSION='1.20.7';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const FIRST_RUN_HELP_KEY='sightfret_first_run_help_shown_v1';
 const isFirstSightFretRun=!localStorage.getItem(STORE_KEY) && !localStorage.getItem(FIRST_RUN_HELP_KEY);
@@ -905,12 +906,18 @@ function methodName(v){return methodEl.querySelector(`option[value="${v}"]`)?.te
 function syncProgressPanelMode(){
  const panel=$('progressPanel');
  if(!panel)return;
- const hidePanel=['5Q','7Q','9Q'].includes(methodEl.value);
+ const hidePanel=['7Q','9Q'].includes(methodEl.value);
  panel.classList.toggle('hidden',hidePanel);
+ panel.classList.toggle('exam-board-only',methodEl.value==='5Q');
  if(hidePanel)return;
- const alwaysOpen=['5','1','2','3','4','7F','7I','7'].includes(methodEl.value);
+ const alwaysOpen=['5','1','2','3','4','5Q','7I','7'].includes(methodEl.value);
  panel.classList.toggle('always-open',alwaysOpen);
  if(alwaysOpen)panel.open=true;
+}
+function applyDefaultProgressPanelState(){
+ const panel=$('progressPanel');
+ if(!panel)return;
+ if(['7F','9','8','10'].includes(methodEl.value))panel.open=false;
 }
 
 function renderStats(){
@@ -973,7 +980,7 @@ function renderStats(){
  const progressStatsGrid=$('progressStatsGrid');
  if(progressStatsGrid)progressStatsGrid.classList.toggle('hidden',method==='5'||method==='5Q'||method==='7Q'||method==='9Q'||method==='7'||method==='7F'||method==='7I'||method==='9'||method==='8'||method==='10');
  const progressPanel=$('progressPanel');
- if(progressPanel)progressPanel.classList.toggle('hidden',['5Q','7Q','9Q'].includes(method));
+ if(progressPanel)progressPanel.classList.toggle('hidden',['7Q','9Q'].includes(method));
  const progressSummaryTitle=$('progressSummaryTitle');
  if(progressSummaryTitle)progressSummaryTitle.textContent=method==='7'?'Tee sointu klikkaamalla':'Osaaminen ja seuranta';
  const progressResetActions=$('progressResetActions');
@@ -1325,7 +1332,6 @@ function method7FSettings(){
   const selectedTarget=String(data.settings.method7FTargetString??'random');
   return `<div><div class="group-title">Intervallit</div>
       <label class="check"><input type="checkbox" id="method7FWithinOctave"> Vain oktaavin sisällä</label>
-      <div class="small">Päällä: intervallit rajataan oktaaviin asti. Pois: mukana voivat olla myös yhdysintervallit kahteen oktaaviin asti.</div>
     </div>
     <div><div class="group-title">Äänet</div>
       <label class="check"><input type="checkbox" id="method7FMute"> Hiljennä äänet</label>
@@ -4586,7 +4592,7 @@ function showMethod10IntervalHints(){
   updateMethod10HintButton();
 }
 
-methodEl.value=data.settings.method||'1';methodEl.addEventListener('change',()=>{fretboardExam=null;intervalFindExam=null;intervalIdentifyExam=null;method3Points=null;method8Drill=null;method9Drill=null;if(methodEl.value==='5'){method5SessionAnswerCount=0;method5AskedThisPass=new Set();}data.settings.method=methodEl.value;saveData();settingHTML();renderStats();if(['5','7','7F','7I','8','9','10'].includes(methodEl.value))pickTask();else showStartState()});$('methodHelpBtn').addEventListener('click',openMethodHelp);$('check').addEventListener('click',checkCurrent);$('next').addEventListener('click',pickTask);$('startExam').addEventListener('click',()=>{if(methodEl.value==='5Q')restartFretboardExam();else restartIntervalExam();});$('reveal').addEventListener('click',revealCurrent);$('xBtn').addEventListener('click',markX);$('tabBtn').addEventListener('click',toggleTab);$('listenBtn').addEventListener('click',listenChord);$('method10HintBtn').addEventListener('click',()=>{if(methodEl.value==='7F')showMethod7FHint();else if(methodEl.value==='8')showMethod8RootHint();else showMethod10IntervalHints()});answerEl.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();if(answered&&['5','1','2','3','4'].includes(methodEl.value))pickTask();else checkCurrent()}});$('saveFile').addEventListener('click',exportTrainingData);$('loadFile').addEventListener('click',chooseTrainingDataFile);$('loadFileInput').addEventListener('change',e=>{importTrainingData(e.target.files?.[0]);e.target.value=''});
+methodEl.value=data.settings.method||'1';methodEl.addEventListener('change',()=>{fretboardExam=null;intervalFindExam=null;intervalIdentifyExam=null;method3Points=null;method8Drill=null;method9Drill=null;if(methodEl.value==='5'){method5SessionAnswerCount=0;method5AskedThisPass=new Set();}data.settings.method=methodEl.value;saveData();settingHTML();renderStats();applyDefaultProgressPanelState();if(['5','7','7F','7I','8','9','10'].includes(methodEl.value))pickTask();else showStartState()});$('methodHelpBtn').addEventListener('click',openMethodHelp);$('check').addEventListener('click',checkCurrent);$('next').addEventListener('click',pickTask);$('startExam').addEventListener('click',()=>{if(methodEl.value==='5Q')restartFretboardExam();else restartIntervalExam();});$('reveal').addEventListener('click',revealCurrent);$('xBtn').addEventListener('click',markX);$('tabBtn').addEventListener('click',toggleTab);$('listenBtn').addEventListener('click',listenChord);$('method10HintBtn').addEventListener('click',()=>{if(methodEl.value==='7F')showMethod7FHint();else if(methodEl.value==='8')showMethod8RootHint();else showMethod10IntervalHints()});answerEl.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();if(answered&&['5','1','2','3','4'].includes(methodEl.value))pickTask();else checkCurrent()}});$('saveFile').addEventListener('click',exportTrainingData);$('loadFile').addEventListener('click',chooseTrainingDataFile);$('loadFileInput').addEventListener('change',e=>{importTrainingData(e.target.files?.[0]);e.target.value=''});
 $('newMethod1Round').addEventListener('click',()=>{
   if(methodEl.value!=='5')return;
   data.method5={};
