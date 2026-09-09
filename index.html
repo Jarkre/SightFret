@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.20.2 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.20.3 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -234,7 +234,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.20.2 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.20.3 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -311,7 +311,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.20.2';
+const APP_VERSION='1.20.3';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const FIRST_RUN_HELP_KEY='sightfret_first_run_help_shown_v1';
 const isFirstSightFretRun=!localStorage.getItem(STORE_KEY) && !localStorage.getItem(FIRST_RUN_HELP_KEY);
@@ -2140,6 +2140,18 @@ function openMethodHelp(){
   w.focus();
 }
 function resetUI(){$('method9QualityHint')?.remove();$('method9GeneralHint')?.remove();$('method7IHintBtn')?.remove();hideMethod9AnswerButtons();answerEl.classList.remove('hidden');$('check').classList.toggle('hidden',['5','1','2','3','4','5Q','7F','7I','7Q','9Q'].includes(methodEl.value));if($('next')){$('next').textContent='Seuraava';$('next').classList.remove('hidden');}answered=false;step=0;stepAnswers={};feedbackEl.textContent='';feedbackEl.className='feedback';tabbox.classList.add('hidden');tabbox.innerHTML='';staffWrap.classList.add('hidden');svg.innerHTML='';stepInfo.textContent='';answerEl.value='';answerEl.disabled=false;$('check').disabled=false;$('xBtn').classList.add('hidden');$('tabBtn').classList.add('hidden');$('tabBtn').textContent='Näytä tabulatuurina';$('listenBtn').classList.add('hidden');$('listenBtn').textContent='Kuuntele sointu';$('method7ChordHintBtn').classList.add('hidden');$('method10HintBtn').classList.add('hidden');$('method10HintBtn').disabled=false;$('method10HintBtn').textContent='Vihje: Root';$('reveal').disabled=false;$('reveal').classList.toggle('hidden',['7Q','9Q'].includes(methodEl.value))}
+function renderIntervalExamIdleFretboard(){
+  if(!['7Q','9Q'].includes(methodEl.value))return;
+  let z=`<div class="method7f-board-wrap"><div class="heatmap method7f-board" id="intervalExamIdleBoard"><div class="heatcell heathead">kieli</div>`+
+    Array.from({length:13},(_,f)=>`<div class="heatcell heathead${f===0?' fret-zero':''}">${f}</div>`).join('');
+  for(let s=5;s>=0;s--){
+    z+=`<div class="heatcell heathead">${stringNames[s]}</div>`;
+    for(let f=0;f<=12;f++)z+=`<div class="heatcell${f===0?' fret-zero':''}"></div>`;
+  }
+  z+='</div></div>';
+  tabbox.innerHTML=z;tabbox.classList.remove('hidden');
+  renderFretboardNutBar($('intervalExamIdleBoard'));
+}
 function showStartState(){
   clearSettledFretPosition();clearCurrentFretAnswerFlash();
   resetUI();current=null;startTime=0;
@@ -2163,6 +2175,7 @@ function showStartState(){
   $('next').textContent='Seuraava';
   $('next').disabled=false;
   $('startExam').textContent='Aloita';$('startExam').classList.toggle('hidden',!isExam);
+  renderIntervalExamIdleFretboard();
 
   if(isMethod3){
     method3Points=null;
