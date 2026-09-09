@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.20.0 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.20.1 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -234,7 +234,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.20.0 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.20.1 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -311,7 +311,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.20.0';
+const APP_VERSION='1.20.1';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const FIRST_RUN_HELP_KEY='sightfret_first_run_help_shown_v1';
 const isFirstSightFretRun=!localStorage.getItem(STORE_KEY) && !localStorage.getItem(FIRST_RUN_HELP_KEY);
@@ -905,8 +905,10 @@ function methodName(v){return methodEl.querySelector(`option[value="${v}"]`)?.te
 function syncProgressPanelMode(){
  const panel=$('progressPanel');
  if(!panel)return;
- panel.classList.remove('hidden');
- const alwaysOpen=['5','1','2','3','4','5Q','7F','7I','7'].includes(methodEl.value);
+ const hidePanel=['5Q','7Q','9Q'].includes(methodEl.value);
+ panel.classList.toggle('hidden',hidePanel);
+ if(hidePanel)return;
+ const alwaysOpen=['5','1','2','3','4','7F','7I','7'].includes(methodEl.value);
  panel.classList.toggle('always-open',alwaysOpen);
  if(alwaysOpen)panel.open=true;
 }
@@ -1273,7 +1275,7 @@ function settingHTML(){const m=methodEl.value;let html='';if(m==='1')html+=`<div
 
  if(['5'].includes(m))html+=`<div><div class="group-title">Alue</div><span class="small">Nauhat 0 - 12</span></div>`;
  if(m==='5Q')html+=`<div><div class="group-title">Pistokoe</div><label>Kysymysten määrä <input id="quizCount" type="number" min="20" max="78" step="1" value="20" style="width:90px"></label><div class="small" style="margin-top:6px">20–78 satunnaista eri otelautapositiota. Samaa positiota ei kysytä kahdesti saman pistokokeen aikana. Aikaraja 5 s / kysymys. Vihreä = oikein aikarajassa, punainen = väärin tai liian hitaasti. Pistokokeen tulokset säilyvät vain käynnissä olevan pistokokeen ajan.</div></div>`;
- if(m==='7')html+=method7ChordSettings();if(m==='8')html+=method8ChordSettings();if(m==='7F')html+=method7FSettings();if(m==='7Q')html+=intervalFindExamSettings();if(m==='9Q')html+=intervalIdentifyExamSettings();if(m==='7I')html+=`<div><div class="group-title">Intervallit</div><label class="check"><input type="checkbox" id="method7IWithinOctave"> Vain oktaavin sisällä</label></div><div><div class="group-title">Äänet</div><label class="check"><input type="checkbox" id="method7IMute"> Hiljennä äänet</label></div><div><div class="group-title">Kitarasovitus</div><label class="check"><input type="checkbox" id="method7IGuitarAdaptation"> Guitar adaptation</label><div class="small">Avoimet kielet sallitaan ilman nauhavälirajoitusta. Kahden painetun sävelen nauhaväli on enintään neljä nauhaa.</div></div>`;if(m==='9')html+=method9Settings();if(m==='10')html+=method10Settings();
+ if(m==='7')html+=method7ChordSettings();if(m==='8')html+=method8ChordSettings();if(m==='7F')html+=method7FSettings();if(m==='7Q')html+=intervalFindExamSettings();if(m==='9Q')html+=intervalIdentifyExamSettings();if(m==='7I')html+=`<div><div class="group-title">Intervallit</div><label class="check"><input type="checkbox" id="method7IWithinOctave"> Vain oktaavin sisällä</label></div><div><div class="group-title">Äänet</div><label class="check"><input type="checkbox" id="method7IMute"> Hiljennä äänet</label></div><div><div class="group-title">Kitarasovitus</div><label class="check"><input type="checkbox" id="method7IGuitarAdaptation"> Guitar adaptation</label></div>`;if(m==='9')html+=method9Settings();if(m==='10')html+=method10Settings();
  if(m==='11')html+=`<div><div class="group-title">Prototyyppi: guide tones 3 + 7</div><span class="small">Valitse seuraavan soinnun 3- ja 7-sävelille se otelautaratkaisu, jossa kokonaisliike on pienin. Tarkoitus on automatisoida läheisen voicingin löytäminen — ei opetella progressioita ulkoa.</span></div>`;
  settingsEl.innerHTML=html;wireSettings()}
 
@@ -1297,17 +1299,17 @@ function intervalExamCountOptions(value){
   return [20,30,40,50].map(n=>`<option value="${n}"${Number(value)===n?' selected':''}>${n}</option>`).join('');
 }
 function intervalFindExamSettings(){
-  return `<div><div class="group-title">Pistokoe</div><label>Kysymysten määrä <select id="intervalFindExamCount">${intervalExamCountOptions(data.settings.intervalFindExamCount||20)}</select></label></div>
+  return `<div><div class="group-title">Kysymysten määrä</div><select id="intervalFindExamCount">${intervalExamCountOptions(data.settings.intervalFindExamCount||20)}</select></div>
     <div><div class="group-title">Aikaraja</div><label><input id="intervalFindExamTime" type="number" min="3" max="60" step="1" value="${Number(data.settings.intervalFindExamTime)||10}" style="width:80px"> s / kysymys</label></div>
     <div><div class="group-title">Intervallit</div><label class="check"><input type="checkbox" id="intervalFindExamWithinOctave"> Vain oktaavin sisällä</label></div>
     <div><div class="group-title">Kitarasovitus</div><label class="check"><input type="checkbox" id="intervalFindExamGuitarAdaptation"> Guitar adaptation</label></div>`;
 }
 function intervalIdentifyExamSettings(){
-  return `<div><div class="group-title">Pistokoe</div><label>Kysymysten määrä <select id="intervalIdentifyExamCount">${intervalExamCountOptions(data.settings.intervalIdentifyExamCount||20)}</select></label></div>
+  return `<div><div class="group-title">Kysymysten määrä</div><select id="intervalIdentifyExamCount">${intervalExamCountOptions(data.settings.intervalIdentifyExamCount||20)}</select></div>
     <div><div class="group-title">Aikaraja</div><label><input id="intervalIdentifyExamTime" type="number" min="3" max="60" step="1" value="${Number(data.settings.intervalIdentifyExamTime)||10}" style="width:80px"> s / kysymys</label></div>
     <div><div class="group-title">Intervallit</div><label class="check"><input type="checkbox" id="intervalIdentifyExamWithinOctave"> Vain oktaavin sisällä</label></div>
     <div><div class="group-title">Kitarasovitus</div><label class="check"><input type="checkbox" id="intervalIdentifyExamGuitarAdaptation"> Guitar adaptation</label></div>
-    <div><div class="group-title">Esitystapa</div><label class="check"><input type="checkbox" id="intervalIdentifyExamShowFretboard"> Näytä otelauta</label><label class="check"><input type="checkbox" id="intervalIdentifyExamShowStaff"> Näytä nuotti</label></div>
+    <div><div class="group-title">Esitystapa</div><label class="check"><input type="checkbox" id="intervalIdentifyExamShowStaff"> Näytä nuotti</label></div>
     <div><div class="group-title">Äänet</div><label class="check"><input type="checkbox" id="intervalIdentifyExamMute"> Hiljennä äänet</label></div>`;
 }
 
@@ -1656,7 +1658,7 @@ function method7ChordSettings(){
   const randomLabel=category==='all'?'Satunnainen kaikista':'Satunnainen kategoriasta';
   const typeOptions=[`<option value="random">${randomLabel}</option>`,...types.map(x=>`<option value="${x.id}">${x.label} — ${x.example}</option>`)].join('');
   return `<div><div class="group-title">Äänet</div><label class="check"><input type="checkbox" id="method7Mute"> Hiljennä äänet</label></div>
-  <div><div class="group-title">Kitarasovitus</div><label class="check"><input type="checkbox" id="method7GuitarAdaptation"> Guitar adaptation</label><div class="small">Päällä: tehtävät rajataan tavallisesti soitettaviin sointuotteisiin. Avoimia kieliä ei lasketa venytykseen. Pois: mukana voivat olla myös teoriassa oikeat mutta yhdellä tavallisella otteella epäkäytännölliset positiot.</div></div>
+  <div><div class="group-title">Kitarasovitus</div><label class="check"><input type="checkbox" id="method7GuitarAdaptation"> Guitar adaptation</label></div>
   <div><div class="group-title">Harjoitustapa</div><select id="method7Mode"><option value="three"${(data.settings.method7Mode||'three')==='three'?' selected':''}>3 soinnun tehoharjoittelu</option><option value="free"${data.settings.method7Mode==='free'?' selected':''}>Vapaa harjoittelu</option></select></div>
   <div><div class="group-title">Sointukategoria</div><select id="method7Category">${categoryOptions.replace(`value="${category}"`,`value="${category}" selected`)}</select></div>
   <div><div class="group-title">Sointutyyppi</div><select id="method7Type">${typeOptions.replace(`value="${data.settings.method7Type||'random'}"`,`value="${data.settings.method7Type||'random'}" selected`)}</select></div>
@@ -1715,7 +1717,6 @@ function method9Settings(){
     </div>
     <div><div class="group-title">Kitarasovitus</div>
       <label class="check"><input type="checkbox" id="method9GuitarAdaptation"> Guitar adaptation</label>
-      <div class="small">Päällä: tehtävät rajataan kitaralla käytännössä soitettaviin kahden sävelen otteisiin eri kielillä; kahden painetun sävelen nauhaväli on enintään neljä nauhaa. Avoimet kielet sallitaan ilman nauhavälirajoitusta. Pois: mukana ovat myös teoreettisesti oikeat mutta tavallisessa soitossa epäkäytännölliset positiot.</div>
     </div>
     <div><div class="group-title">${qualityMode?'Intervalliperhe':'Intervallikategoria'}</div><select id="method9Category">${categories.replace(`value="${category}"`,`value="${category}" selected`)}</select></div>
     ${qualityMode
@@ -1733,7 +1734,6 @@ function method9Settings(){
     <div><div class="group-title">Näyttö</div>
       <label class="check"><input type="checkbox" id="method9ShowFretboard"> Näytä otelauta</label>
       <label class="check"><input type="checkbox" id="method9ShowStaff"> Näytä nuotti</label>
-      <div class="small">Jos molemmat ovat pois päältä, tunnista intervalli pelkän kuuntelun perusteella.</div>
     </div>`;
 }
 function stringSetting(){return `<div><div class="group-title">Kieli</div><select id="singleString">${stringNames.map((n,i)=>`<option value="${i}">${n}</option>`).join('')}</select></div>`}
@@ -1755,12 +1755,12 @@ function method10Settings(){
 
   return `<div><div class="group-title">Sointukategoria</div><select id="method10Category">${categories.replace(`value="${category}"`,`value="${category}" selected`)}</select>${category==='sevenths'?`<button type="button" class="secondary" style="margin-top:10px" onclick="openSeventhChordGuide()">Seiskasointujen tunnistusmenetelmä</button>`:''}</div>
     <div><div class="group-title">Sointutyyppi</div><select id="method10Type">${typeOptions.replace(`value="${data.settings.method10Type||'random'}"`,`value="${data.settings.method10Type||'random'}" selected`)}</select></div>
-    <div><div class="group-title">Nuottikuva</div><label class="check"><input type="checkbox" id="accidentals"> Ylennykset/alennukset</label><label class="check"><input type="checkbox" id="guitarAdaptation"> Guitar adaptation</label><div class="small">Pois: yleinen, intervallijärjestyksessä oleva nuottikuva. Päällä: oikeasti soitettava kitaravoicing.</div></div>
+    <div><div class="group-title">Nuottikuva</div><label class="check"><input type="checkbox" id="accidentals"> Ylennykset/alennukset</label><label class="check"><input type="checkbox" id="guitarAdaptation"> Guitar adaptation</label></div>
     <div><div class="group-title">Inversiot</div>${inversionChecks}</div>`;
 }
 function chordSettings(m){let inv=m==='9A'||m==='9B'||m==='10';return `<div><div class="group-title">Sointulaatu</div><select id="chordMode"><option value="both">Duuri + molli</option><option value="major">Vain duurit</option><option value="minor">Vain mollit</option></select>${m==='10'?'<label class="check"><input type="checkbox" id="sevenths"> Seiskasoinnut</label>':''}${['8B','10'].includes(m)?'<label class="check"><input type="checkbox" id="accidentals"> Ylennykset/alennukset</label>':''}${m==='10'?'<label class="check"><input type="checkbox" id="octaves"> Eri oktaavit/rekisterit</label>':''}</div>${inv?`<div><div class="group-title">Inversiot</div><label class="check"><input type="checkbox" id="inv0"> Root-asento</label><label class="check"><input type="checkbox" id="inv1"> 1. inversio</label><label class="check"><input type="checkbox" id="inv2"> 2. inversio</label></div>`:''}`}
 function wireSettings(){
-  for(const id of ['timeLimit','singleString','sameFret','quizCount','method7Mode','method7Category','method7Type','method7Reps','method7Mute','method7GuitarAdaptation','method8Mode','method8Category','method8Type','method8Reps','method9Mode','method9Category','method9Type','method9Reps','method9ShowFretboard','method9ShowStaff','method9WithinOctave','method9Mute','method9GuitarAdaptation','method7FGuitarAdaptation','method7FWithinOctave','method7FCategory','method7FType','method7FStartString','method7FTargetString','method7FMute','intervalFindExamCount','intervalFindExamTime','intervalFindExamWithinOctave','intervalFindExamGuitarAdaptation','intervalIdentifyExamCount','intervalIdentifyExamTime','intervalIdentifyExamWithinOctave','intervalIdentifyExamGuitarAdaptation','intervalIdentifyExamShowFretboard','intervalIdentifyExamShowStaff','intervalIdentifyExamMute','method7IWithinOctave','method7IMute','method7IGuitarAdaptation','method10Category','method10Type','chordMode','accidentals','sevenths','guitarAdaptation','inv0','inv1','inv2','inv3','inv4']){
+  for(const id of ['timeLimit','singleString','sameFret','quizCount','method7Mode','method7Category','method7Type','method7Reps','method7Mute','method7GuitarAdaptation','method8Mode','method8Category','method8Type','method8Reps','method9Mode','method9Category','method9Type','method9Reps','method9ShowFretboard','method9ShowStaff','method9WithinOctave','method9Mute','method9GuitarAdaptation','method7FGuitarAdaptation','method7FWithinOctave','method7FCategory','method7FType','method7FStartString','method7FTargetString','method7FMute','intervalFindExamCount','intervalFindExamTime','intervalFindExamWithinOctave','intervalFindExamGuitarAdaptation','intervalIdentifyExamCount','intervalIdentifyExamTime','intervalIdentifyExamWithinOctave','intervalIdentifyExamGuitarAdaptation','intervalIdentifyExamShowStaff','intervalIdentifyExamMute','method7IWithinOctave','method7IMute','method7IGuitarAdaptation','method10Category','method10Type','chordMode','accidentals','sevenths','guitarAdaptation','inv0','inv1','inv2','inv3','inv4']){
     const el=$(id);if(!el)continue;
     const val=data.settings[id];
     if(el.type==='checkbox'){
@@ -2138,7 +2138,7 @@ function openMethodHelp(){
   w.document.close();
   w.focus();
 }
-function resetUI(){$('method9QualityHint')?.remove();$('method9GeneralHint')?.remove();$('method7IHintBtn')?.remove();hideMethod9AnswerButtons();answerEl.classList.remove('hidden');$('check').classList.toggle('hidden',['5','1','2','3','4','5Q','7F','7I','7Q','9Q'].includes(methodEl.value));if($('next')){$('next').textContent='Seuraava';$('next').classList.remove('hidden');}answered=false;step=0;stepAnswers={};feedbackEl.textContent='';feedbackEl.className='feedback';tabbox.classList.add('hidden');tabbox.innerHTML='';staffWrap.classList.add('hidden');svg.innerHTML='';stepInfo.textContent='';answerEl.value='';answerEl.disabled=false;$('check').disabled=false;$('xBtn').classList.add('hidden');$('tabBtn').classList.add('hidden');$('tabBtn').textContent='Näytä tabulatuurina';$('listenBtn').classList.add('hidden');$('listenBtn').textContent='Kuuntele sointu';$('method7ChordHintBtn').classList.add('hidden');$('method10HintBtn').classList.add('hidden');$('method10HintBtn').disabled=false;$('method10HintBtn').textContent='Vihje: Root';$('reveal').disabled=false}
+function resetUI(){$('method9QualityHint')?.remove();$('method9GeneralHint')?.remove();$('method7IHintBtn')?.remove();hideMethod9AnswerButtons();answerEl.classList.remove('hidden');$('check').classList.toggle('hidden',['5','1','2','3','4','5Q','7F','7I','7Q','9Q'].includes(methodEl.value));if($('next')){$('next').textContent='Seuraava';$('next').classList.remove('hidden');}answered=false;step=0;stepAnswers={};feedbackEl.textContent='';feedbackEl.className='feedback';tabbox.classList.add('hidden');tabbox.innerHTML='';staffWrap.classList.add('hidden');svg.innerHTML='';stepInfo.textContent='';answerEl.value='';answerEl.disabled=false;$('check').disabled=false;$('xBtn').classList.add('hidden');$('tabBtn').classList.add('hidden');$('tabBtn').textContent='Näytä tabulatuurina';$('listenBtn').classList.add('hidden');$('listenBtn').textContent='Kuuntele sointu';$('method7ChordHintBtn').classList.add('hidden');$('method10HintBtn').classList.add('hidden');$('method10HintBtn').disabled=false;$('method10HintBtn').textContent='Vihje: Root';$('reveal').disabled=false;$('reveal').classList.toggle('hidden',['7Q','9Q'].includes(methodEl.value))}
 function showStartState(){
   clearSettledFretPosition();clearCurrentFretAnswerFlash();
   resetUI();current=null;startTime=0;
@@ -2371,7 +2371,7 @@ function renderIntervalIdentifyExamButtons(){
 }
 function renderMethod9ExamVisual(pair){
   const oldF=data.settings.method9ShowFretboard,oldS=data.settings.method9ShowStaff;
-  data.settings.method9ShowFretboard=data.settings.intervalIdentifyExamShowFretboard!==false;
+  data.settings.method9ShowFretboard=true;
   data.settings.method9ShowStaff=data.settings.intervalIdentifyExamShowStaff!==false;
   renderMethod9IntervalVisual(pair);
   data.settings.method9ShowFretboard=oldF;data.settings.method9ShowStaff=oldS;
@@ -2381,7 +2381,7 @@ function pickIntervalIdentifyExamTask(){
   const t=intervalIdentifyExam.tasks[intervalIdentifyExam.index];
   if(!t){current=null;promptEl.textContent='Pistokoetta ei voitu muodostaa nykyisillä asetuksilla.';return;}
   current={type:'interval9Q',interval:t.interval,positions:t.positions};
-  const audioOnly=data.settings.intervalIdentifyExamShowFretboard===false&&data.settings.intervalIdentifyExamShowStaff===false;
+  const audioOnly=false;
   promptEl.innerHTML=`Pistokoe ${intervalIdentifyExam.index+1}/${intervalIdentifyExam.count}: ${audioOnly?'Kuuntele ja tunnista intervalli':'Mikä intervalli?'}`;
   renderMethod9ExamVisual(t.positions);tabbox.classList.remove('hidden');answerEl.classList.add('hidden');$('check').classList.add('hidden');$('reveal').disabled=true;$('startExam').classList.add('hidden');
   renderIntervalIdentifyExamButtons();$('listenBtn').textContent='Kuuntele intervalli';$('listenBtn').classList.remove('hidden');
