@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.20.22 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.20.23 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -240,7 +240,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.20.22 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.20.23 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -317,7 +317,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.20.22';
+const APP_VERSION='1.20.23';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const FIRST_RUN_HELP_KEY='sightfret_first_run_help_shown_v1';
 const isFirstSightFretRun=!localStorage.getItem(STORE_KEY) && !localStorage.getItem(FIRST_RUN_HELP_KEY);
@@ -1576,7 +1576,7 @@ function renderMethod7FFretboard(){
   const staffId=current.type==='intervalFind7Q'?'intervalFindExamStaff':'method7FStaff';
   const staffHTML=current.type==='intervalFind7F'
     ? `<div class="method9-staff" style="margin-bottom:18px;position:relative"><svg id="${staffId}" viewBox="0 0 420 210" aria-label="Intervalli nuottiviivastolla"></svg><div id="method7FIntervalLabel" style="position:absolute;left:66%;right:16px;top:50%;transform:translateY(-50%);font-size:1.12rem;font-weight:700;white-space:nowrap;text-align:left;pointer-events:none"></div></div>`
-    : `<div class="method9-staff" style="margin-bottom:18px"><svg id="${staffId}" viewBox="0 0 420 210" aria-label="Intervalli nuottiviivastolla"></svg></div>`;
+    : `<div class="method9-staff" style="margin-bottom:18px;position:relative"><svg id="${staffId}" viewBox="0 0 420 210" aria-label="Intervalli nuottiviivastolla"></svg><div id="method7QIntervalLabel" style="position:absolute;left:66%;right:16px;top:50%;transform:translateY(-50%);font-size:1.12rem;font-weight:700;white-space:nowrap;text-align:left;pointer-events:none"></div></div>`;
   let html=`${staffHTML}<div class="method7f-board-wrap"><div class="small" style="margin-bottom:8px">Lähtösävel: <b>${method7FMidiName(start.m)}</b> · valittu kieli: <b>${stringNames[target.s]}</b></div><div class="heatmap method7f-board" id="method7FBoard">`;
   html+='<div class="heatcell heathead">kieli</div>'+Array.from({length:13},(_,f)=>`<div class="heatcell heathead${f===0?' fret-zero':''}">${f}</div>`).join('');
   for(let s=5;s>=0;s--){
@@ -1614,7 +1614,7 @@ function pickMethod7FTask(){
     answerEl.disabled=true;$('reveal').disabled=true;return;
   }
   const direction=method7FDirectionLabel(current.start.m,current.target.m);
-  promptEl.innerHTML=`Lähtösävel on <b>${method7FMidiName(current.start.m)}</b>. Valitse otelaudalta <b>${current.interval.name.toLowerCase()} ${direction}</b> valitulta <b>${stringNames[current.target.s]}-kieleltä</b>.`;
+  promptEl.innerHTML=`Valitse otelaudalta <b>${current.interval.name.toLowerCase()} ${direction}</b> valitulta <b>${stringNames[current.target.s]}-kieleltä</b>.`;
   answerEl.value='';answerEl.disabled=true;answerEl.classList.add('hidden');$('check').classList.add('hidden');
   $('listenBtn').textContent='Kuuntele intervalli';$('listenBtn').classList.remove('hidden');
   // Remove any progressive hint button left in the action row by another interval method.
@@ -2392,7 +2392,8 @@ function pickIntervalFindExamTask(){
   if(!t){current=null;promptEl.textContent='Pistokoetta ei voitu muodostaa nykyisillä asetuksilla.';return;}
   current={type:'intervalFind7Q',interval:t.interval,start:t.start,target:t.target,positions:[t.start,t.target],revealed:false,hintShown:false,lastPick:null};
   const dir=method7FDirectionLabel(t.start.m,t.target.m);
-  promptEl.innerHTML=`Pistokoe ${intervalFindExam.index+1}/${intervalFindExam.count}: Lähtösävel on <b>${method7FMidiName(t.start.m)}</b>. Valitse <b>${t.interval.name.toLowerCase()} ${dir}</b> <b>${stringNames[t.target.s]}-kieleltä</b>.`;
+  promptEl.innerHTML=`Pistokoe ${intervalFindExam.index+1}/${intervalFindExam.count}: Valitse <b>${t.interval.name.toLowerCase()} ${dir}</b> <b>${stringNames[t.target.s]}-kieleltä</b>.`;
+  const qLabel=$('method7QIntervalLabel'); if(qLabel) qLabel.textContent=t.interval.name;
   answerEl.classList.add('hidden');$('check').classList.add('hidden');$('reveal').disabled=true;$('startExam').classList.add('hidden');
   renderMethod7FFretboard();
 }
