@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.20.20 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.20.21 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -240,7 +240,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.20.20 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.20.21 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -317,7 +317,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.20.20';
+const APP_VERSION='1.20.21';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const FIRST_RUN_HELP_KEY='sightfret_first_run_help_shown_v1';
 const isFirstSightFretRun=!localStorage.getItem(STORE_KEY) && !localStorage.getItem(FIRST_RUN_HELP_KEY);
@@ -1321,7 +1321,6 @@ function intervalFindExamSettings(){
 }
 function intervalIdentifyExamSettings(){
   return `<div><div class="group-title">Kysymysten määrä</div><select id="intervalIdentifyExamCount">${intervalExamCountOptions(data.settings.intervalIdentifyExamCount||20)}</select></div>
-    <div><div class="group-title">Aikaraja</div><label><input id="intervalIdentifyExamTime" type="number" min="3" max="60" step="1" value="${Number(data.settings.intervalIdentifyExamTime)||10}" style="width:80px"> s / kysymys</label></div>
     <div><div class="group-title">Intervallit</div><label class="check"><input type="checkbox" id="intervalIdentifyExamWithinOctave"> Vain oktaavin sisällä</label></div>
     <div><div class="group-title">Kitarasovitus</div><label class="check"><input type="checkbox" id="intervalIdentifyExamGuitarAdaptation"> Guitar adaptation</label></div>
     <div><div class="group-title">Äänet</div><label class="check"><input type="checkbox" id="intervalIdentifyExamMute"> Hiljennä äänet</label></div>`;
@@ -2140,7 +2139,7 @@ const METHOD_HELP_CONTENT={
   '9Q':{
     title:'10 – Tunnista intervalli pistokoe',
     practice:'Pistokoe mittaa, kuinka nopeasti tunnistat kahden sävelen muodostaman intervallin. Valitse vastaus intervallipainikkeista. Jokaisessa tehtävässä on yksi vastausyritys.',
-    practiceAfter:['Valitse 20, 30 tai 40 kysymystä. Oletusaikaraja on 10 sekuntia / kysymys. Tehtävä esitetään sekä nuottiviivastolla että otelaudalla.'],
+    practiceAfter:['Valitse 20, 30 tai 40 kysymystä. Aikaraja on 10 sekuntia / kysymys. Tehtävä esitetään sekä nuottiviivastolla että otelaudalla.'],
     develops:'Pistokoe mittaa harmonisen intervallisuhteen tunnistamisen automatisoitumista.'
   },
   '7I':{title:'8 – Tunnista intervalli otelaudalta',practice:'SightFret näyttää otelaudalla lähtö- ja kohdeposition sekä kertoo, kuljetaanko lähtösävelestä kohdesäveleen sävelkorkeudessa ylöspäin vai alaspäin. Tunnista suunnallinen intervalli ja vastaa intervallipainikkeella. Suunta määräytyy absoluuttisesta sävelkorkeudesta, ei otelaudan visuaalisesta suunnasta. Harjoitusta kannattaa tehdä kitara kädessä ja soittaa samat kaksi positiota myös fyysiseltä otelaudalta. Vain oktaavin sisällä rajaa tehtävät oktaaviin asti. Hiljennä äänet poistaa kuuntelun. Guitar adaptation rajaa tehtävät käytännössä soitettaviin kahden sävelen otteisiin ja sallii avoimet kielet ilman nauhavälirajoitusta.',develops:'Harjoitus on menetelmän 7 peilikuva: siinä otelaudan kahdesta positiosta päätellään niiden välinen intervalli. Se vahvistaa kykyä lukea otelautaa toisiinsa liittyvien positioiden ja intervallien verkostona sekä automatisoi intervallisuhteiden tunnistamista eri kieliltä.'},
@@ -2454,7 +2453,7 @@ function pickIntervalIdentifyExamTask(){
 function finishIntervalIdentifyExamAnswer(id){
   if(answered||!current||current.type!=='interval9Q')return;
   const chosen=METHOD7F_INTERVALS.find(x=>x.id===id)||METHOD9_INTERVALS.find(x=>x.id===id);if(!chosen)return;
-  const t=elapsed(),good=chosen.id===current.interval.id,slow=good&&t>intervalExamTime(data.settings.intervalIdentifyExamTime)*1000;
+  const t=elapsed(),good=chosen.id===current.interval.id,slow=good&&t>10000;
   answered=true;if(good&&!slow){intervalIdentifyExam.correct++;intervalIdentifyExam.times.push(t)}else if(slow)intervalIdentifyExam.slow++;else intervalIdentifyExam.wrong++;
   intervalIdentifyExam.index++;const [a,b]=current.positions;
   feedbackEl.innerHTML=good&&!slow?`✓ Oikein — <b>${current.interval.name}</b> — ${fmtTime(t)}`:good&&slow?`Vastaus oikein mutta liian hidas — <b>${current.interval.name}</b> — ${fmtTime(t)}`:`Väärin — oikea vastaus: <b>${current.interval.name}</b><div class="small">${pcName(a.pc)} → ${pcName(b.pc)} · ${current.interval.semitones} puolisävelaskelta</div>`;
