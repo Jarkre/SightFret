@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 1.20.13 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 1.20.14 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -239,7 +239,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 1.20.13 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 1.20.14 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -316,7 +316,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='1.20.13';
+const APP_VERSION='1.20.14';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const FIRST_RUN_HELP_KEY='sightfret_first_run_help_shown_v1';
 const isFirstSightFretRun=!localStorage.getItem(STORE_KEY) && !localStorage.getItem(FIRST_RUN_HELP_KEY);
@@ -3295,8 +3295,9 @@ function method9AttachProgressiveHint(buttonId,textId){
 function renderMethod9InlineMastery(){
   let area=$('method9MasteryInline'); const box=$('method9Answers'); if(!box)return;
   if(!area){area=document.createElement('div');area.id='method9MasteryInline';area.className='method9-mastery-inline';box.insertAdjacentElement('afterend',area);}
-  area.classList.remove('hidden');
-  area.innerHTML=`<div class="method9-mastery-cells">${METHOD9_INTERVALS.map(interval=>{const level=method9MasteryValue(interval.id);return `<div class="method9-mastery-cell" style="background:${masteryColor(level/10)}" title="${interval.name}: ${level}/10">${interval.name}</div>`;}).join('')}</div><div class="method9-mastery-legend"><span>heikko</span><span class="bar"></span><span>automatisoitunut</span></div><div class="method9-reset-row"><button type="button" class="ghost" id="method9InlineReset">Nollaa valitun menetelmän osaamisdata</button></div>`;
+  area.classList.toggle('hidden',methodEl.value!=='9');
+  if(methodEl.value!=='9')return;
+  area.innerHTML=`<div class="method9-mastery-legend"><span>heikko</span><span class="bar"></span><span>automatisoitunut</span></div><div class="method9-reset-row"><button type="button" class="ghost" id="method9InlineReset">Nollaa valitun menetelmän osaamisdata</button></div>`;
   $('method9InlineReset').onclick=()=>{if(!confirm('Nollataanko kaikki intervallien osaamisdata?'))return;data.method9Mastery={};saveData();renderStats();renderMethod9AnswerButtons();};
 }
 
@@ -3312,6 +3313,13 @@ function renderMethod9AnswerButtons(){
     box=document.createElement('div');
     box.id='method9Answers';
     box.className='method9-answer-grid';
+  }
+  if(methodEl.value==='9'){
+    // Menetelmä 9: toimintopainikkeet ensin, intervallipainikkeet heti niiden alla.
+    const actionRow=$('next')?.parentElement;
+    if(actionRow)actionRow.insertAdjacentElement('afterend',box);
+    $('startExam')?.classList.add('hidden');
+  }else if(!box.isConnected){
     answerEl.parentElement.insertAdjacentElement('afterend',box);
   }
 
@@ -3458,6 +3466,7 @@ function renderMethod9AnswerButtons(){
 
       hintBtn.disabled=true;
     });
+    renderMethod9InlineMastery();
     return;
   }
 
@@ -3466,9 +3475,8 @@ function renderMethod9AnswerButtons(){
   const free=mode==='free';
 
   box.innerHTML=
-    (free?`<div class="method9-mastery-legend"><span>heikko</span><span class="bar"></span><span>automatisoitunut</span></div>`:'')+
     pool.map(x=>{
-      const style=free?` style="background:${method9MasteryColor(x.baseId||x.id)}"`:'';
+      const style=` style="background:${method9MasteryColor(x.baseId||x.id)}"`;
       return `<button type="button" data-interval="${x.id}"${style}>${x.name}</button>`;
     }).join('')+
     `<button type="button" id="method9GeneralHint">Vihje 1</button>`+
@@ -3483,9 +3491,8 @@ function renderMethod9AnswerButtons(){
     checkCurrent();
   }));
   method9AttachProgressiveHint('method9GeneralHint','method9GeneralHintText');
+  renderMethod9InlineMastery();
 }
-
-renderMethod9InlineMastery();
 
 function positionMethod9HintButton(){
   const hint=$('method9QualityHint')||$('method9GeneralHint');
