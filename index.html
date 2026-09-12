@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 2.0.5 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 2.0.7 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -240,7 +240,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 2.0.5 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 2.0.7 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -329,7 +329,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='2.0.5';
+const APP_VERSION='2.0.7';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const FIRST_RUN_HELP_KEY='sightfret_first_run_help_shown_v1';
 const isFirstSightFretRun=!localStorage.getItem(STORE_KEY) && !localStorage.getItem(FIRST_RUN_HELP_KEY);
@@ -1450,7 +1450,7 @@ function settingHTML(){const m=methodEl.value;let html='';if(m==='1')html+=`<div
  if(m==='2')html+=`<div><div class="group-title">Automaatiotesti</div><label>Aikaraja <select id="timeLimit"><option value="0">Ei aikarajaa</option><option value="10">10 s</option><option value="5">5 s</option><option value="3">3 s</option><option value="2">2 s</option><option value="1.5">1,5 s</option></select></label></div><div><div class="group-title" style="visibility:hidden" aria-hidden="true">Automaatiotesti</div><label>Kieli <select id="singleString">${[5,4,3,2,1,0].map(i=>`<option value="${i}">${stringNames[i]}</option>`).join('')}</select></label><label class="check" style="margin-top:8px"><input type="checkbox" id="method2AutoWeakestString"> Harjoittele heikointa kieltä</label></div>`;if(m==='3')html+=`<div><div class="group-title">Heikot pisteet</div><span class="small">Valitaan automaattisesti menetelmissä 2–4 havaituista toistuvista virhekohdista. Menetelmä 5 toimii niiden kohdennettuna tehotreeninä.</span></div>`;
 
  if(['5'].includes(m))html+=`<div><div class="group-title">Alue</div><span class="small">Nauhat 0 - 12</span></div>`;
- if(m==='IM')html+=`<div><div class="group-title">Asema</div><select id="intervalMovementArea"><option value="auto">Automaattinen – heikoin asema</option><option value="1-4">1–4 + vapaat kielet</option><option value="5-8">5–8</option><option value="9-12">9–12</option></select></div><div><div class="group-title">Vaikeustaso</div><select id="intervalMovementDifficulty"><option value="1">1 – sekunnit ja terssit</option><option value="2">2 – lisäksi kvartit, tritonus ja kvintit</option><option value="3">3 – lisäksi sekstit, septimit ja oktaavi</option></select></div><div><div class="group-title">Peräkkäisten nuottien määrä</div><select id="intervalMovementNoteCount">${Array.from({length:7},(_,i)=>`<option value="${i+2}">${i+2}</option>`).join('')}</select></div>`;
+ if(m==='IM')html+=`<div><div class="group-title">Asema</div><select id="intervalMovementArea"><option value="auto">Automaattinen – heikoin avattu asema</option><option value="1-4">1–4 + vapaat kielet</option><option value="5-8">5–8</option><option value="9-12">9–12</option></select></div><div><div class="group-title">Vaikeustaso</div><select id="intervalMovementDifficulty"><option value="1">1 – sekunnit ja terssit</option><option value="2">2 – lisäksi kvartit, tritonus ja kvintit</option><option value="3">3 – lisäksi sekstit, septimit ja oktaavi</option></select></div><div><div class="group-title">Peräkkäisten nuottien määrä</div><select id="intervalMovementNoteCount">${Array.from({length:7},(_,i)=>`<option value="${i+2}">${i+2}</option>`).join('')}</select></div>`;
  if(m==='5Q')html+=`<div><div class="group-title">Pistokoe</div><label>Kysymysten määrä <input id="quizCount" type="number" min="20" max="78" step="1" value="20" style="width:90px"></label><div class="small" style="margin-top:6px">20–78 satunnaista eri otelautapositiota. Samaa positiota ei kysytä kahdesti saman pistokokeen aikana. Aikaraja 5 s / kysymys. Vihreä = oikein aikarajassa, punainen = väärin tai liian hitaasti. Pistokokeen tulokset säilyvät vain käynnissä olevan pistokokeen ajan.</div></div>`;
  if(m==='7')html+=method7ChordSettings();if(m==='8')html+=method8ChordSettings();if(m==='7F')html+=method7FSettings();if(m==='7Q')html+=intervalFindExamSettings();if(m==='9Q')html+=intervalIdentifyExamSettings();if(m==='7I')html+=`<div><div class="group-title">Intervallit</div><label class="check"><input type="checkbox" id="method7IWithinOctave"> Vain oktaavin sisällä</label></div><div><div class="group-title">Äänet</div><label class="check"><input type="checkbox" id="method7IMute"> Hiljennä äänet</label></div><div><div class="group-title">Kitarasovitus</div><label class="check"><input type="checkbox" id="method7IGuitarAdaptation"> Guitar adaptation</label></div>`;if(m==='9')html+=method9Settings();if(m==='10')html+=method10Settings();
  if(m==='11')html+=`<div><div class="group-title">Prototyyppi: guide tones 3 + 7</div><span class="small">Valitse seuraavan soinnun 3- ja 7-sävelille se otelautaratkaisu, jossa kokonaisliike on pienin. Tarkoitus on automatisoida läheisen voicingin löytäminen — ei opetella progressioita ulkoa.</span></div>`;
@@ -1851,12 +1851,32 @@ function handleMethod7FClick(s,f){
 const INTERVAL_MOVEMENT_NATURALS={0:'C',2:'D',4:'E',5:'F',7:'G',9:'A',11:'B'};
 const INTERVAL_MOVEMENT_LETTERS=['C','D','E','F','G','A','B'];
 const INTERVAL_MOVEMENT_AREAS={
-  '1-4':{id:'1-4',label:'1–4 + vapaat kielet',frets:[0,1,2,3,4]},
-  '5-8':{id:'5-8',label:'5–8',frets:[5,6,7,8]},
-  '9-12':{id:'9-12',label:'9–12',frets:[9,10,11,12]}
+  '1-4':{id:'1-4',label:'1–4 + vapaat kielet',frets:[0,1,2,3,4],tier:0},
+  '5-8':{id:'5-8',label:'5–8',frets:[5,6,7,8],tier:0},
+  '9-12':{id:'9-12',label:'9–12',frets:[9,10,11,12],tier:0},
+  '3-6':{id:'3-6',label:'3–6',frets:[3,4,5,6],tier:1},
+  '7-10':{id:'7-10',label:'7–10',frets:[7,8,9,10],tier:1},
+  '1-6':{id:'1-6',label:'1–6 + vapaat kielet',frets:[0,1,2,3,4,5,6],tier:2},
+  '4-9':{id:'4-9',label:'4–9',frets:[4,5,6,7,8,9],tier:2},
+  '7-12':{id:'7-12',label:'7–12',frets:[7,8,9,10,11,12],tier:2},
+  '1-12':{id:'1-12',label:'1–12 + vapaat kielet',frets:[0,1,2,3,4,5,6,7,8,9,10,11,12],tier:3}
 };
-const INTERVAL_MOVEMENT_AREA_IDS=['1-4','5-8','9-12'];
+const INTERVAL_MOVEMENT_BASE_AREA_IDS=['1-4','5-8','9-12'];
+const INTERVAL_MOVEMENT_AREA_IDS=Object.keys(INTERVAL_MOVEMENT_AREAS);
+const INTERVAL_MOVEMENT_UNLOCK_MASTERY=.72;
+const INTERVAL_MOVEMENT_UNLOCK_ATTEMPTS=18;
+function intervalMovementUnlockedTier(){
+  const base=INTERVAL_MOVEMENT_BASE_AREA_IDS.map(id=>intervalMovementAreaMetrics(id));
+  if(base.some(x=>x.attempts<INTERVAL_MOVEMENT_UNLOCK_ATTEMPTS||x.mastery==null))return 0;
+  const floor=Math.min(...base.map(x=>x.mastery));
+  if(floor<INTERVAL_MOVEMENT_UNLOCK_MASTERY)return 0;
+  if(floor<.82)return 1;
+  if(floor<.90)return 2;
+  return 3;
+}
+function intervalMovementAvailableAreaIds(){const tier=intervalMovementUnlockedTier();return INTERVAL_MOVEMENT_AREA_IDS.filter(id=>(INTERVAL_MOVEMENT_AREAS[id].tier||0)<=tier)}
 const INTERVAL_MOVEMENT_AREA_MIN_ATTEMPTS=8;
+const INTERVAL_MOVEMENT_COLD_START_ATTEMPTS=10;
 const INTERVAL_MOVEMENT_AREA_MIN_HOLD=5;
 const INTERVAL_MOVEMENT_AREA_SWITCH_MARGIN=.03;
 let intervalMovementActiveArea=null,intervalMovementAreaHoldCount=0;
@@ -1872,14 +1892,27 @@ function intervalMovementAreaMetrics(id){
   return {attempts,mastery:weight?weighted/weight:null};
 }
 function intervalMovementChooseAutoArea(){
-  const metrics=Object.fromEntries(INTERVAL_MOVEMENT_AREA_IDS.map(id=>[id,intervalMovementAreaMetrics(id)]));
-  const under=INTERVAL_MOVEMENT_AREA_IDS.filter(id=>metrics[id].attempts<INTERVAL_MOVEMENT_AREA_MIN_ATTEMPTS);
+  // Cold start: kerää ensin tasaisesti dataa kaikista kolmesta perusasemasta.
+  // Tässä vaiheessa ei käytetä hold-logiikkaa, jotta harjoitus ei juutu yhteen asemaan
+  // ennen kuin muista asemista on vertailukelpoista dataa.
+  const baseMetrics=Object.fromEntries(INTERVAL_MOVEMENT_BASE_AREA_IDS.map(id=>[id,intervalMovementAreaMetrics(id)]));
+  if(INTERVAL_MOVEMENT_BASE_AREA_IDS.some(id=>baseMetrics[id].attempts<INTERVAL_MOVEMENT_COLD_START_ATTEMPTS)){
+    const minAttempts=Math.min(...INTERVAL_MOVEMENT_BASE_AREA_IDS.map(id=>baseMetrics[id].attempts));
+    let candidates=INTERVAL_MOVEMENT_BASE_AREA_IDS.filter(id=>baseMetrics[id].attempts===minAttempts);
+    // Tasatilanteessa suositaan eri asemaa kuin edellisessä tehtävässä.
+    if(intervalMovementActiveArea&&candidates.length>1)candidates=candidates.filter(id=>id!==intervalMovementActiveArea);
+    return candidates[randomInt(candidates.length)];
+  }
+
+  const available=intervalMovementAvailableAreaIds();
+  const metrics=Object.fromEntries(available.map(id=>[id,intervalMovementAreaMetrics(id)]));
+  const under=available.filter(id=>metrics[id].attempts<INTERVAL_MOVEMENT_AREA_MIN_ATTEMPTS);
   if(intervalMovementActiveArea&&intervalMovementAreaHoldCount<INTERVAL_MOVEMENT_AREA_MIN_HOLD)return intervalMovementActiveArea;
   if(under.length){
     if(intervalMovementActiveArea&&under.includes(intervalMovementActiveArea)&&intervalMovementAreaHoldCount<INTERVAL_MOVEMENT_AREA_MIN_HOLD+2)return intervalMovementActiveArea;
     return under[randomInt(under.length)];
   }
-  const weakest=[...INTERVAL_MOVEMENT_AREA_IDS].sort((a,b)=>(metrics[a].mastery??1)-(metrics[b].mastery??1))[0];
+  const weakest=[...available].sort((a,b)=>(metrics[a].mastery??1)-(metrics[b].mastery??1))[0];
   if(!intervalMovementActiveArea)return weakest;
   const cur=metrics[intervalMovementActiveArea].mastery??1,weak=metrics[weakest].mastery??1;
   return weakest!==intervalMovementActiveArea&&cur-weak>=INTERVAL_MOVEMENT_AREA_SWITCH_MARGIN?weakest:intervalMovementActiveArea;
@@ -2460,7 +2493,7 @@ const METHOD_HELP_CONTENT={
   'IM':{
     title:'11 – Nuotista otelaudalle',
     practice:'Nuottiviivastolla näkyy 2–8 peräkkäistä nuottia. Aktiivinen nuotti näkyy vihreänä. Soita vihreä nuotti kitaralla ja valitse sitten sama positio otelaudalta. Oikean valinnan jälkeen seuraava nuotti muuttuu vihreäksi ja harjoitus etenee nuotti kerrallaan.',
-    practiceAfter:['Harjoitus käyttää asemia 1–4 (+ vapaat kielet), 5–8 ja 9–12. Automaattisessa tilassa SightFret kerää aluksi dataa eri asemista ja painottaa sen jälkeen heikoiten osattua asemaa. Jos sama absoluuttinen sävelkorkeus löytyy valitulla alueella useasta kohdasta, kaikki oikeat positiot hyväksytään. Vaikeustaso 1 käyttää sekunteja ja terssejä, taso 2 lisää kvartit, tritonuksen ja kvintit ja taso 3 myös sekstit, septimit ja oktaavin silloin kun siirtymä on valitulla alueella mahdollinen. Sävelen nimeä ei tarvitse kirjoittaa.'],
+    practiceAfter:['Harjoitus käyttää asemia 1–4 (+ vapaat kielet), 5–8 ja 9–12. Automaattisessa tilassa SightFret kierrättää aluksi tasaisesti asemia 1–4, 5–8 ja 9–12, kunnes jokaisesta on riittävästi dataa. Sen jälkeen harjoittelu painottuu heikoiten osattuun avattuun asemaan. Jos sama absoluuttinen sävelkorkeus löytyy valitulla alueella useasta kohdasta, kaikki oikeat positiot hyväksytään. Vaikeustaso 1 käyttää sekunteja ja terssejä, taso 2 lisää kvartit, tritonuksen ja kvintit ja taso 3 myös sekstit, septimit ja oktaavin silloin kun siirtymä on valitulla alueella mahdollinen. Sävelen nimeä ei tarvitse kirjoittaa.'],
     develops:'Harjoitus rakentaa suoraa yhteyttä nuottikuvan, nykyisen otelautasijainnin ja seuraavan motorisen liikkeen välille. Tavoitteena on vähentää tietoista välivaihetta nuotin lukemisen ja kitaralla tapahtuvan liikkeen välillä.'
   },
   '7F':{
