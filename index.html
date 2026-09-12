@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 2.0.13 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 2.1.0 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -240,7 +240,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 2.0.13 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 2.1.0 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -329,7 +329,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='2.0.13';
+const APP_VERSION='2.1.0';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const FIRST_RUN_HELP_KEY='sightfret_first_run_help_shown_v1';
 const isFirstSightFretRun=!localStorage.getItem(STORE_KEY) && !localStorage.getItem(FIRST_RUN_HELP_KEY);
@@ -1450,7 +1450,7 @@ function settingHTML(){const m=methodEl.value;let html='';if(m==='1')html+=`<div
  if(m==='2')html+=`<div><div class="group-title">Automaatiotesti</div><label>Aikaraja <select id="timeLimit"><option value="0">Ei aikarajaa</option><option value="10">10 s</option><option value="5">5 s</option><option value="3">3 s</option><option value="2">2 s</option><option value="1.5">1,5 s</option></select></label></div><div><div class="group-title" style="visibility:hidden" aria-hidden="true">Automaatiotesti</div><label>Kieli <select id="singleString">${[5,4,3,2,1,0].map(i=>`<option value="${i}">${stringNames[i]}</option>`).join('')}</select></label><label class="check" style="margin-top:8px"><input type="checkbox" id="method2AutoWeakestString"> Harjoittele heikointa kieltä</label></div>`;if(m==='3')html+=`<div><div class="group-title">Heikot pisteet</div><span class="small">Valitaan automaattisesti menetelmissä 2–4 havaituista toistuvista virhekohdista. Menetelmä 5 toimii niiden kohdennettuna tehotreeninä.</span></div>`;
 
  if(['5'].includes(m))html+=`<div><div class="group-title">Alue</div><span class="small">Nauhat 0 - 12</span></div>`;
- if(m==='IM')html+=`<div><div class="group-title">Asema</div><select id="intervalMovementArea"><option value="auto">Automaattinen – heikoin avattu asema</option><option value="1-4">1–4 + vapaat kielet</option><option value="5-8">5–8</option><option value="9-12">9–12</option></select></div><div><div class="group-title">Vaikeustaso</div><select id="intervalMovementDifficulty"><option value="1">1 – sekunnit ja terssit</option><option value="2">2 – lisäksi kvartit, tritonus ja kvintit</option><option value="3">3 – lisäksi sekstit, septimit ja oktaavi</option></select></div><div><div class="group-title">Peräkkäisten nuottien määrä</div><select id="intervalMovementNoteCount">${Array.from({length:7},(_,i)=>`<option value="${i+2}">${i+2}</option>`).join('')}</select></div><div><div class="group-title">Nuottikuva</div><label class="check"><input type="checkbox" id="intervalMovementAccidentals"> Ylennykset/alennukset</label></div>`;
+ if(m==='IM')html+=`<div><div class="group-title">Asema</div><select id="intervalMovementArea"><option value="auto">Automaattinen – heikoin avattu asema</option><option value="1-4">1–4 + vapaat kielet</option><option value="5-8">5–8</option><option value="9-12">9–12</option></select></div><div><div class="group-title">Vaikeustaso</div><select id="intervalMovementDifficulty"><option value="1">1 – sekunnit ja terssit</option><option value="2">2 – lisäksi kvartit, tritonus ja kvintit</option><option value="3">3 – lisäksi sekstit, septimit ja oktaavi</option></select></div><div><div class="group-title">Peräkkäisten nuottien määrä</div><select id="intervalMovementNoteCount">${Array.from({length:7},(_,i)=>`<option value="${i+2}">${i+2}</option>`).join('')}</select></div><div><div class="group-title">Nuottikuva</div><label class="check"><input type="checkbox" id="intervalMovementAccidentals"> Ylennykset/alennukset</label></div><div><div class="group-title">Äänitulo</div><button type="button" class="secondary" onclick="openFrequencyMonitor()">Avaa Frequency monitor</button></div>`;
  if(m==='5Q')html+=`<div><div class="group-title">Pistokoe</div><label>Kysymysten määrä <input id="quizCount" type="number" min="20" max="78" step="1" value="20" style="width:90px"></label><div class="small" style="margin-top:6px">20–78 satunnaista eri otelautapositiota. Samaa positiota ei kysytä kahdesti saman pistokokeen aikana. Aikaraja 5 s / kysymys. Vihreä = oikein aikarajassa, punainen = väärin tai liian hitaasti. Pistokokeen tulokset säilyvät vain käynnissä olevan pistokokeen ajan.</div></div>`;
  if(m==='7')html+=method7ChordSettings();if(m==='8')html+=method8ChordSettings();if(m==='7F')html+=method7FSettings();if(m==='7Q')html+=intervalFindExamSettings();if(m==='9Q')html+=intervalIdentifyExamSettings();if(m==='7I')html+=`<div><div class="group-title">Intervallit</div><label class="check"><input type="checkbox" id="method7IWithinOctave"> Vain oktaavin sisällä</label></div><div><div class="group-title">Äänet</div><label class="check"><input type="checkbox" id="method7IMute"> Hiljennä äänet</label></div><div><div class="group-title">Kitarasovitus</div><label class="check"><input type="checkbox" id="method7IGuitarAdaptation"> Guitar adaptation</label></div>`;if(m==='9')html+=method9Settings();if(m==='10')html+=method10Settings();
  if(m==='11')html+=`<div><div class="group-title">Prototyyppi: guide tones 3 + 7</div><span class="small">Valitse seuraavan soinnun 3- ja 7-sävelille se otelautaratkaisu, jossa kokonaisliike on pienin. Tarkoitus on automatisoida läheisen voicingin löytäminen — ei opetella progressioita ulkoa.</span></div>`;
@@ -2400,6 +2400,73 @@ function wireSettings(){
 
   const ss=$('singleString');if(ss)ss.disabled=!!data.settings.method2AutoWeakestString;
   const sf=$('sameFret');if(sf)sf.disabled=!!data.settings.method3AutoWeakestFret;
+}
+
+
+let frequencyMonitorWindow=null;
+function openFrequencyMonitor(){
+  if(frequencyMonitorWindow&&!frequencyMonitorWindow.closed){
+    frequencyMonitorWindow.focus();
+    return;
+  }
+  const w=window.open('','SightFretFrequencyMonitor','width=620,height=610,resizable=yes,scrollbars=yes');
+  if(!w)return;
+  frequencyMonitorWindow=w;
+  w.document.open();
+  w.document.write(`<!doctype html><html lang="fi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SightFret Frequency monitor</title><style>
+    :root{color-scheme:light dark}*{box-sizing:border-box}body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;margin:0;padding:24px;background:Canvas;color:CanvasText}h1{font-size:1.35rem;margin:0 0 18px}.panel{border:1px solid color-mix(in srgb,CanvasText 24%,transparent);border-radius:12px;padding:16px;margin-bottom:14px}.label{font-size:.8rem;font-weight:750;opacity:.72;text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px}select,button{font:inherit;padding:.62rem .78rem;border-radius:8px;border:1px solid ButtonBorder;background:ButtonFace;color:ButtonText}select{width:100%;margin-bottom:10px}button{cursor:pointer}.grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}.value{font-variant-numeric:tabular-nums;font-weight:800;font-size:1.45rem}.note{font-size:2rem}.muted{opacity:.72;font-size:.9rem;line-height:1.45}.meter{height:14px;border-radius:999px;background:color-mix(in srgb,CanvasText 12%,transparent);overflow:hidden;margin-top:8px}.meter>div{height:100%;width:0;background:CanvasText;transition:width .05s linear}.status{font-weight:700;margin-top:8px}.ok{opacity:.9}.err{color:#d63b3b}@media(max-width:520px){.grid{grid-template-columns:1fr}}
+  </style></head><body><h1>SightFret Frequency monitor</h1>
+  <div class="panel"><div class="label">Äänilähde</div><select id="device"><option value="">Oletusäänitulo</option></select><button id="start" type="button">Käynnistä äänitulo</button><div id="status" class="status muted">Valitse Käynnistä. Selain pyytää luvan äänitulon käyttöön.</div></div>
+  <div class="panel"><div class="grid"><div><div class="label">Taajuus</div><div id="freq" class="value">– Hz</div></div><div><div class="label">Sävel</div><div id="note" class="value note">–</div></div><div><div class="label">Poikkeama</div><div id="cents" class="value">– cent</div></div></div><div class="label" style="margin-top:16px">Signaalitaso</div><div class="meter"><div id="level"></div></div></div>
+  <div class="muted">Monitori tunnistaa yhden sävelen kerrallaan YIN-tyyppisellä perustaajuuden tunnistuksella. Äänilähteenä voi käyttää selaimelle näkyvää USB-äänikorttia, Kemperiä tai muuta audio input -laitetta. Hiiriklikkaus SightFretissä toimii edelleen normaalisti.</div>
+  <script>
+  (()=>{
+    const device=document.getElementById('device'),start=document.getElementById('start'),status=document.getElementById('status'),freqEl=document.getElementById('freq'),noteEl=document.getElementById('note'),centsEl=document.getElementById('cents'),levelEl=document.getElementById('level');
+    let stream=null,ctx=null,analyser=null,buf=null,raf=0,activeDevice='';
+    const noteNames=['C','C♯ / D♭','D','D♯ / E♭','E','F','F♯ / G♭','G','G♯ / A♭','A','A♯ / B♭','B'];
+    function stop(){if(raf)cancelAnimationFrame(raf);raf=0;if(stream)stream.getTracks().forEach(t=>t.stop());stream=null;if(ctx){ctx.close().catch(()=>{});ctx=null}analyser=null;buf=null;}
+    async function refreshDevices(selectId=''){
+      const devices=(await navigator.mediaDevices.enumerateDevices()).filter(d=>d.kind==='audioinput');
+      device.innerHTML='';
+      devices.forEach((d,i)=>{const o=document.createElement('option');o.value=d.deviceId;o.textContent=d.label||('Äänitulo '+(i+1));device.appendChild(o)});
+      if(!devices.length){const o=document.createElement('option');o.value='';o.textContent='Äänituloja ei löytynyt';device.appendChild(o)}
+      if(selectId&&[...device.options].some(o=>o.value===selectId))device.value=selectId;
+    }
+    function yinPitch(x,sampleRate){
+      const n=x.length,half=n>>1,diff=new Float32Array(half),cmnd=new Float32Array(half);let running=0;
+      for(let tau=1;tau<half;tau++){let sum=0;for(let i=0;i<half;i++){const d=x[i]-x[i+tau];sum+=d*d}diff[tau]=sum;running+=sum;cmnd[tau]=running?diff[tau]*tau/running:1}
+      cmnd[0]=1;const threshold=.12;let tau=-1;
+      for(let t=2;t<half;t++){if(cmnd[t]<threshold){while(t+1<half&&cmnd[t+1]<cmnd[t])t++;tau=t;break}}
+      if(tau<0){let best=2;for(let t=3;t<half;t++)if(cmnd[t]<cmnd[best])best=t;if(cmnd[best]>.28)return null;tau=best}
+      const x0=tau>1?tau-1:tau,x2=tau+1<half?tau+1:tau,s0=cmnd[x0],s1=cmnd[tau],s2=cmnd[x2],den=2*(2*s1-s2-s0);let better=tau;if(Math.abs(den)>1e-12)better=tau+(s2-s0)/den;
+      const hz=sampleRate/better;return Number.isFinite(hz)&&hz>=55&&hz<=1400?hz:null;
+    }
+    function update(){
+      if(!analyser||!buf)return;analyser.getFloatTimeDomainData(buf);let sum=0;for(const v of buf)sum+=v*v;const rms=Math.sqrt(sum/buf.length);levelEl.style.width=Math.min(100,rms*700)+'%';
+      if(rms<.006){freqEl.textContent='– Hz';noteEl.textContent='–';centsEl.textContent='– cent';raf=requestAnimationFrame(update);return}
+      const hz=yinPitch(buf,ctx.sampleRate);
+      if(hz){const midi=69+12*Math.log2(hz/440),nearest=Math.round(midi),cents=Math.round((midi-nearest)*100),pc=((nearest%12)+12)%12,oct=Math.floor(nearest/12)-1;freqEl.textContent=hz.toFixed(1)+' Hz';noteEl.textContent=noteNames[pc]+oct;centsEl.textContent=(cents>0?'+':'')+cents+' cent'}
+      else{freqEl.textContent='– Hz';noteEl.textContent='–';centsEl.textContent='– cent'}
+      raf=requestAnimationFrame(update);
+    }
+    async function startAudio(deviceId=''){
+      stop();status.className='status muted';status.textContent='Avataan äänituloa…';
+      try{
+        const constraints={audio:{channelCount:1,echoCancellation:false,noiseSuppression:false,autoGainControl:false}};
+        if(deviceId)constraints.audio.deviceId={exact:deviceId};
+        stream=await navigator.mediaDevices.getUserMedia(constraints);activeDevice=stream.getAudioTracks()[0]?.getSettings()?.deviceId||deviceId||'';
+        await refreshDevices(activeDevice);
+        ctx=new (window.AudioContext||window.webkitAudioContext)();await ctx.resume();
+        const src=ctx.createMediaStreamSource(stream);analyser=ctx.createAnalyser();analyser.fftSize=4096;analyser.smoothingTimeConstant=0;src.connect(analyser);buf=new Float32Array(analyser.fftSize);
+        const label=stream.getAudioTracks()[0]?.label||'äänitulo';status.className='status ok';status.textContent='Kuunnellaan: '+label;start.textContent='Käynnistä uudelleen';update();
+      }catch(err){stop();status.className='status err';status.textContent='Äänituloa ei voitu avata: '+(err?.message||err)}
+    }
+    start.addEventListener('click',()=>startAudio(device.value||''));device.addEventListener('change',()=>{if(stream)startAudio(device.value||'')});window.addEventListener('beforeunload',stop);
+    if(!navigator.mediaDevices?.getUserMedia){status.className='status err';status.textContent='Selain ei tue Web Audio -äänituloa tässä ympäristössä.'}
+  })();
+  <\/script></body></html>`);
+  w.document.close();
+  w.focus();
 }
 
 let seventhChordGuideWindow=null;
