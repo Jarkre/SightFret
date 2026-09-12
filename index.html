@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 2.0.8 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 2.0.9 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -240,7 +240,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 2.0.8 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 2.0.9 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -329,7 +329,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='2.0.8';
+const APP_VERSION='2.0.9';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const FIRST_RUN_HELP_KEY='sightfret_first_run_help_shown_v1';
 const isFirstSightFretRun=!localStorage.getItem(STORE_KEY) && !localStorage.getItem(FIRST_RUN_HELP_KEY);
@@ -1976,6 +1976,7 @@ function makeIntervalMovementTask(){
   }
   return null;
 }
+let intervalMovementTransitionTimer=null;
 function drawIntervalMovementStaff(){
   const s=$('intervalMovementStaff');if(!s||!current||current.type!=='intervalMovement')return;
   s.innerHTML='';
@@ -1983,7 +1984,13 @@ function drawIntervalMovementStaff(){
   for(let i=0;i<5;i++){const y=150-i*22;add('line',{x1:36,y1:y,x2:392,y2:y,stroke:'CanvasText','stroke-width':2});}
   add('text',{x:48,y:144,'font-size':72,'font-family':'serif',fill:'CanvasText'},'𝄞');
   const n=current.notes.length,x0=n<=4?190:130,span=n<=4?58:Math.min(48,250/Math.max(1,n-1));
-  const notes=current.notes.map((p,i)=>{const wm=p.m+12,diatonic=midiDiatonicIndex(wm,p.sp),active=!answered&&i===current.activeIndex;return {...p,y:150-(diatonic-E4IDX)*11,x:x0+i*span,color:active?'#8fe3a4':'CanvasText'};});
+  const transition=current.transition;
+  const notes=current.notes.map((p,i)=>{
+    const wm=p.m+12,diatonic=midiDiatonicIndex(wm,p.sp);
+    const active=!answered&&!transition&&i===current.activeIndex;
+    const inTransition=!!transition&&(i===transition.fromIndex||i===transition.toIndex);
+    return {...p,y:150-(diatonic-E4IDX)*11,x:x0+i*span,color:(active||inTransition)?'#8fe3a4':'CanvasText'};
+  });
   if(notes.length){const minY=Math.min(...notes.map(x=>x.y)),maxY=Math.max(...notes.map(x=>x.y));const top=Math.min(0,minY-32),bottom=Math.max(210,maxY+32);s.setAttribute('viewBox',`0 ${top} 420 ${bottom-top}`);}
   const ledgerYs=y=>{const out=[];if(y>150){for(let ly=172;ly<=y+1;ly+=22)out.push(ly)}else if(y<62){for(let ly=40;ly>=y-1;ly-=22)out.push(ly)}return out};
   for(const note of notes){
@@ -1995,10 +2002,12 @@ function drawIntervalMovementStaff(){
 }
 function renderIntervalMovement(){
   if(!current||current.type!=='intervalMovement')return;
-  const active=current.notes[current.activeIndex],area=intervalMovementAreaInfo(current.areaId);
-  const nextNote=current.notes[current.activeIndex+1];
-  const movementInterval=nextNote?method9IntervalBySemitones(Math.abs(nextNote.m-active.m)):null;
-  let html=`<div class="method9-staff" style="margin-bottom:18px;position:relative"><svg id="intervalMovementStaff" viewBox="0 0 420 210" aria-label="Nuottiviivasto"></svg><div id="intervalMovementIntervalLabel" style="position:absolute;left:66%;right:16px;top:50%;transform:translateY(-50%);font-size:1.12rem;font-weight:700;white-space:nowrap;text-align:left;pointer-events:none">${movementInterval?movementInterval.name:''}</div></div>`;
+  const active=current.notes[current.activeIndex],area=intervalMovementAreaInfo(current.areaId),transition=current.transition;
+  const movementInterval=transition?.interval||null;
+  const labelStyle=movementInterval
+    ? 'font-size:1.55rem;font-weight:850;opacity:1;transform:translateY(-50%) scale(1.04);'
+    : 'font-size:1.12rem;font-weight:700;opacity:0;transform:translateY(-50%);';
+  let html=`<div class="method9-staff" style="margin-bottom:18px;position:relative"><svg id="intervalMovementStaff" viewBox="0 0 420 210" aria-label="Nuottiviivasto"></svg><div id="intervalMovementIntervalLabel" style="position:absolute;left:66%;right:16px;top:50%;${labelStyle}white-space:nowrap;text-align:left;pointer-events:none;transition:opacity .12s ease,transform .12s ease">${movementInterval?movementInterval.name:''}</div></div>`;
   html+=`<div class="method7f-board-wrap"><div class="small" style="margin-bottom:8px"><b>${area.label}</b> · nuotti ${Math.min(current.activeIndex+1,current.notes.length)}/${current.notes.length}</div><div class="heatmap method7f-board" id="intervalMovementBoard">`;
   html+='<div class="heatcell heathead">kieli</div>'+Array.from({length:13},(_,f)=>`<div class="heatcell heathead${f===0?' fret-zero':''}">${f}</div>`).join('');
   for(let s=5;s>=0;s--){
@@ -2006,9 +2015,12 @@ function renderIntervalMovement(){
     for(let f=0;f<=12;f++){
       const inPos=area.frets.includes(f);
       const isCurrentPos=current.currentPosition&&s===current.currentPosition.s&&f===current.currentPosition.f;
+      const isTransitionFrom=transition&&s===transition.fromPos.s&&f===transition.fromPos.f;
+      const isTransitionTo=transition&&s===transition.toPos.s&&f===transition.toPos.f;
       const isRevealed=current.revealed&&current.revealedIndex===current.activeIndex&&active?.positions?.some(t=>t.s===s&&t.f===f);
       const isWrong=current.lastPick&&!current.lastPick.good&&current.lastPick.s===s&&current.lastPick.f===f;
-      const cls=[f===0?'fret-zero':'',inPos?'method7f-target':'method7f-disabled',isCurrentPos?'method7f-start':'',isRevealed?'method7f-answer':'',isWrong?'method7f-wrong':''].filter(Boolean).join(' ');
+      const showGreen=isCurrentPos||isTransitionFrom||isTransitionTo;
+      const cls=[f===0?'fret-zero':'',inPos?'method7f-target':'method7f-disabled',showGreen?'method7f-start':'',isRevealed?'method7f-answer':'',isWrong?'method7f-wrong':''].filter(Boolean).join(' ');
       let label='';if(isRevealed)label=active.sp||'';if(isWrong)label='✗';
       html+=`<div class="heatcell ${cls}" data-s="${s}" data-f="${f}">${label}</div>`;
     }
@@ -2017,25 +2029,58 @@ function renderIntervalMovement(){
   const board=$('intervalMovementBoard');if(board)renderFretboardNutBar(board);drawIntervalMovementStaff();
 }
 function pickIntervalMovementTask(){
+  if(intervalMovementTransitionTimer){clearTimeout(intervalMovementTransitionTimer);intervalMovementTransitionTimer=null;}
   current=makeIntervalMovementTask();if(!current){promptEl.textContent='Tehtävää ei saatu muodostettua.';return;}
+  current.transition=null;
   promptEl.textContent='Soita vihreä nuotti kitaralla ja valitse sitten sama positio otelaudalta.';
   answerEl.classList.add('hidden');answerEl.disabled=true;$('check').classList.add('hidden');$('reveal').disabled=false;$('listenBtn').classList.add('hidden');$('method10HintBtn').classList.add('hidden');$('next').disabled=true;
   $('intervalFindExamRestartRow')?.classList.remove('hidden');
   renderIntervalMovement();
 }
 function handleIntervalMovementClick(s,f){
-  if(answered||!current||current.type!=='intervalMovement')return;const area=intervalMovementAreaInfo(current.areaId);if(!area.frets.includes(f))return;
+  if(answered||!current||current.type!=='intervalMovement'||current.transition)return;const area=intervalMovementAreaInfo(current.areaId);if(!area.frets.includes(f))return;
   const active=current.notes[current.activeIndex],good=active.positions.some(t=>t.s===s&&t.f===f);playFretPosition(s,f);current.lastPick={s,f,good};
   const t=elapsed();
   // Menetelmän 11 oma otelautaosaamisdata: jokainen klikkaus päivittää juuri klikattua positiota.
   // Oikea vahvistaa positiota, väärä heikentää sitä. Data ei sekoitu menetelmien 1–6 otelautaosaamiseen.
   recordResult({good,timeMs:good?t:null,positions:[{s,f}]});
   if(good){
-    current.stepTimes.push(t);active.chosen={s,f,m:tuning[s]+f,pc:mod(tuning[s]+f,12),sp:active.sp};current.currentPosition={...active.chosen};
-    if(current.activeIndex>=current.notes.length-1){answered=true;const total=current.stepTimes.reduce((a,b)=>a+b,0);feedbackEl.textContent=`✓ Oikein — sarja valmis — ${fmtTime(total)}`;feedbackEl.className='feedback ok';$('next').disabled=false;$('next').focus();}
-    else{current.activeIndex++;current.lastPick=null;current.revealed=false;current.revealedIndex=null;startTime=performance.now();feedbackEl.textContent=`✓ Oikein — ${current.activeIndex}/${current.notes.length}`;feedbackEl.className='feedback ok';}
-  }else{feedbackEl.textContent='Väärin — kokeile uudelleen.';feedbackEl.className='feedback warn';}
-  renderIntervalMovement();renderStats();
+    current.stepTimes.push(t);
+    active.chosen={s,f,m:tuning[s]+f,pc:mod(tuning[s]+f,12),sp:active.sp};
+    const chosen={...active.chosen};
+    // Ensimmäinen oikein löydetty nuotti muodostaa vasta ankkurin. Intervallia ei vielä näytetä.
+    if(current.activeIndex===0){
+      current.currentPosition=chosen;
+      current.activeIndex=1;
+      current.lastPick=null;current.revealed=false;current.revealedIndex=null;
+      startTime=performance.now();feedbackEl.textContent=`✓ Oikein — 1/${current.notes.length}`;feedbackEl.className='feedback ok';
+      renderIntervalMovement();renderStats();return;
+    }
+    const fromIndex=current.activeIndex-1,toIndex=current.activeIndex;
+    const fromPos=current.currentPosition?{...current.currentPosition}:null;
+    const movementInterval=method9IntervalBySemitones(Math.abs(current.notes[toIndex].m-current.notes[fromIndex].m));
+    current.currentPosition=chosen;
+    current.transition={fromIndex,toIndex,fromPos:fromPos||chosen,toPos:chosen,interval:movementInterval};
+    current.lastPick=null;current.revealed=false;current.revealedIndex=null;
+    feedbackEl.textContent='✓ Oikein';feedbackEl.className='feedback ok';
+    renderIntervalMovement();renderStats();
+    const task=current;
+    if(intervalMovementTransitionTimer)clearTimeout(intervalMovementTransitionTimer);
+    intervalMovementTransitionTimer=setTimeout(()=>{
+      intervalMovementTransitionTimer=null;
+      if(current!==task||!current||current.type!=='intervalMovement')return;
+      current.transition=null;
+      if(toIndex>=current.notes.length-1){
+        answered=true;const total=current.stepTimes.reduce((a,b)=>a+b,0);
+        feedbackEl.textContent=`✓ Oikein — sarja valmis — ${fmtTime(total)}`;feedbackEl.className='feedback ok';$('next').disabled=false;$('next').focus();
+      }else{
+        current.activeIndex=toIndex+1;
+        startTime=performance.now();
+        feedbackEl.textContent=`✓ Oikein — ${toIndex+1}/${current.notes.length}`;feedbackEl.className='feedback ok';
+      }
+      renderIntervalMovement();renderStats();
+    },2000);
+  }else{feedbackEl.textContent='Väärin — kokeile uudelleen.';feedbackEl.className='feedback warn';renderIntervalMovement();renderStats();}
 }
 
 function method9IntervalBySemitones(n){return METHOD9_INTERVALS.find(x=>x.semitones===n)||null}
