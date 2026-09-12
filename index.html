@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 2.0.11 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 2.0.12 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -240,7 +240,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 2.0.11 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 2.0.12 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -329,7 +329,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='2.0.11';
+const APP_VERSION='2.0.12';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const FIRST_RUN_HELP_KEY='sightfret_first_run_help_shown_v1';
 const isFirstSightFretRun=!localStorage.getItem(STORE_KEY) && !localStorage.getItem(FIRST_RUN_HELP_KEY);
@@ -2680,6 +2680,27 @@ function renderIntervalExamIdleFretboard(){
   drawIntervalExamStaff('intervalExamIdleStaff',[]);
   renderFretboardNutBar($('intervalExamIdleBoard'));
 }
+function renderIntervalMovementIdle(){
+  if(methodEl.value!=='IM')return;
+  let html=`<div class="method9-staff" style="margin-bottom:18px;position:relative"><svg id="intervalMovementIdleStaff" viewBox="0 0 420 210" aria-label="Nuottiviivasto"></svg></div>`;
+  html+=`<div class="method7f-board-wrap"><div class="heatmap method7f-board" id="intervalMovementIdleBoard">`;
+  html+='<div class="heatcell heathead">kieli</div>'+Array.from({length:13},(_,f)=>`<div class="heatcell heathead${f===0?' fret-zero':''}">${f}</div>`).join('');
+  for(let s=5;s>=0;s--){
+    html+=`<div class="heatcell heathead">${stringNames[s]}</div>`;
+    for(let f=0;f<=12;f++)html+=`<div class="heatcell${f===0?' fret-zero':''}"></div>`;
+  }
+  html+='</div></div>';
+  stepInfo.innerHTML=html;
+  const staff=$('intervalMovementIdleStaff');
+  if(staff){
+    const ns='http://www.w3.org/2000/svg';
+    const add=(tag,attrs,text='')=>{const el=document.createElementNS(ns,tag);for(const [k,v] of Object.entries(attrs))el.setAttribute(k,v);if(text)el.textContent=text;staff.appendChild(el);return el;};
+    for(let i=0;i<5;i++){const y=150-i*22;add('line',{x1:36,y1:y,x2:392,y2:y,stroke:'CanvasText','stroke-width':2});}
+    add('text',{x:48,y:144,'font-size':72,'font-family':'serif',fill:'CanvasText'},'𝄞');
+  }
+  const board=$('intervalMovementIdleBoard');if(board)renderFretboardNutBar(board);
+}
+
 function showStartState(){
   clearSettledFretPosition();clearCurrentFretAnswerFlash();
   resetUI();current=null;startTime=0;
@@ -2734,6 +2755,7 @@ function showStartState(){
     $('check').classList.add('hidden');
     $('reveal').disabled=false;
     promptEl.textContent='Paina Seuraava aloittaaksesi Nuotista otelaudalle -harjoituksen.';
+    renderIntervalMovementIdle();
   }else{
     answerEl.classList.remove('hidden');
     $('check').classList.toggle('hidden',['5','1','2','3','4','5Q','7F','7I','7Q','9Q','IM'].includes(methodEl.value));
