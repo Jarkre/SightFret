@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 2.0.9 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 2.0.10 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -240,7 +240,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 2.0.9 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 2.0.10 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -329,7 +329,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='2.0.9';
+const APP_VERSION='2.0.10';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const FIRST_RUN_HELP_KEY='sightfret_first_run_help_shown_v1';
 const isFirstSightFretRun=!localStorage.getItem(STORE_KEY) && !localStorage.getItem(FIRST_RUN_HELP_KEY);
@@ -1883,10 +1883,45 @@ let intervalMovementActiveArea=null,intervalMovementAreaHoldCount=0;
 function intervalMovementNaturalName(m){return INTERVAL_MOVEMENT_NATURALS[mod(m,12)]||null}
 const INTERVAL_MOVEMENT_SHARP_NAMES={1:'C#',3:'D#',6:'F#',8:'G#',10:'A#'};
 const INTERVAL_MOVEMENT_FLAT_NAMES={1:'Db',3:'Eb',6:'Gb',8:'Ab',10:'Bb'};
+const INTERVAL_MOVEMENT_NATURAL_PC={C:0,D:2,E:4,F:5,G:7,A:9,B:11};
+function intervalMovementSpellingCandidates(m){
+  const natural=intervalMovementNaturalName(m);
+  if(natural)return [natural];
+  if(!data.settings.intervalMovementAccidentals)return [];
+  const pc=mod(m,12),out=[];
+  if(INTERVAL_MOVEMENT_SHARP_NAMES[pc])out.push(INTERVAL_MOVEMENT_SHARP_NAMES[pc]);
+  if(INTERVAL_MOVEMENT_FLAT_NAMES[pc])out.push(INTERVAL_MOVEMENT_FLAT_NAMES[pc]);
+  return out;
+}
 function intervalMovementSpelling(m){
-  const natural=intervalMovementNaturalName(m);if(natural)return natural;
-  if(!data.settings.intervalMovementAccidentals)return null;
-  const pc=mod(m,12);return Math.random()<.5?INTERVAL_MOVEMENT_SHARP_NAMES[pc]:INTERVAL_MOVEMENT_FLAT_NAMES[pc];
+  const choices=intervalMovementSpellingCandidates(m);
+  return choices.length?choices[randomInt(choices.length)]:null;
+}
+function intervalMovementDiatonicStepOptions(semitones){
+  const map={1:[1],2:[1],3:[2],4:[2],5:[3],6:[3,4],7:[4],8:[5],9:[5],10:[6],11:[6],12:[7]};
+  return map[semitones]||[];
+}
+function intervalMovementTargetSpelling(fromSp,fromMidi,targetMidi){
+  if(!fromSp)return null;
+  const distance=Math.abs(targetMidi-fromMidi),dir=targetMidi>fromMidi?1:-1;
+  if(!dir||!distance)return null;
+  const fromLetter=fromSp[0],fromIndex=INTERVAL_MOVEMENT_LETTERS.indexOf(fromLetter);
+  if(fromIndex<0)return null;
+  const targetPc=mod(targetMidi,12);
+  // Intervallin diatoninen koko määrää kirjaimen. Näin esim. G→Ab on pieni sekunti,
+  // kun taas G→G# olisi muunnettu priimi eikä tämän harjoituksen m2.
+  for(const steps of intervalMovementDiatonicStepOptions(distance)){
+    const targetLetter=INTERVAL_MOVEMENT_LETTERS[mod(fromIndex+dir*steps,7)];
+    const naturalPc=INTERVAL_MOVEMENT_NATURAL_PC[targetLetter];
+    let accidental=mod(targetPc-naturalPc,12);
+    if(accidental>6)accidental-=12;
+    if(accidental===0)return targetLetter;
+    if(accidental===1)return targetLetter+'#';
+    if(accidental===-1)return targetLetter+'b';
+    // Vältetään tässä vaiheessa kaksoisylennyksiä/-alennuksia. Tritonuksessa
+    // kokeillaan tarvittaessa myös enharmonista A4/d5-vaihtoehtoa.
+  }
+  return null;
 }
 function intervalMovementAreaInfo(id){return INTERVAL_MOVEMENT_AREAS[id]||INTERVAL_MOVEMENT_AREAS['5-8']}
 function intervalMovementAreaMetrics(id){
@@ -1930,10 +1965,11 @@ function intervalMovementSelectedArea(){
   if(chosen!==intervalMovementActiveArea){intervalMovementActiveArea=chosen;intervalMovementAreaHoldCount=0;}
   return intervalMovementAreaInfo(chosen);
 }
-function intervalMovementPositionsForMidi(m,area=intervalMovementSelectedArea()){
-  const out=[];
+function intervalMovementPositionsForMidi(m,area=intervalMovementSelectedArea(),sp=null){
+  const out=[],written=sp||intervalMovementSpelling(m);
+  if(!written)return out;
   for(let s=0;s<6;s++)for(const f of area.frets){
-    if(tuning[s]+f===m)out.push({s,f,m,pc:mod(m,12),sp:intervalMovementSpelling(m)});
+    if(tuning[s]+f===m)out.push({s,f,m,pc:mod(m,12),sp:written});
   }
   return out;
 }
@@ -1943,12 +1979,14 @@ function intervalMovementAllowedSemitones(){
   if(level===2)return new Set([1,2,3,4,5,6,7]);
   return new Set([1,2,3,4,5,6,7,8,9,10,11,12]);
 }
-function intervalMovementNeighborMidis(m,area){
+function intervalMovementNeighborMidis(m,area,fromSp){
   const allowed=intervalMovementAllowedSemitones(),out=[],seen=new Set();
   for(let s=0;s<6;s++)for(const f of area.frets){
-    const nm=tuning[s]+f,sp=intervalMovementSpelling(nm),distance=Math.abs(nm-m);
-    if(!sp||!allowed.has(distance)||seen.has(nm))continue;
-    const positions=intervalMovementPositionsForMidi(nm,area);
+    const nm=tuning[s]+f,distance=Math.abs(nm-m);
+    if(!allowed.has(distance)||seen.has(nm))continue;
+    const sp=intervalMovementTargetSpelling(fromSp,m,nm);
+    if(!sp)continue;
+    const positions=intervalMovementPositionsForMidi(nm,area,sp);
     if(!positions.length)continue;
     seen.add(nm);
     out.push({m:nm,pc:mod(nm,12),sp,positions,dir:nm>m?1:-1,semitones:distance});
@@ -1957,17 +1995,23 @@ function intervalMovementNeighborMidis(m,area){
 }
 function makeIntervalMovementTask(){
   const count=Math.max(2,Math.min(8,Number(data.settings.intervalMovementNoteCount)||2));
-  const area=intervalMovementSelectedArea(),starts=[];
+  const area=intervalMovementSelectedArea(),starts=[],seenStarts=new Set();
   for(let s=0;s<6;s++)for(const f of area.frets){
-    const m=tuning[s]+f,sp=intervalMovementSpelling(m);if(sp)starts.push({s,f,m,pc:mod(m,12),sp});
+    const m=tuning[s]+f;
+    for(const sp of intervalMovementSpellingCandidates(m)){
+      const key=m+'|'+sp;if(seenStarts.has(key))continue;seenStarts.add(key);
+      starts.push({m,pc:mod(m,12),sp});
+    }
   }
-  for(let guard=0;guard<900;guard++){
+  for(let guard=0;guard<1200;guard++){
     const start=starts[randomInt(starts.length)];
-    const startPositions=intervalMovementPositionsForMidi(start.m,area);
+    const startPositions=intervalMovementPositionsForMidi(start.m,area,start.sp);
+    if(!startPositions.length)continue;
     const notes=[{m:start.m,pc:start.pc,sp:start.sp,positions:startPositions,chosen:null}];
     let ok=true;
     for(let i=1;i<count;i++){
-      const choices=intervalMovementNeighborMidis(notes[i-1].m,area);
+      const prev=notes[i-1];
+      const choices=intervalMovementNeighborMidis(prev.m,area,prev.sp);
       if(!choices.length){ok=false;break;}
       const next=choices[randomInt(choices.length)];
       notes.push({m:next.m,pc:next.pc,sp:next.sp,positions:next.positions,chosen:null});
@@ -2546,7 +2590,7 @@ const METHOD_HELP_CONTENT={
   'IM':{
     title:'11 – Nuotista otelaudalle',
     practice:'Nuottiviivastolla näkyy 2–8 peräkkäistä nuottia. Aktiivinen nuotti näkyy vihreänä. Soita vihreä nuotti kitaralla ja valitse sitten sama positio otelaudalta. Oikean valinnan jälkeen seuraava nuotti muuttuu vihreäksi ja harjoitus etenee nuotti kerrallaan.',
-    practiceAfter:['Harjoitus käyttää asemia 1–4 (+ vapaat kielet), 5–8 ja 9–12. Automaattisessa tilassa SightFret kierrättää aluksi tasaisesti asemia 1–4, 5–8 ja 9–12, kunnes jokaisesta on riittävästi dataa. Sen jälkeen harjoittelu painottuu heikoiten osattuun avattuun asemaan. Jos sama absoluuttinen sävelkorkeus löytyy valitulla alueella useasta kohdasta, kaikki oikeat positiot hyväksytään. Vaikeustaso 1 käyttää sekunteja ja terssejä, taso 2 lisää kvartit, tritonuksen ja kvintit ja taso 3 myös sekstit, septimit ja oktaavin silloin kun siirtymä on valitulla alueella mahdollinen. Kun Ylennykset/alennukset on valittu, mukana on myös kromaattisia säveliä ylennys- ja alennusmerkkeineen. Valittu otelautapositio soi noin sekunnin ajan. Sävelen nimeä ei tarvitse kirjoittaa.'],
+    practiceAfter:['Harjoitus käyttää asemia 1–4 (+ vapaat kielet), 5–8 ja 9–12. Automaattisessa tilassa SightFret kierrättää aluksi tasaisesti asemia 1–4, 5–8 ja 9–12, kunnes jokaisesta on riittävästi dataa. Sen jälkeen harjoittelu painottuu heikoiten osattuun avattuun asemaan. Jos sama absoluuttinen sävelkorkeus löytyy valitulla alueella useasta kohdasta, kaikki oikeat positiot hyväksytään. Vaikeustaso 1 käyttää sekunteja ja terssejä, taso 2 lisää kvartit, tritonuksen ja kvintit ja taso 3 myös sekstit, septimit ja oktaavin silloin kun siirtymä on valitulla alueella mahdollinen. Kun Ylennykset/alennukset on valittu, mukana on myös kromaattisia säveliä. Nuottien enharmoninen kirjoitusasu valitaan intervallisuhteen mukaan, jotta nuottikuva ja näytettävä intervalli ovat keskenään johdonmukaisia. Valittu otelautapositio soi noin sekunnin ajan. Sävelen nimeä ei tarvitse kirjoittaa.'],
     develops:'Harjoitus rakentaa suoraa yhteyttä nuottikuvan, nykyisen otelautasijainnin ja seuraavan motorisen liikkeen välille. Tavoitteena on vähentää tietoista välivaihetta nuotin lukemisen ja kitaralla tapahtuvan liikkeen välillä.'
   },
   '7F':{
