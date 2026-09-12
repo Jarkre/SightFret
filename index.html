@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SightFret 2.1.1 — Designed by Jarkko Reijonaho</title>
+<title>SightFret 2.1.2 — Designed by Jarkko Reijonaho</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--text:#1e2430;--muted:#687180;--border:#dfe3ea;--ok:#18794e;--bad:#b42318;--soft:#f0f2f6;--accent:#222831;--warn:#9a6700}
 *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);padding:20px}.app{width:min(1380px,100%);margin:auto;background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;box-shadow:0 12px 35px rgba(0,0,0,.06)}
@@ -240,7 +240,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
   </div>
 </div>
 <main class="app">
-  <h1>SightFret 2.1.1 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
+  <h1>SightFret 2.1.2 <span class="designer-credit">— Designed by Jarkko Reijonaho</span></h1>
   <p class="sub"></p>
 
   <div class="topbar">
@@ -329,7 +329,7 @@ select,input,button{font:inherit}select,input[type=text],input[type=number]{bord
 </main>
 <script>
 'use strict';
-const APP_VERSION='2.1.1';
+const APP_VERSION='2.1.2';
 const STORE_KEY='kitara_ja_teoria_treenari_data_v1';
 const FIRST_RUN_HELP_KEY='sightfret_first_run_help_shown_v1';
 const isFirstSightFretRun=!localStorage.getItem(STORE_KEY) && !localStorage.getItem(FIRST_RUN_HELP_KEY);
@@ -2031,11 +2031,12 @@ function makeIntervalMovementTask(){
       const next=intervalMovementWeightedPick(choices,x=>intervalMovementSpellingWeight(x.sp));
       notes.push({m:next.m,pc:next.pc,sp:next.sp,positions:next.positions,chosen:null});
     }
-    if(ok){intervalMovementAreaHoldCount++;return {type:'intervalMovement',areaId:area.id,notes,activeIndex:0,currentPosition:null,lastPick:null,revealed:false,revealedIndex:null,stepTimes:[]};}
+    if(ok){intervalMovementAreaHoldCount++;return {type:'intervalMovement',areaId:area.id,notes,activeIndex:0,currentPosition:null,lastPick:null,audioWrongPositions:[],revealed:false,revealedIndex:null,stepTimes:[]};}
   }
   return null;
 }
 let intervalMovementTransitionTimer=null;
+let intervalMovementAudioWrongTimer=null;
 function drawIntervalMovementStaff(){
   const s=$('intervalMovementStaff');if(!s||!current||current.type!=='intervalMovement')return;
   s.innerHTML='';
@@ -2085,8 +2086,9 @@ function renderIntervalMovement(){
       const isTransitionTo=transition&&s===transition.toPos.s&&f===transition.toPos.f;
       const isRevealed=current.revealed&&current.revealedIndex===current.activeIndex&&active?.positions?.some(t=>t.s===s&&t.f===f);
       const isWrong=current.lastPick&&!current.lastPick.good&&current.lastPick.s===s&&current.lastPick.f===f;
+      const isAudioWrong=Array.isArray(current.audioWrongPositions)&&current.audioWrongPositions.some(p=>p.s===s&&p.f===f);
       const showGreen=isCurrentPos||isTransitionFrom||isTransitionTo;
-      const cls=[f===0?'fret-zero':'',inPos?'method7f-target':'method7f-disabled',showGreen?'method7f-start':'',isRevealed?'method7f-answer':'',isWrong?'method7f-wrong':''].filter(Boolean).join(' ');
+      const cls=[f===0?'fret-zero':'',inPos?'method7f-target':'method7f-disabled',showGreen?'method7f-start':'',isRevealed?'method7f-answer':'',(isWrong||isAudioWrong)?'method7f-wrong':''].filter(Boolean).join(' ');
       let label='';if(isRevealed)label=active.sp||'';if(isWrong)label='✗';
       html+=`<div class="heatcell ${cls}" data-s="${s}" data-f="${f}">${label}</div>`;
     }
@@ -2096,6 +2098,7 @@ function renderIntervalMovement(){
 }
 function pickIntervalMovementTask(){
   if(intervalMovementTransitionTimer){clearTimeout(intervalMovementTransitionTimer);intervalMovementTransitionTimer=null;}
+  if(intervalMovementAudioWrongTimer){clearTimeout(intervalMovementAudioWrongTimer);intervalMovementAudioWrongTimer=null;}
   current=makeIntervalMovementTask();if(!current){promptEl.textContent='Tehtävää ei saatu muodostettua.';return;}
   current.transition=null;
   promptEl.textContent='Soita vihreä nuotti kitaralla ja valitse sitten sama positio otelaudalta.';
@@ -2553,7 +2556,29 @@ function intervalMovementAudioLoop(){
     if(target.positions.length===1){const p=target.positions[0];handleIntervalMovementClick(p.s,p.f,'audio')}
     else{feedbackEl.textContent='Sävel oikein — vahvista positio hiirellä.';feedbackEl.className='feedback ok'}
   }else if(nearest!==target.m&&stableMs>=300&&!intervalMovementAudioWrongReported){
-    intervalMovementAudioWrongReported=true;recordResult({good:false,positions:[]});feedbackEl.textContent=`Väärä sävel (${intervalMovementMidiLabel(nearest)}) — kokeile uudelleen.`;feedbackEl.className='feedback warn';renderStats();
+    intervalMovementAudioWrongReported=true;
+    recordResult({good:false,positions:[]});
+    feedbackEl.textContent=`Väärä sävel (${intervalMovementMidiLabel(nearest)}) — kokeile uudelleen.`;
+    feedbackEl.className='feedback warn';
+    // Jos väärä sävel löytyy nykyisen harjoitusaseman otelaudalta, näytä kaikki
+    // kyseisen absoluuttisen sävelkorkeuden mahdolliset positiot punaisina 3 sekuntia.
+    // Audiosta ei voi päätellä, miltä näistä käyttäjä sävelen soitti.
+    const area=intervalMovementAreaInfo(current.areaId);
+    const wrongPositions=intervalMovementPositionsForMidi(nearest,area,'');
+    if(wrongPositions.length){
+      const task=current;
+      task.audioWrongPositions=wrongPositions.map(p=>({s:p.s,f:p.f}));
+      renderIntervalMovement();
+      if(intervalMovementAudioWrongTimer)clearTimeout(intervalMovementAudioWrongTimer);
+      intervalMovementAudioWrongTimer=setTimeout(()=>{
+        if(current===task&&current?.type==='intervalMovement'){
+          current.audioWrongPositions=[];
+          renderIntervalMovement();
+        }
+        intervalMovementAudioWrongTimer=null;
+      },3000);
+    }
+    renderStats();
   }
   intervalMovementAudioRaf=requestAnimationFrame(intervalMovementAudioLoop);
 }
